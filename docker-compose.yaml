@@ -25,15 +25,15 @@ services:
   # 2. PyTorch Model Inference Service (Deep Learning & NetCDF Processing)
   model-service:
     build:
-      context: ./model_service
+      context: ./model
       dockerfile: Dockerfile
     container_name: mhw_pytorch_service
     restart: always
     ports:
       - "8001:8001"
     volumes:
-      - ./model_service/models:/app/models
-      - ./model_service/data:/app/data
+      - ./model/models:/app/models
+      - ./model/data:/app/data
     environment:
       - TZ=Asia/Jakarta
       - PYTHONUNBUFFERED=1
