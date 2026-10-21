@@ -1,22 +1,43 @@
-# --- Core Numerical & Data Processing ---
+# ==========================================
+# CORE NUMERICAL & DATA PROCESSING
+# ==========================================
 numpy>=1.22.0
 pandas>=1.4.0
 scipy>=1.8.0
 
-# --- NetCDF & Geospatial Data Handling ---
+# ==========================================
+# NETCDF, GEOSPATIAL & BIG DATA HANDLING
+# ==========================================
 netcdf4>=1.5.8
 xarray>=2022.03.0
 rasterio>=1.2.0
+dask[complete]>=2022.03.0   # Essential for opening/processing multiple .nc files lazily in parallel
+zarr>=2.10.0                # For high-performance chunked tensor/array caching
 
-# --- Deep Learning (PyTorch) ---
+# ==========================================
+# DEEP LEARNING (PYTORCH ECOSYSTEM)
+# ==========================================
 torch>=2.0.0
+torchaudio>=2.0.0           # Optional audio/signal utilities if processing wave data
+tensorboard>=2.10.0         # For tracking training losses and metrics
 
-# --- Machine Learning & Utilities ---
+# ==========================================
+# MACHINE LEARNING & UTILITIES
+# ==========================================
 scikit-learn>=1.0.0
 lightgbm>=3.3.0
 joblib>=1.1.0
+tqdm>=4.60.0                # Essential for tracking progress when batch-decoding multiple .nc files
 
-# --- Web API (Opsional) ---
+# ==========================================
+# VISUALIZATION & DIAGNOSTICS (Optional)
+# ==========================================
+matplotlib>=3.5.0
+seaborn>=0.11.2
+
+# ==========================================
+# WEB API (Optional)
+# ==========================================
 fastapi>=0.95.0
 uvicorn>=0.21.0
 pydantic>=1.9.0
