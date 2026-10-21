@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  lstm-app:
+    build: .
+    container_name: tensorflow-lstm-container
+    restart: always
+    volumes:
+      - ./model:/app/model  # Melakukan sinkronisasi folder model secara real-time
+    # ports:
+    #   - "5000:5000"     # Uncomment jika aplikasi Anda menggunakan Flask/FastAPI (port mapping)
+    environment:
+      - PYTHONUNBUFFERED=1
+    # Konfigurasi di bawah ini opsional jika Anda menggunakan GPU (Pastikan sudah menginstal NVIDIA Container Toolkit)
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
