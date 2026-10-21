@@ -1,23 +1,81 @@
 version: '3.8'
 
 services:
-  mhw-api:
-    build: .
-    container_name: mhw-pytorch-service
-    restart: unless-stopped
+  # 1. Database PostgreSQL dengan ekstensi PostGIS (Spasial)
+  postgres-db:
+    image: postgis/postgis:15-3.3
+    container_name: mhw_postgres_db
+    restart: always
+    environment:
+      POSTGRES_DB: mhw_db
+      POSTGRES_USER: mhw_user
+      POSTGRES_PASSWORD: mhw_password
+      TZ: Asia/Jakarta
     ports:
-      - "8000:8000"
+      - "5432:5432"
     volumes:
-      - ./model:/app/model
-      - ./data:/app/data
-      - ./logs:/app/logs
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mhw_user -d mhw_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 2. PyTorch Model Inference Service (Deep Learning & NetCDF Processing)
+  model-service:
+    build:
+      context: ./model_service
+      dockerfile: Dockerfile
+    container_name: mhw_pytorch_service
+    restart: always
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./model_service/models:/app/models
+      - ./model_service/data:/app/data
     environment:
       - TZ=Asia/Jakarta
-    # Opsional: Uncomment jika menggunakan GPU NVIDIA dengan PyTorch
-    # deploy:
-    #   resources:
-    #     reservations:
-    #       devices:
-    #         - driver: nvidia
-    #           count: 1
-    #           capabilities: [gpu]
+      - PYTHONUNBUFFERED=1
+    # Jika menggunakan GPU NVIDIA, hapus komentar pada blok di bawah:
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  # 3. FastAPI Backend API
+  fastapi-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: mhw_fastapi_backend
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://mhw_user:mhw_password@postgres-db:5432/mhw_db
+      - MODEL_SERVICE_URL=http://model-service:8001
+      - TZ=Asia/Jakarta
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+      model-service:
+        condition: service_started
+
+  # 4. Frontend Web Server (Nginx melayani HTML/CSS/JS)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: mhw_frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - fastapi-backend
+
+volumes:
+  postgres_data:
