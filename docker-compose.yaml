@@ -1,17 +1,19 @@
 version: '3.8'
 
 services:
-  lstm-app:
+  mhw-api:
     build: .
-    container_name: tensorflow-lstm-container
-    restart: always
+    container_name: mhw-pytorch-service
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
     volumes:
-      - ./model:/app/model  # Melakukan sinkronisasi folder model secara real-time
-    # ports:
-    #   - "5000:5000"     # Uncomment jika aplikasi Anda menggunakan Flask/FastAPI (port mapping)
+      - ./model:/app/model
+      - ./data:/app/data
+      - ./logs:/app/logs
     environment:
-      - PYTHONUNBUFFERED=1
-    # Konfigurasi di bawah ini opsional jika Anda menggunakan GPU (Pastikan sudah menginstal NVIDIA Container Toolkit)
+      - TZ=Asia/Jakarta
+    # Opsional: Uncomment jika menggunakan GPU NVIDIA dengan PyTorch
     # deploy:
     #   resources:
     #     reservations:

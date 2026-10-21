@@ -1,17 +1,26 @@
-# Menggunakan official TensorFlow image dengan dukungan CPU (gunakan tag -gpu jika menggunakan GPU NVIDIA)
-FROM tensorflow/tensorflow:2.12.0-py3
+FROM python:3.10-slim
 
-# Menetapkan working directory di dalam container
+# Mencegah Python menulis file .pyc dan buffering stdout/stderr
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
 WORKDIR /app
 
-# Menyalin requirements.txt jika ada
-COPY requirements.txt .
+# Menginstal dependensi sistem yang dibutuhkan oleh NetCDF dan build tools
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libnetcdf-dev \
+    libhdf5-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
-# Menginstal dependensi tambahan jika diperlukan
+# Menyalin dan menginstal requirements
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Menyalin seluruh kode aplikasi dan model ke dalam container
+# Menyalin seluruh kode proyek
 COPY . /app
 
-# Menjalankan aplikasi Python saat container dimulai
-CMD ["python", "app.py"]
+EXPOSE 8000
+
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
