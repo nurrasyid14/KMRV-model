@@ -142,3 +142,37 @@ class Visuals:
         plt.ylabel("Latitude Index")
         plt.tight_layout()
         plt.show()
+
+
+if __name__ == "__main__":
+    import sys
+    print("=== Menjalankan Demo Uji Coba utils.py ===")
+    
+    # Path sample data
+    sample_file = Path("dataset/sst_5_wilayah/Selat_Makassar_2015.nc")
+    if not sample_file.exists():
+        # Cek jika dijalankan dari dalam folder src/
+        sample_file = Path("../dataset/sst_5_wilayah/Selat_Makassar_2015.nc")
+
+    if sample_file.exists():
+        print(f"[1] Membaca file: {sample_file.name}")
+        encoder = NCEncoder(sample_file)
+        
+        # Ekstrak tensor
+        tensor = encoder.process_to_tensor(variable_name="sst")
+        print(f"    -> Berhasil decode ke Tensor! Shape: {tensor.shape}, Tipe data: {tensor.dtype}")
+        encoder.close()
+        
+        # Uji Preprocess (Normalisasi & Windowing)
+        print("\n[2] Menjalankan Preprocess...")
+        prep = Preprocess(tensor)
+        norm_tensor, mean_val, std_val = prep.normalize()
+        print(f"    -> Rata-rata (mean): {mean_val:.4f}, Standar Deviasi (std): {std_val:.4f}")
+        
+        X, y = Preprocess.create_sliding_windows(norm_tensor, input_window=30, horizon=1)
+        print(f"    -> Sliding Window dibuat!")
+        print(f"       Fitur Input  (X): {X.shape} (misal: 30 hari data)")
+        print(f"       Target Label (y): {y.shape} (misal: 1 hari berikutnya)")
+        print("\n[SUKSES] Semua class di utils.py berjalan normal!")
+    else:
+        print("[PERINGATAN] File sampel dataset tidak ditemukan pada path yang dicek.")

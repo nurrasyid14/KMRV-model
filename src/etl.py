@@ -48,7 +48,7 @@ class ExploratoryDataAnalysis:
                 ds = encoder.open_dataset()
                 
                 file_name = file_path.name
-                dimensions = {dim: size.size for dim, size in ds.dims.items()}
+                dimensions = dict(ds.sizes)
                 variables = list(ds.data_vars.keys())
                 
                 # Check if the requested variable exists, else fall back or report
@@ -81,3 +81,24 @@ class ExploratoryDataAnalysis:
                 encoder.close()
 
         return pd.DataFrame(report_records)
+
+
+if __name__ == "__main__":
+    print("=== Menjalankan Proses EDA & Ekstraksi Tensor .pt ===")
+    data_dir = "dataset/sst_5_wilayah"
+    output_pt_dir = "data/processed/pt"
+    report_csv_path = Path("data/processed/eda_report.csv")
+    report_csv_path.parent.mkdir(parents=True, exist_ok=True)
+
+    eda = ExploratoryDataAnalysis(data_dir=data_dir, output_base_dir=output_pt_dir)
+    df_report = eda.process_and_report(variable_name="sst")
+
+    if not df_report.empty:
+        df_report.to_csv(report_csv_path, index=False)
+        print(f"\n[SELESAI] Laporan metadata disimpan ke: {report_csv_path}")
+        print(f"Total file & variabel yang tercatat: {len(df_report)}")
+        print("\nContoh ringkasan laporan:")
+        print(df_report[["file_name", "variable", "shape", "has_nans"]].head(10).to_string())
+    else:
+        print("[PERINGATAN] Tidak ada data yang berhasil diproses.")
+
