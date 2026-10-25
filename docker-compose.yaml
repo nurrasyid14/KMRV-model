@@ -7,17 +7,19 @@ services:
     container_name: mhw_postgres_db
     restart: always
     environment:
-      POSTGRES_DB: mhw_db
-      POSTGRES_USER: mhw_user
-      POSTGRES_PASSWORD: mhw_password
+      POSTGRES_DB: ${POSTGRES_DB:?Set POSTGRES_DB in .env}
+      POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      DB_MEMBER_USER: ${DB_MEMBER_USER:?Set DB_MEMBER_USER in .env}
+      DB_MEMBER_PASSWORD: ${DB_MEMBER_PASSWORD:?Set DB_MEMBER_PASSWORD in .env}
       TZ: Asia/Jakarta
     ports:
-      - "5432:5432"
+      - "${POSTGRES_BIND_ADDRESS:-0.0.0.0}:${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U mhw_user -d mhw_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -56,7 +58,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgresql://mhw_user:mhw_password@postgres-db:5432/mhw_db
+      - DATABASE_URL=postgresql+psycopg2://${DB_MEMBER_USER}:${DB_MEMBER_PASSWORD}@postgres-db:5432/${POSTGRES_DB}
       - MODEL_SERVICE_URL=http://model-service:8001
       - TZ=Asia/Jakarta
     depends_on:

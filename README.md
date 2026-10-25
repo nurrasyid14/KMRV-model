@@ -155,6 +155,41 @@ SST atau dampak di suatu sel grid. Interpretasikan keluaran model per wilayah
 dengan metrik ketidakpastian dan validasi historis; korelasi dengan ENSO tidak
 membuktikan bahwa ENSO adalah satu-satunya penyebab anomali lokal.
 
+## Akses database dari anggota kelompok di Wi-Fi/LAN yang sama
+
+Docker Compose menerbitkan PostgreSQL pada port yang ditetapkan di `.env`.
+Salin `.env.example` menjadi `.env` dan isi kata sandi unik yang kuat. File
+`.env` diabaikan Git; jangan kirim atau commit file tersebut.
+
+- Jalankan database di komputer host dengan `docker compose up -d postgres-db`.
+- Anggota kelompok harus memakai **alamat IPv4 LAN komputer host**, bukan
+  `localhost`. Contoh format URL:
+  `postgresql+psycopg2://mhw_member:<password>@<IP-LAN-host>:5432/mhw_db`.
+- Izinkan koneksi masuk TCP pada port yang dikonfigurasi hanya untuk profil
+  jaringan **Private** dan subnet Wi-Fi/LAN kelompok melalui Windows Firewall.
+  Jangan membuat port-forwarding router atau membuka port PostgreSQL ke
+  internet publik.
+- Komputer host, Docker, dan container database harus tetap berjalan; alamat IP
+  host perlu tetap diketahui (gunakan DHCP reservation bila tersedia).
+- Beberapa Wi-Fi mengaktifkan client/AP isolation. Dalam kondisi itu, perangkat
+  satu Wi-Fi pun tidak dapat saling menjangkau; ubah pengaturan jaringan atau
+  gunakan VPN tepercaya. Untuk anggota di luar LAN, gunakan VPN, bukan port
+  PostgreSQL publik.
+
+URL `DATABASE_URL` pada `.env` lokal memakai `localhost` agar kode Python pada
+komputer host terhubung. Backend yang berjalan di Docker Compose menggunakan
+nama layanan `postgres-db` secara internal. `init.sql` membuat akun
+`DB_MEMBER_USER` terpisah yang dapat membaca, menambah, dan memperbarui data,
+tetapi tidak dapat menghapus tabel atau mengubah skema. Bagikan hanya kredensial
+akun anggota melalui saluran tepercaya; jangan bagikan `POSTGRES_USER` atau
+`POSTGRES_PASSWORD` (akun administrator/bootstrap).
+
+Catatan: skrip dalam `init.sql` dijalankan otomatis hanya saat volume database
+pertama kali dibuat. Jika volume `postgres_data` sudah pernah diinisialisasi,
+menambah variabel atau mengubah `.env` tidak otomatis membuat akun atau
+mengubah kata sandi di dalam database; lakukan migrasi/rotasi kredensial
+terencana dan jangan menghapus volume yang berisi data.
+
 ## Referensi
 
 1. NOAA Climate.gov, [ENSO](https://www.climate.gov/enso).
