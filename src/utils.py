@@ -6,47 +6,33 @@ import xarray as xr
 
 class NCEncoder:
     """
-    A class to decode NetCDF (.nc) scientific data files into PyTorch tensors.
+    A class to convert NetCDF (.nc) scientific data files into Zarr stores.
     Optimized for multi-file processing in Docker-based pipelines.
     """
     def __init__(self, file_path: Union[str, Path]):
         self.file_path = Path(file_path)
-        self.ds = None
-        self.tensor_data = None
+        self.ds: Optional[xr.Dataset] = None
 
     def open_dataset(self) -> xr.Dataset:
-        """Opens the NetCDF dataset using xarray with local imports."""
+        """Opens the NetCDF dataset using xarray."""
         if not self.file_path.exists():
             raise FileNotFoundError(f"File not found: {self.file_path}")
         self.ds = xr.open_dataset(self.file_path)
         return self.ds
 
+    def encode_to_zarr(self, output_path: Union[str, Path]) -> Path:
+        """Writes the complete NetCDF dataset to a Zarr store."""
+        ds = self.ds if self.ds is not None else self.open_dataset()
+        zarr_path = Path(output_path)
+        zarr_path.parent.mkdir(parents=True, exist_ok=True)
+        ds.to_zarr(zarr_path, mode="w", zarr_format=2)
+        return zarr_path
+
     def print_metadata(self) -> None:
         """Prints dataset dimensions, variables, and attributes."""
-        if self.ds is None:
-            self.open_dataset()
+        ds = self.ds if self.ds is not None else self.open_dataset()
         print(f"=== METADATA FOR: {self.file_path.name} ===")
-        print(self.ds)
-
-    def process_to_tensor(self, variable_name: str = 'sst', fill_value: float = 0.0) -> torch.Tensor:
-        """
-        Extracts a specific variable, handles missing/NaN values, 
-        and converts the array into a PyTorch tensor.
-        """
-        if self.ds is None:
-            self.open_dataset()
-
-        if variable_name not in self.ds:
-            raise KeyError(
-                f"Variable '{variable_name}' not found. "
-                f"Available variables: {list(self.ds.data_vars.keys())}"
-            )
-
-        raw_data = self.ds[variable_name].values
-        cleaned_data = np.nan_to_num(raw_data, nan=fill_value)
-
-        self.tensor_data = torch.tensor(cleaned_data, dtype=torch.float32)
-        return self.tensor_data
+        print(ds)
 
     def close(self) -> None:
         """Closes the underlying xarray dataset to free file handles."""
@@ -62,6 +48,29 @@ class Preprocess:
     """
     def __init__(self, tensor: torch.Tensor):
         self.tensor = tensor
+
+    @classmethod
+    def from_zarr(
+        cls,
+        store_path: Union[str, Path],
+        variable_name: str = "sst",
+        fill_value: float = 0.0,
+    ) -> "Preprocess":
+        """Extracts a Zarr variable into a tensor for existing preprocessing steps."""
+        zarr_path = Path(store_path)
+        if not zarr_path.exists():
+            raise FileNotFoundError(f"Zarr store not found: {zarr_path}")
+
+        with xr.open_zarr(zarr_path) as ds:
+            if variable_name not in ds.data_vars:
+                raise KeyError(
+                    f"Variable '{variable_name}' not found. "
+                    f"Available variables: {list(ds.data_vars)}"
+                )
+            raw_data = ds[variable_name].to_numpy()
+
+        cleaned_data = np.nan_to_num(raw_data, nan=fill_value)
+        return cls(torch.tensor(cleaned_data, dtype=torch.float32))
 
     def crop_spatial_region(self, 
                             lat_slice: Optional[Tuple[float, float]] = None, 
@@ -157,15 +166,16 @@ if __name__ == "__main__":
     if sample_file.exists():
         print(f"[1] Membaca file: {sample_file.name}")
         encoder = NCEncoder(sample_file)
-        
-        # Ekstrak tensor
-        tensor = encoder.process_to_tensor(variable_name="sst")
-        print(f"    -> Berhasil decode ke Tensor! Shape: {tensor.shape}, Tipe data: {tensor.dtype}")
+        zarr_path = Path("data/processed/zarr") / sample_file.with_suffix(".zarr").name
+        encoder.encode_to_zarr(zarr_path)
         encoder.close()
+
+        prep = Preprocess.from_zarr(zarr_path, variable_name="sst")
+        tensor = prep.tensor
+        print(f"    -> Berhasil decode ke Tensor! Shape: {tensor.shape}, Tipe data: {tensor.dtype}")
         
         # Uji Preprocess (Normalisasi & Windowing)
         print("\n[2] Menjalankan Preprocess...")
-        prep = Preprocess(tensor)
         norm_tensor, mean_val, std_val = prep.normalize()
         print(f"    -> Rata-rata (mean): {mean_val:.4f}, Standar Deviasi (std): {std_val:.4f}")
         
