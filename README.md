@@ -139,6 +139,126 @@ produksi; simpan metadata versi bila tersedia. [6]
 6. Simpan array multidimensi di Zarr; gunakan PostgreSQL untuk metadata, indeks,
    dan hasil analisis/prediksi yang perlu dikueri.
 
+## Workflow prosedural: dari data ke keluaran
+
+Jangan memperlakukan semua keluaran sebagai satu target model. Proyek ini
+memiliki tiga pertanyaan berbeda: **(A)** probabilitas fase ENSO mendatang,
+**(B)** perubahan SST dan kejadian panas laut, dan **(C)** respons cuaca/iklim
+di Indonesia. Prediksi ENSO untuk beberapa musim ke depan adalah sasaran
+musiman-probabilistik; siklus ENSO yang rata-rata berulang tiap beberapa tahun
+tidak berarti tahun atau fase berikutnya dapat diprediksi seperti jadwal.
+Gunakan prakiraan ensemble operasional sebagai pembanding dan jangan
+menjanjikan prediksi deterministik beberapa tahun ke depan. IRI mempublikasikan
+plume ensemble bulanan dengan model dinamis dan statistik serta probabilitas
+fase yang bergantung pada lead time dan musim. [2][10]
+
+| Blok | Masukan | Prosedur | Keluaran/status |
+|---|---|---|---|
+| 0. Definisikan produk prediksi | Kebutuhan analis/pengguna | Tetapkan target, wilayah, musim, lead time, satuan, ambang keputusan, dan tanggal penerbitan. Pisahkan A (fase RONI), B (SST/anomali/MHW), dan C (hujan/suhu/dampak Indonesia). | Spesifikasi target; belum ada keputusan horizon multi-tahun. |
+| 1. Ambil data laut Pasifik | SST historis dan terkini, indeks resmi | Untuk prediksi ENSO, arsipkan domain tropis Pasifik yang cukup lebar untuk menangkap evolusi pola, bukan hanya kotak Niño 3.4. Sertakan Niño 3.4/RONI resmi, SOI, dan bila tersedia angin serta suhu laut bawah permukaan/heat content. Produk operasional/ensemble IRI menjadi acuan prakiraan, bukan diganti oleh rekonstruksi sendiri. | Arsip laut dan indeks dengan provenance/versi. |
+| 2. Ambil data dampak Indonesia | Hujan, suhu udara, angin, kelembapan dan kalender musim | Prioritaskan data stasiun BMKG untuk validasi lokal; lengkapi dengan grid CHIRPS v3 untuk hujan daratan dan ERA5 untuk variabel atmosfer/reanalisis. Simpan mask darat/laut. CHIRPS v3 adalah estimasi hujan gridded; jangan samakan dengan pengamatan stasiun atau menganggapnya pengamatan laut. | Arsip tiap parameter dengan resolusi, cakupan, dan kualitas tercatat. |
+| 3. Simpan sumber mentah | Unduhan asli (NetCDF/CSV/gridded) | Simpan tanpa perubahan, bersama metadata produk, URL, waktu unduh, versi, lisensi, satuan, kalender, dan checksum. Gunakan Zarr untuk array multidimensi yang akan dibaca per wilayah/waktu; simpan tabel ringkas/indeks sumber di PostgreSQL. | Data mentah yang dapat diulang dan ditelusuri. |
+| 4. QC dan penyelarasan | Arsip multi-sumber | Verifikasi unit, kalender, timestamp, grid, koordinat, nilai hilang, duplikasi, perubahan versi, dan cakupan. Samakan kalender/resolusi hanya setelah mencatat metode; agregasikan daily ke monthly/seasonal sesuai definisi indeks atau target. Jangan mengisi SST hilang dengan nol. | Dataset analisis selaras dan laporan QC. |
+| 5. Bentuk fitur dan label | SST, indeks, atmosfer, observasi Indonesia | Bentuk anomali terhadap baseline yang tetap dan didokumentasikan; sertakan siklus musiman. Buat target ENSO dari seri resmi RONI/ONI dan fase; buat target dampak per wilayah/musim (misalnya anomali hujan atau peluang hujan di bawah persentil); hitung label MHW secara terpisah dari ambang ENSO. Fitur dapat mencakup lag RONI/SST, SOI, DMI, monsun, angin, dan panas bawah permukaan. | Tabel fitur/label berversi; definisi label tetap. |
+| 6. Bentuk eksperimen hindcast | Fitur/target historis | Untuk setiap tanggal awal prakiraan, gunakan hanya data yang memang tersedia pada tanggal itu. Lakukan rolling-origin/forward-chaining secara kronologis; simpan banyak periode uji dan evaluasi per musim, lead time, dan wilayah. Jangan random-split baris deret waktu atau memakai klimatologi yang dihitung dari masa depan. | Prakiraan historis yang mereplikasi penggunaan operasional. |
+| 7. Latih dan kalibrasi | Train/validation hindcast | Mulai dari baseline klimatologi dan persistence, lalu bandingkan regresi/CCA atau model probabilistik dengan prakiraan ensemble dinamika/statistika resmi. Model ML tabular (regularized regression, gradient boosting) adalah pembanding tambahan; gunakan LSTM/ConvLSTM hanya jika cakupan historis, variabel, dan jumlah hindcast memadai. Pilih model berdasarkan skill di luar sampel, bukan kecocokan train. Kalibrasikan probabilitas fase. | Model terpilih per target/lead dan kartu evaluasi. |
+| 8. Terbitkan dan pantau | Model tervalidasi, input terbaru | Terbitkan probabilitas El Niño/netral/La Niña untuk lead yang telah tervalidasi, prakiraan/anomali SST per wilayah, serta probabilitas dampak musiman Indonesia. Sertakan ketidakpastian, tanggal data, lead time, kualitas, dan peringatan saat input berubah. Pantau drift dan skor saat observasi baru tiba. | Produk prakiraan dapat ditafsirkan; bukan jaminan cuaca harian. |
+| 9. Simpan dan sajikan | Metadata, indeks, skor, prediksi | Simpan array besar di Zarr/object storage. Simpan run, versi model, waktu penerbitan, wilayah, lead, probabilitas, metrik, dan referensi Zarr di PostgreSQL; jangan masukkan seluruh tensor grid ke tabel relasional. | Audit trail, analitik, dan akses anggota tim. |
+
+### Rekomendasi metode menurut pertanyaan
+
+#### A. Apakah El Niño atau La Niña akan terjadi?
+
+- **Gunakan target kontinu dahulu:** prediksi RONI/Niño 3.4 untuk beberapa lead
+  bulanan yang realistis, lalu konversi prakiraan kontinu/ensemble menjadi
+  probabilitas tiga kelas sesuai definisi fase. Jangan melatih klasifikasi dari
+  label tahunan yang kasar jika seri indeks bulanan tersedia.
+- **Pembanding wajib:** klimatologi musiman, persistence (indeks terkini
+  bertahan), serta plume/probabilitas ensemble dari IRI dan produk operasional
+  resmi. Periksa apakah model tambahan memberi skill di atas pembanding ini.
+  IRI menggabungkan model dinamis dan statistik serta menyesuaikan sebaran
+  probabilitas dengan skill menurut musim dan lead. [10]
+- **Model buatan sendiri:** regresi regularized/CCA atau model autoregresif
+  multivariat sebagai baseline; setelah itu coba gradient boosting untuk fitur
+  lag terstruktur. Model deep learning spasio-temporal (CNN/LSTM) hanya sebagai
+  eksperimen lanjutan dengan hindcast panjang dan evaluasi ketat.
+- **Masukan fisik yang disarankan:** SST/indeks Niño lintas wilayah ekuatorial,
+  RONI/ONI resmi, SOI/tekanan, angin pasat, dan suhu/heat content bawah
+  permukaan. SST permukaan Pasifik yang luas saja lebih baik dari kotak tunggal,
+  tetapi tetap tidak menggantikan state laut-atmosfer yang terkopel.
+- **Batas horizon:** mulai dengan prakiraan beberapa musim sampai sekitar satu
+  tahun dan laporkan skill per lead. Untuk “tahun-tahun mendatang”, berikan
+  skenario/probabilitas dengan ketidakpastian besar atau gunakan outlook
+  multi-model resmi; jangan klaim kepastian fase ENSO beberapa tahun di muka.
+
+#### B. Perubahan suhu laut dan kejadian panas laut
+
+- Hitung klimatologi/anomali SST per grid dan musim; agregasikan wilayah dengan
+  pembobotan luas. Tampilkan deret waktu, peta anomali, tren, distribusi
+  persentil, serta perbandingan antarwilayah.
+- Untuk tren historis, gunakan regresi tren dan estimator robust seperti
+  Theil–Sen; laporkan ketidakpastian dan autokorelasi, jangan simpulkan tren
+  iklim dari hubungan satu kejadian ENSO saja.
+- Untuk MHW, gunakan ambang persentil harian lokal dan aturan durasi definisi
+  Hobday, kemudian ukur frekuensi, durasi, intensitas maksimum/rata-rata, serta
+  luas spasial. MHW adalah target peristiwa laut yang berbeda dari prediksi
+  kategori ENSO.
+- Model prediksi: mulai dari baseline musiman/persistence dan regresi per
+  lead; gradient boosting dapat diuji untuk fitur tabular. Model grid
+  convolutional/spatio-temporal memerlukan arsip luas dan hindcast yang cukup.
+
+#### C. Respons hujan/cuaca di Indonesia
+
+- Targetkan **anomali atau probabilitas per wilayah dan musim**, bukan klaim
+  “El Niño selalu menyebabkan kekeringan”. Analisis terpisah DJF/MAM/JJA/SON
+  atau kalender musim lokal dan wilayah; hubungan ENSO–hujan berbeda secara
+  spasial, musiman, dan antar-kejadian.
+- Mulai dengan komposit dan regresi/GAM yang menjelaskan hujan terhadap RONI,
+  DMI, musim/monsoon, serta interaksi ENSO×IOD. Gunakan model campuran atau
+  efek wilayah bila menggabungkan beberapa stasiun; gunakan quantile regression
+  atau quantile forest untuk risiko ekor kering/basah.
+- Bandingkan dengan prakiraan musiman operasional dan validasi menggunakan
+  stasiun BMKG yang tidak dipakai sebagai input. CHIRPS v3 memberi data hujan
+  daratan gridded 0,05° sejak 1981 hingga mendekati kini; ERA5 memberi variabel
+  atmosfer global berbasis asimilasi. Keduanya adalah produk analisis, bukan
+  pengganti observasi lokal. [11][12]
+- Terbitkan peta probabilitas/anomali dan rentang ketidakpastian per kabupaten
+  atau wilayah laut yang didukung data. Untuk respons operasional (misalnya
+  pertanian, kebakaran, banjir), kolaborasikan validasi dengan pengguna dan
+  sumber lokal BMKG.
+
+### Metrik evaluasi minimum
+
+| Produk | Metrik yang disarankan | Pemeriksaan penting |
+|---|---|---|
+| RONI/Niño 3.4 kontinu | MAE, RMSE, korelasi anomali | Skor per lead dan musim; bandingkan persistence/climatology. |
+| Fase ENSO probabilistik | Brier score, log loss, reliability/calibration, confusion matrix | Jangan hanya melaporkan accuracy; kelas dapat tidak seimbang. |
+| SST/anomali per grid | MAE/RMSE, bias, anomaly correlation | Laporkan per wilayah dan musim; periksa peta bias. |
+| Hujan/dampak probabilistik | Brier score dan reliability untuk ambang; MAE untuk anomali | Evaluasi per musim/wilayah dan terhadap stasiun independen. |
+| MHW | Precision/recall/F1 dan galat durasi/intensitas | Cocokkan definisi episode dan baseline klimatologi. |
+
+Semua metrik harus dihitung dari hindcast yang kronologis dan tidak bocor.
+Laporkan interval ketidakpastian atau bootstrap menurut tahun/episode; sampel
+hari yang saling bertumpang tindih bukan sampel independen.
+
+### Prioritas implementasi proyek
+
+1. **Sekarang:** perpanjang arsip OISST melampaui 2015–2025 dan tambahkan
+   seri RONI/ONI, SOI, DMI, hujan, serta data stasiun/ERA5. Rentang 11 tahun
+   saat ini terlalu pendek untuk membangun dan menguji prakiraan ENSO yang
+   andal atau baseline klimatologi multi-dekadal.
+2. **Berikutnya:** buat alur QC, anomali dan label berversi; simpan NetCDF/Zarr
+   mentah/terproses dan metadata sumber.
+3. **Lalu:** buat eksperimen hindcast rolling-origin dan ukur baseline
+   persistence/climatology serta skill plume IRI sebelum memilih model ML.
+4. **Baru setelah skill terukur:** tambahkan model probabilistik, kalibrasi,
+   analisis dampak regional, dan antarmuka penyajian.
+
+Kode saat ini sudah mencakup pengunduhan SST OISST regional, konversi NetCDF
+ke Zarr, ringkasan EDA, beberapa utilitas preprocessing, dan rancangan
+penyimpanan PostgreSQL. Pengunduhan indeks iklim/hujan, training, hindcast,
+kalibrasi, dan prediksi dampak Indonesia **belum diimplementasikan**. [13]
+
 ## Interpretasi
 
 | Sinyal | Interpretasi umum | Batas interpretasi |
@@ -201,5 +321,9 @@ terencana dan jangan menghapus volume yang berisi data.
 7. NOAA CoastWatch ERDDAP, [OISST v2.1 gridded dataset](https://coastwatch.pfeg.noaa.gov/erddap/griddap/ncdcOisst21Agg_LonPM180.html).
 8. Hobday, A. J. et al. (2016), [A hierarchical approach to defining marine heatwaves](https://doi.org/10.1016/j.pocean.2015.12.014), *Progress in Oceanography*.
 9. Saji, N. H. et al. (1999), [A dipole mode in the tropical Indian Ocean](https://doi.org/10.1038/43854), *Nature*.
+10. Columbia Climate School / IRI, [ENSO prediction plume, model outlook, and forecast probabilities](https://iri.columbia.edu/our-expertise/climate/forecasts/enso/current/).
+11. Climate Hazards Center, [CHIRPS v3 data and documentation](https://www.chc.ucsb.edu/data/chirps3).
+12. Copernicus Climate Data Store, [ERA5 hourly data on single levels](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels).
+13. [NOAA CoastWatch ERDDAP OISST dataset used by the current downloader](https://coastwatch.pfeg.noaa.gov/erddap/griddap/ncdcOisst21Agg_LonPM180.html).
 
 Sumber web diakses 25 Oktober 2026.
