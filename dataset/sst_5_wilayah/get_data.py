@@ -6,7 +6,7 @@ from pathlib import Path
 
 BASE_URL = "https://coastwatch.pfeg.noaa.gov/erddap/griddap/ncdcOisst21Agg_LonPM180.nc"
 
-OUTPUT_DIR = Path("sst_5_wilayah")
+OUTPUT_DIR = Path(__file__).resolve().parent
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 OUTPUT_FILE = OUTPUT_DIR / "sst_5_wilayah_2015_2025.nc"
