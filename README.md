@@ -1,9 +1,11 @@
-# ENSO, data, dan alur analisis
+# ENSO dan Marine Heatwave: Tentang Data dan Alur Analisis
 
-Dokumen ini merangkum indikator El Niño–La Niña, data yang relevan untuk
-proyek, dan batas interpretasinya. Ambang ENSO di bawah adalah definisi
-operasional iklim, bukan ambang prediksi atau diagnosis gelombang panas laut
-(marine heatwave/MHW).
+Dokumen ini merupakan artikel eksplanasi-ekposisi tentang hubungan ENSO,
+SST, indeks oseanografi-atmosfer, curah hujan, dan label marine heatwave
+(MHW). Pembahasan disusun untuk menjelaskan fenomena, menunjukkan seluruh
+dataset yang dipakai, menilai kualitas dan batas penggunaannya, serta
+menghubungkan data dengan alur pemodelan. Ambang ENSO bukan ambang suhu untuk
+MHW; keduanya memiliki definisi dan tujuan evaluasi yang berbeda.
 
 ## El Niño dan La Niña: indikator dan mekanisme
 
@@ -83,28 +85,90 @@ klimatologi lokal dan musim, MHW tidak memiliki satu ambang suhu absolut yang
 berlaku untuk semua wilayah. Tetapkan baseline klimatologi, metode persentil,
 dan aturan durasi secara eksplisit sebelum membuat label pelatihan. [8]
 
-## Data yang diperlukan
+## Tentang Data
+
+Dataset proyek dibedakan menjadi sumber mentah, data bulanan yang telah
+digabungkan, dan store analisis terverifikasi. Store utama berada pada
+`dataset/climate_dataset.zarr`, sedangkan berkas CSV/NetCDF mentah tetap
+disimpan di folder sumbernya. Seluruh deret bulanan pada store mencakup
+Januari 2015 sampai Desember 2025, tetapi panjang rentang tidak berarti
+dataset memiliki mutu, resolusi, atau cakupan yang sama.
 
 ### Sumber data
 
-1. **SST harian dan anomali grid:** NOAA Daily Optimum Interpolation Sea Surface
-   Temperature (OISST) v2.1, produk gabungan harian beresolusi 0,25°. Proyek
-   saat ini meminta variabel `sst` melalui NOAA CoastWatch ERDDAP. [6][7]
-2. **Indeks ENSO:** seri dan penjelasan RONI/ONI dari NOAA Climate Prediction
-   Center (CPC). Unduh seri indeks yang dipilih dari sumber resmi; jangan
-   mengasumsikan rata-rata sederhana dari kotak regional identik dengan RONI
-   atau ONI CPC. [4][5]
-3. **SOI:** nilai bulanan dari CPC untuk menguji konsistensi atmosfer dengan
-   sinyal laut Niño 3.4. [3]
+1. **SST grid harian:** NOAA Daily Optimum Interpolation Sea Surface
+   Temperature (OISST) v2.1, beresolusi 0,25°, digunakan sebagai variabel
+   laut absolut untuk lima wilayah. Store saat ini memuat Pasifik Niño 3.4,
+   Selat Makassar, dan Selat Karimata; dua wilayah Indonesia regional lainnya
+   dikecualikan oleh aturan verifikasi saat ini. Sumber pengunduhan dan preprocessing:
+   [6][7].
+2. **ONI ENSO:** seri NOAA Climate Prediction Center (CPC), berisi SST total
+   (`TOTAL`) dan anomali (`ANOM`) dalam format musiman 3-bulanan yang dipetakan
+   ke tanggal tengah bulan saat preprocessing. ONI bukan hasil rerata sederhana
+   dari grid regional proyek dan perlu diperlakukan sebagai indeks resmi. [4][5]
+3. **SOI:** Southern Oscillation Index bulanan, menggunakan selisih tekanan
+   Tahiti–Darwin sebagai sisi atmosfer ENSO. Data ini digunakan untuk
+   membandingkan sinyal tekanan dengan SST dan ONI, bukan untuk
+   mengklasifikasikan ENSO sendiri. [3]
 4. **IOD:** Dipole Mode Index (DMI), yaitu kontras anomali SST antara Samudra
    Hindia tropis barat (50°–70°BT, 10°LS–10°LU) dan tenggara
    (90°–110°BT, 10°LS–ekuator). DMI positif menunjukkan bagian barat relatif
    lebih hangat daripada tenggara; DMI berguna sebagai konteks tambahan bagi
    hujan Indonesia, bukan pengganti indeks ENSO. Metode dan definisi awal
    dijelaskan oleh Saji et al. [9]
-5. **Label MHW:** dihitung dari SST harian dan baseline klimatologi menggunakan
-   definisi MHW yang dipilih (misalnya Hobday et al.); label ini belum dibuat
-   oleh tahap pengunduhan saat ini. [8]
+5. **Curah hujan Malaysia:** CSV regional dekadal yang diaggregasi menjadi
+   rerata bulanan. Variabel utama meliputi keadaan curah, akumulasi/rerata,
+   dan kuantil yang tersedia pada sumber; variabel administratif tidak boleh
+   dianggap pengukuran cuaca. Sumber proyek adalah HDX dataset
+   `mys-rainfall-subnational`. [14]
+6. **Curah hujan Hawaii:** beberapa CSV stasiun harian dari Hawaii
+   dikonversi ke rerata hujan harian per stasiun, lalu dirata-ratakan secara
+   regional. `rain_total_mm` adalah perkalian rerata hujan harian dengan jumlah
+   hari dalam bulan. Sumber data resmi yang digunakan adalah Hawaiʻi Climate
+   Data Portal. [15]
+7. **Label MHW:** variabel pada `data_mhw/mhw_labels` memuat indikator kejadian,
+   persentil, dan SST untuk empat wilayah yang termasuk dalam store. Label MHW
+   berasal dari SST dan aturan ambang lokal, sehingga tidak boleh disamakan
+   dengan ambang fase ENSO ±0,5 °C. [8]
+
+### Deskripsi dan peran setiap group Zarr
+
+| Group | Bentuk data | Peran dalam analisis |
+|---|---|---|
+| `data_curah_hujan/rainfall-mys` | Deret 132 bulan, nilai numerik Malaysia | Salah satu sumber curah hujan Malaysia dalam representasi agregat regional. |
+| `data_rainfall_monthly/malaysia` | Deret 132 bulan, variabel curah hujan Malaysia | Data bulanan hasil pipeline untuk eksperimen curah hujan Malaysia. |
+| `data_rainfall_monthly/hawaii` | Deret 132 bulan, rata-rata dan total regional | Data pembanding curah hujan wilayah timur laut Pasifik/Hawaii. |
+| `sst_5_wilayah/pasifik_nino34` | Grid lat/lon × time | SST absolut regional Pasifik tengah; menjadi dasar anomali Niño 3.4 buatan proyek. |
+| `sst_5_wilayah/selat_makassar` | Grid lat/lon × time | SST lokal untuk respons laut di Indonesia tengah. |
+| `sst_5_wilayah/selat_karimata` | Grid lat/lon × time | SST lokal di Selat Karimata. |
+| `data_mhw/mhw_labels` | Deret 132 bulan, variabel per wilayah | Target/label dan variabel pembantu untuk empat wilayah yang masuk store. |
+| `data_oni/oni` | Deret musiman 132 bulan | Indeks ENSO resmi; `ANOM` menjadi benchmark dan `TOTAL` merupakan SST referensi tekstual. |
+| `data_soi/soi` | Deret bulanan indeks 132 bulan | Pembanding tekanan atmosfer terhadap respons laut dan hujan. |
+| `data_dmi/dmi` | Deret bulanan indeks 132 bulan | Kontrol mode Samudra Hindia yang dapat memodulasi dampak ENSO regional. |
+
+Kelompok `data_curah_hujan/rainfall-mys` dan kelompok
+`data_rainfall_monthly/malaysia` adalah dua representasi yang berbeda, bukan
+dua pengamatan independen. Kedua file harus diverifikasi sebelum dipakai
+bersama agar tidak menduplikasi satu sumber, sementara `Hawaii` dapat dijaga
+sebagai pembanding lintas wilayah.
+
+### Pembatasan dan prinsip pemakaian data
+
+Kelengkapan kalender hanya memastikan bahwa semua 132 titik bulanan ada; tidak
+menjamin setiap stasiun, titik grid, atau area administratif memiliki pengamatan
+lengkap pada tiap titik waktu. Nilai yang hilang pada nilai hujan, SST, indeks,
+atau observasi MHW tidak boleh diganti dengan nol karena nol dapat berarti
+garis dasar yang berbeda atau keadaan kering, bukan ketidakhadirannya
+pengamatan. Penggunaan variabel harus mengikuti satuan asli dan luas domain
+masing-masing.
+
+Data ONI, SOI, DMI, dan produk SST memiliki skala serta prosedur asal yang
+berbeda. Karena itu, korelasi antarvariabel bukan bukti hubungan sebab-akibat.
+Sebelum analisis, seluruh deret perlu disejajarkan pada timestamp bulanan yang
+ditetapkan proyek; sebelum pemodelan, parameter normalisasi dan baseline
+klimatologi harus ditetapkan hanya dari data training. Eksperimen benchmark
+harus mempertahankan split, horizon prediksi, dan evaluasi yang sama dengan
+model utama agar perbandingan adil.
 
 ### Metode pengambilan saat ini
 
@@ -138,6 +202,56 @@ produksi; simpan metadata versi bila tersedia. [6]
    depan.
 6. Simpan array multidimensi di Zarr; gunakan PostgreSQL untuk metadata, indeks,
    dan hasil analisis/prediksi yang perlu dikueri.
+
+### Inventaris dataset Zarr
+
+`dataset/climate_dataset.zarr` telah diverifikasi dengan
+`python src/verify_zarr.py`. Semua group berikut mencakup Januari 2015 sampai
+Desember 2025 dan tidak memiliki bulan yang hilang.
+
+| Group | Dimensi | Variabel data | Bulan |
+|---|---|---|---:|
+| `data_curah_hujan/rainfall-mys` | `time: 132` | `adm_id`, `adm_level`, `n_pixels`, `r1h`, `r1h_avg`, `r1q`, `r3h`, `r3h_avg`, `r3q`, `rfh`, `rfh_avg`, `rfq` | 132 |
+| `data_dmi/dmi` | `time: 132` | `DMI` | 132 |
+| `data_mhw/mhw_labels` | `time: 132` | `Maluku_Utara_Papua_is_mhw`, `Maluku_Utara_Papua_p90`, `Maluku_Utara_Papua_sst`, `Pasifik_Nino34_is_mhw`, `Pasifik_Nino34_p90`, `Pasifik_Nino34_sst`, `Selat_Karimata_is_mhw`, `Selat_Karimata_p90`, `Selat_Karimata_sst`, `Selat_Makassar_is_mhw`, `Selat_Makassar_p90`, `Selat_Makassar_sst`, `Selatan_Jawa_is_mhw`, `Selatan_Jawa_p90`, `Selatan_Jawa_sst` | 132 |
+| `data_oni/oni` | `time: 132` | `ANOM`, `TOTAL` | 132 |
+| `data_rainfall_monthly/hawaii` | `time: 132` | `n_stations`, `rain_mean_daily_mm`, `rain_total_mm` | 132 |
+| `data_rainfall_monthly/malaysia` | `time: 132` | `n_obs`, `n_pixels`, `r1h`, `r1h_avg`, `r1q`, `r3h`, `r3h_avg`, `r3q`, `rfh`, `rfh_avg`, `rfq` | 132 |
+| `data_soi/soi` | `time: 132` | `SOI` | 132 |
+| `sst_5_wilayah/pasifik_nino34` | `lat: 41`, `lon: 201`, `time: 132`, `zlev: 1` | `sst` | 132 |
+| `sst_5_wilayah/selat_karimata` | `lat: 21`, `lon: 21`, `time: 132`, `zlev: 1` | `sst` | 132 |
+| `sst_5_wilayah/selat_makassar` | `lat: 29`, `lon: 17`, `time: 132`, `zlev: 1` | `sst` | 132 |
+
+#### Kelengkapan parameter dan perlakuan anomali
+
+Parameter utama untuk eksperimen sudah tersedia pada store:
+
+| Parameter | Sumber Zarr | Status | Catatan penggunaan |
+|---|---|---|---|
+| Curah hujan Malaysia | `data_rainfall_monthly/malaysia` | Tersedia | Gunakan variabel hujan observasi utama; kolom wilayah/metadata tidak boleh diperlakukan sebagai deret hujan. |
+| Curah hujan Hawaii | `data_rainfall_monthly/hawaii` | Tersedia | Gunakan `rain_mean_daily_mm` atau `rain_total_mm` sesuai target bulanan. |
+| SST Pasifik tengah | `sst_5_wilayah/pasifik_nino34` | Tersedia | Variabel `sst` masih SST absolut. Kurangi baseline klimatologi yang ditetapkan secara terpisah sebelum membuat anomali SST. |
+| ONI | `data_oni/oni` | Tersedia | `ANOM` adalah anomali ONI; `TOTAL` adalah SST total. Gunakan `ANOM` untuk pembanding ENSO dan jangan menyamakannya dengan SST Pasifik. |
+| SOI | `data_soi/soi` | Tersedia | Indeks osilasi tekanan; tanda positif/negatif ditafsirkan bersama ONI karena SOI dan ONI dapat tidak sinkron. |
+| DMI | `data_dmi/dmi` | Tersedia | Indeks gradien SST Samudra Hindia dan pembanding tambahan, bukan pengganti ENSO. |
+
+Anomali harus memiliki acuan dan rentang baseline yang terdokumentasi. Untuk
+model ini, baseline rekomendasinya adalah klimatologi yang diperbarui dari
+periode referensi tetap, misalnya 1991–2020 bila data lengkap. Jangan menghitung
+SST anomaly, normalisasi, atau climatology dari keseluruhan data uji lalu
+memasukkannya kembali ke training. Di bawah ini, **anomali SST dan ONI berfungsi
+sebagai benchmark pembanding**, bukan hasil yang otomatis dianggap model baru:
+
+| Benchmark | Aturan prediksi | Pemetaan keluaran |
+|---|---|---|
+| Persistence | Nilai SST/anomali indeks bulan saat ini dianggap bertahan pada horizon target. | Baseline pertama untuk ONI, DMI, SOI, dan SST. |
+| Climatologi bulanan | Gunakan nilai rerata bulanan dari periode training saja pada bulan kalender yang sama. | Baseline untuk SST dan hujan tanpa momentum ENSO. |
+| ONI persistence | Pertahankan `ANOM` terakhir pada horizon prediksi yang diuji. | Pembanding khusus fase ENSO. |
+
+Seluruh benchmark dan model dievaluasi pada split kronologis yang sama dengan
+horizon dan wilayah yang sama. Pembanding utama harus dilaporkan sebelum,
+bersamaan dengan, dan sesudah implementasi model agar klaim peningkatan tidak
+berasal dari definisi evaluasi yang berbeda.
 
 ## Workflow prosedural: dari data ke keluaran
 
@@ -310,7 +424,7 @@ menambah variabel atau mengubah `.env` tidak otomatis membuat akun atau
 mengubah kata sandi di dalam database; lakukan migrasi/rotasi kredensial
 terencana dan jangan menghapus volume yang berisi data.
 
-## Referensi
+## Daftar Pustaka
 
 1. NOAA Climate.gov, [ENSO](https://www.climate.gov/enso).
 2. NOAA Physical Sciences Laboratory, [ENSO basics and impacts](https://www.psl.noaa.gov/enso/).
@@ -325,5 +439,7 @@ terencana dan jangan menghapus volume yang berisi data.
 11. Climate Hazards Center, [CHIRPS v3 data and documentation](https://www.chc.ucsb.edu/data/chirps3).
 12. Copernicus Climate Data Store, [ERA5 hourly data on single levels](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels).
 13. [NOAA CoastWatch ERDDAP OISST dataset used by the current downloader](https://coastwatch.pfeg.noaa.gov/erddap/griddap/ncdcOisst21Agg_LonPM180.html).
+14. Humanitarian Data Exchange, [Malaysia rainfall — subnational dataset](https://data.humdata.org/dataset/mys-rainfall-subnational).
+15. University of Hawaiʻi, [Hawaiʻi Climate Data Portal](https://www.hawaii.edu/climate-data-portal/data-portal/).
 
-Sumber web diakses 25 Oktober 2026.
+Sumber web diakses 31 Oktober 2026.
