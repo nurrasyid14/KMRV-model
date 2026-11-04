@@ -20,8 +20,8 @@ class Database:
     """Store project records in PostgreSQL and load tables as pandas DataFrames.
 
     The tables must already exist, as created by ``init.sql``. Large gridded
-    tensors should remain in Zarr; these methods store their queryable records
-    and model outputs in PostgreSQL.
+    tensors should remain in Zarr; these methods store their queryable records,
+    model outputs, and evaluation metrics in PostgreSQL.
     """
 
     _TABLE_COLUMNS = {
@@ -36,11 +36,17 @@ class Database:
             "region_name", "target_date", "sst_anomaly", "enso_index",
             "iod_index", "mhw_category", "duration_days", "model_version",
         },
+        "model_metrics": {
+            "model_name", "target_variable", "region_name", "lead_horizon",
+            "mae", "rmse", "r2_score", "accuracy", "f1_score", "roc_auc",
+            "brier_score", "sample_size", "evaluated_at",
+        },
     }
     _DATE_COLUMNS = {
         "oisst_daily_observations": "time_stamp",
         "climate_indices": "date",
         "mhw_predictions": "target_date",
+        "model_metrics": "evaluated_at",
     }
 
     def __init__(self, database_url: Optional[str] = None):
@@ -160,6 +166,12 @@ class Database:
         """Insert model predictions; ``prediction_id`` and ``predicted_at`` default."""
         return self._store_records("mhw_predictions", records)
 
+    def store_metrics(
+        self, records: Union[pd.DataFrame, Iterable[DatabaseRecord]]
+    ) -> int:
+        """Insert model evaluation metrics; ``metric_id`` and ``evaluated_at`` default."""
+        return self._store_records("model_metrics", records)
+
     def fetch_table(
         self,
         table_name: str,
@@ -188,6 +200,96 @@ class Database:
         with self.engine.connect() as connection:
             return pd.read_sql(text(query), connection, params=parameters)
 
+    def init_schema(self) -> None:
+        """Create project tables and indexes if they do not already exist."""
+        ddl_statements = [
+            # PostGIS extension (supported natively on Supabase)
+            "CREATE EXTENSION IF NOT EXISTS postgis;",
+            # 1. Wilayah Perairan
+            """
+            CREATE TABLE IF NOT EXISTS mhw_regions (
+                region_id SERIAL PRIMARY KEY,
+                region_name VARCHAR(100) NOT NULL,
+                lat_min FLOAT NOT NULL,
+                lat_max FLOAT NOT NULL,
+                lon_min FLOAT NOT NULL,
+                lon_max FLOAT NOT NULL,
+                geom GEOMETRY(Polygon, 4326)
+            );
+            """,
+            # 2. Observasi Harian
+            """
+            CREATE TABLE IF NOT EXISTS oisst_daily_observations (
+                obs_id BIGSERIAL PRIMARY KEY,
+                time_stamp TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+                latitude FLOAT NOT NULL,
+                longitude FLOAT NOT NULL,
+                sst FLOAT,
+                anom FLOAT,
+                err FLOAT,
+                ice FLOAT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                CONSTRAINT unique_obs_grid_time UNIQUE (time_stamp, latitude, longitude)
+            );
+            """,
+            "CREATE INDEX IF NOT EXISTS idx_oisst_time_lat_lon ON oisst_daily_observations (time_stamp, latitude, longitude);",
+            # 3. Indeks Iklim
+            """
+            CREATE TABLE IF NOT EXISTS climate_indices (
+                index_id SERIAL PRIMARY KEY,
+                date DATE UNIQUE NOT NULL,
+                enso_index FLOAT NOT NULL,
+                iod_index FLOAT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+            """,
+            # 4. Prediksi MHW
+            """
+            CREATE TABLE IF NOT EXISTS mhw_predictions (
+                prediction_id BIGSERIAL PRIMARY KEY,
+                region_name VARCHAR(100) NOT NULL,
+                target_date DATE NOT NULL,
+                sst_anomaly FLOAT NOT NULL,
+                enso_index FLOAT NOT NULL,
+                iod_index FLOAT NOT NULL,
+                mhw_category VARCHAR(50) NOT NULL,
+                duration_days INT,
+                model_version VARCHAR(50) DEFAULT 'PyTorch-LSTM-v1.0',
+                predicted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+            """,
+            "CREATE INDEX IF NOT EXISTS idx_mhw_pred_date_region ON mhw_predictions (target_date, region_name);",
+            # 5. Metrik Evaluasi Model
+            """
+            CREATE TABLE IF NOT EXISTS model_metrics (
+                metric_id BIGSERIAL PRIMARY KEY,
+                model_name VARCHAR(100) NOT NULL,
+                target_variable VARCHAR(100) NOT NULL,
+                region_name VARCHAR(100),
+                lead_horizon INT,
+                mae FLOAT,
+                rmse FLOAT,
+                r2_score FLOAT,
+                accuracy FLOAT,
+                f1_score FLOAT,
+                roc_auc FLOAT,
+                brier_score FLOAT,
+                sample_size INT,
+                evaluated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP
+            );
+            """,
+            "CREATE INDEX IF NOT EXISTS idx_model_metrics_name_target ON model_metrics (model_name, target_variable, lead_horizon);",
+        ]
+        with self.engine.begin() as connection:
+            for stmt in ddl_statements:
+                try:
+                    connection.execute(text(stmt))
+                except Exception as e:
+                    # In case of postgis permission nuances in certain cloud providers
+                    if "postgis" in stmt.lower():
+                        continue
+                    raise
+
     def fetch_analytics_tables(
         self,
         start_date: DateFilter = None,
@@ -202,3 +304,34 @@ class Database:
             )
             for table_name in self._TABLE_COLUMNS
         }
+
+
+if __name__ == "__main__":
+    import sys
+
+    print("=" * 60)
+    print("Database Connectivity & Schema Check")
+    print("=" * 60)
+    url = os.getenv("DATABASE_URL")
+    if not url:
+        print("[ERROR] DATABASE_URL tidak ditemukan di file .env")
+        sys.exit(1)
+
+    print(f"Connecting to: {url.split('@')[-1] if '@' in url else url}")
+    try:
+        db = Database()
+        print("[OK] Engine terhubung!")
+        print("Menginisialisasi tabel skema...")
+        db.init_schema()
+        print("[OK] Inisialisasi skema (mhw_regions, climate_indices, mhw_predictions, model_metrics) berhasil!")
+        for tbl in db._TABLE_COLUMNS:
+            try:
+                df = db.fetch_table(tbl)
+                print(f"  - Tabel '{tbl}': {len(df)} baris")
+            except Exception as ex:
+                print(f"  - Tabel '{tbl}': belum ada / error ({ex})")
+        db.close()
+        print("\nSemua pengujian database selesai.")
+    except Exception as e:
+        print(f"[FAIL] Gagal terhubung ke database: {e}")
+

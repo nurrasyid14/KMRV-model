@@ -55,6 +55,26 @@ CREATE TABLE IF NOT EXISTS mhw_predictions (
 
 CREATE INDEX idx_mhw_pred_date_region ON mhw_predictions (target_date, region_name);
 
+-- 5. Tabel Metrik Evaluasi Model (Model Performance & Forecast Metrics)
+CREATE TABLE IF NOT EXISTS model_metrics (
+    metric_id BIGSERIAL PRIMARY KEY,
+    model_name VARCHAR(100) NOT NULL,        -- Contoh: "persistence", "climatology", "ridge", "lightgbm", "lstm"
+    target_variable VARCHAR(100) NOT NULL,   -- Contoh: "ONI", "sst_anomaly", "enso_phase", "rainfall"
+    region_name VARCHAR(100),                -- Contoh: "Pasifik_Nino34", "Selat_Makassar", "Global"
+    lead_horizon INT,                        -- Horizon peramalan (bulan, misal 1, 3, 6, 12)
+    mae FLOAT,                               -- Mean Absolute Error
+    rmse FLOAT,                              -- Root Mean Squared Error
+    r2_score FLOAT,                          -- Coefficient of Determination (R²)
+    accuracy FLOAT,                          -- Accuracy / Balanced Accuracy
+    f1_score FLOAT,                          -- Macro / Binary F1 Score
+    roc_auc FLOAT,                           -- ROC-AUC Score
+    brier_score FLOAT,                       -- Brier Score (Probabilistic Calibration)
+    sample_size INT,                         -- Jumlah sampel evaluasi / hindcast
+    evaluated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_model_metrics_name_target ON model_metrics (model_name, target_variable, lead_horizon);
+
 -- Create a limited application/member login without sharing the bootstrap superuser.
 \getenv app_user DB_MEMBER_USER
 \getenv app_password DB_MEMBER_PASSWORD
