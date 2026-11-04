@@ -24,12 +24,24 @@ def stored_groups(store: Path) -> list[str]:
     root = zarr.open_group(str(store), mode="r")
     groups: list[str] = []
 
-    def collect(name: str, node: object) -> None:
-        if hasattr(node, "array_keys") and list(node.array_keys()):
-            groups.append(name)
+    if hasattr(root, "visititems"):
+        def collect(name: str, node: object) -> None:
+            if hasattr(node, "array_keys") and list(node.array_keys()):
+                groups.append(name)
 
-    root.visititems(collect)
-    return sorted(groups)
+        root.visititems(collect)
+    else:
+        def walk(node: object, prefix: str = "") -> None:
+            if hasattr(node, "groups"):
+                for key, val in node.groups():
+                    sub_name = f"{prefix}/{key}".lstrip("/")
+                    walk(val, sub_name)
+            if hasattr(node, "array_keys") and list(node.array_keys()):
+                groups.append(prefix)
+
+        walk(root)
+
+    return sorted([g for g in groups if g])
 
 
 def verify(store: Path) -> int:
