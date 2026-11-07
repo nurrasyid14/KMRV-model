@@ -1,0 +1,28 @@
+{
+  "metrics": [
+    {
+      "split": "test",
+      "forecast_horizon_months": 1,
+      "accuracy": 0.7142857142857143,
+      "balanced_accuracy": 0.7142857142857143,
+      "macro_f1": 0.4166666666666667,
+      "macro_precision": 0.5,
+      "macro_recall": 0.35714285714285715,
+      "oni_mse": 0.03226710558915998,
+      "oni_rmse": 0.179630472021112
+    }
+  ],
+  "output_directory": "E:\\KMRV-model\\reports",
+  "forecast_horizons_months": [
+    1
+  ],
+  "tri_monthly_seasons": [
+    "AMJ",
+    "DJF",
+    "FMA",
+    "JFM",
+    "MAM",
+    "MJJ",
+    "NDJ"
+  ]
+}

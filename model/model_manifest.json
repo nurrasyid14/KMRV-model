@@ -1,0 +1,8 @@
+{
+  "recent_model": "model\\recent_model.pt",
+  "best_model": "model\\best_model.pt",
+  "best_validation_horizon_months": 1,
+  "horizon_artifacts": {
+    "1": "model\\enso_ensemble_1m"
+  }
+}

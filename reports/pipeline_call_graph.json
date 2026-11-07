@@ -1,0 +1,31 @@
+{
+  "main.py": [
+    "src.pipeline.run_full_pipeline"
+  ],
+  "src.pipeline.run_full_pipeline": [
+    "src.pipeline.run_source_eda",
+    "src.pipeline.run_data_preprocessing",
+    "src.pipeline.run_enso_training"
+  ],
+  "src.pipeline.run_source_eda": [
+    "src.etl.ExploratoryDataAnalysis",
+    "src.utils.NCEncoder"
+  ],
+  "src.pipeline.run_data_preprocessing": [
+    "src.preprocessing.main"
+  ],
+  "src.pipeline.run_enso_training": [
+    "src.learning.run"
+  ],
+  "src.learning.run": [
+    "src.learning.validate_sequence_inputs",
+    "src.utils.Preprocess.create_sliding_windows",
+    "src.learning.train_ensemble",
+    "src.ml.ensemble",
+    "src.learning.aggregate_and_report"
+  ],
+  "src.ml.ensemble": [
+    "src.ml.2lstm.CausalLSTM",
+    "src.ml.lgbm.train_phase_classifier"
+  ]
+}

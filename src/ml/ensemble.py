@@ -11,8 +11,10 @@ from __future__ import annotations
 
 import argparse
 import copy
+import importlib
 import json
 import random
+import sys
 from pathlib import Path
 from typing import Iterable
 
@@ -32,29 +34,18 @@ from sklearn.preprocessing import StandardScaler
 from torch import nn
 from torch.utils.data import DataLoader, TensorDataset
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+LSTM_MODULE = importlib.import_module("src.ml.2lstm")
+CausalLSTM = LSTM_MODULE.CausalLSTM
+from src.ml.lgbm import create_phase_classifier, train_phase_classifier
+
 DEFAULT_DATA_DIR = PROJECT_ROOT / "dataset"
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "model" / "enso_ensemble"
 PHASE_NAMES = {0: "La Nina", 1: "Neutral", 2: "El Nino"}
 PHASE_CLASSES = np.array([0, 1, 2], dtype=np.int64)
-
-
-class CausalLSTM(nn.Module):
-    def __init__(self, feature_count: int, hidden_size: int, dropout: float) -> None:
-        super().__init__()
-        self.lstm = nn.LSTM(
-            input_size=feature_count,
-            hidden_size=hidden_size,
-            num_layers=1,
-            batch_first=True,
-        )
-        self.dropout = nn.Dropout(dropout)
-        self.output = nn.Linear(hidden_size, 1)
-
-    def forward(self, inputs: torch.Tensor) -> torch.Tensor:
-        _, (hidden, _) = self.lstm(inputs)
-        return self.output(self.dropout(hidden[-1])).squeeze(-1)
 
 
 def parse_args() -> argparse.Namespace:
@@ -135,6 +126,7 @@ def train_lstm(
     epochs_without_improvement = 0
     val_x_tensor = torch.from_numpy(val_x)
     val_y_tensor = torch.from_numpy(val_y)
+    loss_history: list[dict[str, float]] = []
 
     for _ in range(epochs):
         model.train()
@@ -148,6 +140,10 @@ def train_lstm(
         model.eval()
         with torch.no_grad():
             validation_loss = loss_function(model(val_x_tensor), val_y_tensor).item()
+        loss_history.append({
+            "epoch": float(len(loss_history) + 1),
+            "validation_mse": validation_loss,
+        })
         if validation_loss < best_loss - 1e-5:
             best_loss = validation_loss
             best_state = copy.deepcopy(model.state_dict())
@@ -159,6 +155,7 @@ def train_lstm(
 
     if best_state is not None:
         model.load_state_dict(best_state)
+    model.loss_history = loss_history
     return model
 
 
@@ -191,27 +188,12 @@ def train_lightgbm(
     validation_features: pd.DataFrame,
     validation_labels: np.ndarray,
 ) -> lgb.LGBMClassifier:
-    model = lgb.LGBMClassifier(
-        objective="multiclass",
-        num_class=len(PHASE_CLASSES),
-        n_estimators=300,
-        learning_rate=0.03,
-        num_leaves=7,
-        max_depth=3,
-        min_child_samples=5,
-        subsample=0.8,
-        colsample_bytree=0.8,
-        reg_lambda=1.0,
-        random_state=42,
-        verbose=-1,
-    )
-    model.fit(
+    return train_phase_classifier(
         features,
         labels,
-        eval_set=[(validation_features, validation_labels)],
-        callbacks=[lgb.early_stopping(50, verbose=False)],
+        validation_features,
+        validation_labels,
     )
-    return model
 
 
 def classification_metrics(labels: np.ndarray, predictions: np.ndarray) -> dict[str, float | list[int]]:
@@ -305,19 +287,9 @@ def main() -> None:
         [train_lgb_features, validation_lgb_features], ignore_index=True
     )
     production_labels = np.concatenate([train_labels, validation_labels])
-    production_classifier = lgb.LGBMClassifier(
-        objective="multiclass",
-        num_class=len(PHASE_CLASSES),
-        n_estimators=max(1, classifier.best_iteration_),
-        learning_rate=0.03,
-        num_leaves=7,
-        max_depth=3,
-        min_child_samples=5,
-        subsample=0.8,
-        colsample_bytree=0.8,
-        reg_lambda=1.0,
+    production_classifier = create_phase_classifier(
         random_state=args.seed,
-        verbose=-1,
+        iterations=max(1, classifier.best_iteration_),
     )
     production_classifier.fit(production_features, production_labels)
     test_phase = production_classifier.predict(test_lgb_features).astype(np.int64)
@@ -351,8 +323,13 @@ def main() -> None:
             "hidden_size": args.hidden_size,
             "window": args.window,
             "horizon_months": args.horizon,
+            "loss_history": lstm.loss_history,
         },
         output_dir / f"lstm_horizon_{args.horizon}m.pt",
+    )
+    pd.DataFrame(lstm.loss_history).to_csv(
+        output_dir / f"gradient_descent_horizon_{args.horizon}m.csv",
+        index=False,
     )
     production_classifier.booster_.save_model(
         str(output_dir / f"lightgbm_horizon_{args.horizon}m.txt")
