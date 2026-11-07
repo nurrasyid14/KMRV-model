@@ -1,4 +1,4 @@
-"""Train and report the ENSO forecasting models used by the project pipeline."""
+"""ENSO training orchestration, model checkpointing, and report generation."""
 
 from __future__ import annotations
 
@@ -21,56 +21,30 @@ from sklearn.metrics import (
     precision_score,
     recall_score,
 )
-from src.utils import Preprocess
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DATASET_DIR = PROJECT_ROOT / "dataset"
 MODEL_DIR = PROJECT_ROOT / "model"
 REPORT_DIR = PROJECT_ROOT / "reports"
-ENSEMBLE_SCRIPT = Path(__file__).resolve().parent / "ml" / "ensemble.py"
-SEASON_NAMES = {
-    1: "DJF",
-    2: "JFM",
-    3: "FMA",
-    4: "MAM",
-    5: "AMJ",
-    6: "MJJ",
-    7: "JJA",
-    8: "JAS",
-    9: "ASO",
-    10: "SON",
-    11: "OND",
-    12: "NDJ",
-}
+ENSEMBLE_SCRIPT = PROJECT_ROOT / "src" / "ml" / "ensemble.py"
 PHASE_NAMES = {0: "La Nina", 1: "Neutral", 2: "El Nino"}
+SEASONS = ("DJF", "JFM", "FMA", "MAM", "AMJ", "MJJ",
+           "JJA", "JAS", "ASO", "SON", "OND", "NDJ")
 
 
-def tri_monthly_label(month: pd.Timestamp) -> str:
-    """Return the 3-month season label centered on the supplied month."""
-    return SEASON_NAMES[int(pd.Timestamp(month).month)]
+def tri_monthly_season(date: pd.Timestamp) -> str:
+    """Return the named three-month season for a target month."""
+    return SEASONS[int(pd.Timestamp(date).month) - 1]
 
 
-def validate_sequence_inputs(data_dir: Path = DATASET_DIR) -> dict[str, list[int]]:
-    """Exercise the shared sliding-window utility against every training split."""
-    train_path = data_dir / "train_features.csv"
-    frame = pd.read_csv(train_path)
-    values = torch_tensor(frame["oni_anom"].to_numpy(dtype=np.float32))
-    shapes: dict[str, list[int]] = {}
-    for horizon in (1, 3, 6):
-        windows, targets = Preprocess.create_sliding_windows(
-            values,
-            input_window=12,
-            horizon=horizon,
-        )
-        shapes[str(horizon)] = [list(windows.shape), list(targets.shape)]
-    return shapes
-
-
-def torch_tensor(values: np.ndarray):
-    import torch
-
-    return torch.tensor(values, dtype=torch.float32)
+def validate_horizons(horizons: Iterable[int]) -> tuple[int, ...]:
+    selected = tuple(dict.fromkeys(horizons))
+    unsupported = set(selected) - {1, 3, 6}
+    if unsupported:
+        raise ValueError(f"Unsupported forecast horizons: {sorted(unsupported)}")
+    if not selected:
+        raise ValueError("At least one forecast horizon is required")
+    return selected
 
 
 def train_ensemble(
@@ -78,92 +52,89 @@ def train_ensemble(
     epochs: int = 300,
     seed: int = 42,
 ) -> dict[int, Path]:
-    """Run the ensemble training script once for each requested horizon."""
+    """Train each horizon through the implemented src/ml/ensemble.py entry point."""
+    selected = validate_horizons(horizons)
     output_dirs: dict[int, Path] = {}
-    for horizon in horizons:
-        if horizon not in (1, 3, 6):
-            raise ValueError("Supported ENSO horizons are 1, 3, and 6 months")
+
+    for horizon in selected:
         output_dir = MODEL_DIR / f"enso_ensemble_{horizon}m"
         output_dir.mkdir(parents=True, exist_ok=True)
-        subprocess.run(
-            [
-                sys.executable,
-                str(ENSEMBLE_SCRIPT),
-                "--horizon",
-                str(horizon),
-                "--epochs",
-                str(epochs),
-                "--seed",
-                str(seed),
-                "--output-dir",
-                str(output_dir),
-            ],
-            cwd=PROJECT_ROOT,
-            check=True,
-        )
+        command = [
+            sys.executable,
+            str(ENSEMBLE_SCRIPT),
+            "--horizon",
+            str(horizon),
+            "--epochs",
+            str(epochs),
+            "--seed",
+            str(seed),
+            "--output-dir",
+            str(output_dir),
+        ]
+        result = subprocess.run(command, cwd=PROJECT_ROOT, text=True)
+        if result.returncode != 0:
+            raise RuntimeError(
+                f"ENSO ensemble training failed for {horizon}-month horizon "
+                f"with exit code {result.returncode}"
+            )
         output_dirs[horizon] = output_dir
+
     return output_dirs
 
 
 def save_model_checkpoints(output_dirs: dict[int, Path]) -> dict[str, Path]:
-    """Keep one recent checkpoint per run and the strongest validation checkpoint."""
+    """Create recent_model.pt from the latest run and best_model.pt by validation RMSE."""
     MODEL_DIR.mkdir(parents=True, exist_ok=True)
-    recent_path = MODEL_DIR / "recent_model.pt"
-    best_path = MODEL_DIR / "best_model.pt"
-    ranked: list[tuple[float, int, Path]] = []
+    ranking: list[tuple[float, int, Path]] = []
+
     for horizon, output_dir in output_dirs.items():
         checkpoint = output_dir / f"lstm_horizon_{horizon}m.pt"
-        metrics_path = output_dir / f"metrics_horizon_{horizon}m.json"
-        metrics = json.loads(metrics_path.read_text(encoding="utf-8"))
-        rmse = metrics["validation"]["lstm_oni_rmse"]
-        ranked.append((rmse, horizon, checkpoint))
+        metrics_file = output_dir / f"metrics_horizon_{horizon}m.json"
+        if not checkpoint.exists() or not metrics_file.exists():
+            raise FileNotFoundError(
+                f"Incomplete ensemble artifacts for horizon {horizon}: "
+                f"{checkpoint} or {metrics_file} is missing"
+            )
+        metrics = json.loads(metrics_file.read_text(encoding="utf-8"))
+        ranking.append(
+            (float(metrics["validation"]["lstm_oni_rmse"]), horizon, checkpoint)
+        )
 
-    newest = ranked[-1][2]
-    shutil.copy2(newest, recent_path)
-    _, best_horizon, best_checkpoint = min(ranked, key=lambda item: item[0])
+    recent_checkpoint = ranking[-1][2]
+    best_checkpoint = min(ranking, key=lambda row: row[0])[2]
+    recent_path = MODEL_DIR / "recent_model.pt"
+    best_path = MODEL_DIR / "best_model.pt"
+    shutil.copy2(recent_checkpoint, recent_path)
     shutil.copy2(best_checkpoint, best_path)
-    write_model_manifest(output_dirs, recent_path, best_path, best_horizon)
-    return {"recent": recent_path, "best": best_path}
 
-
-def write_model_manifest(
-    output_dirs: dict[int, Path],
-    recent_path: Path,
-    best_path: Path,
-    best_horizon: int,
-) -> None:
     manifest = {
-        "recent_model": str(recent_path.relative_to(PROJECT_ROOT)),
-        "best_model": str(best_path.relative_to(PROJECT_ROOT)),
-        "best_validation_horizon_months": best_horizon,
+        "recent_model": recent_path.relative_to(PROJECT_ROOT).as_posix(),
+        "best_model": best_path.relative_to(PROJECT_ROOT).as_posix(),
+        "best_validation_horizon_months": min(ranking, key=lambda row: row[0])[1],
         "horizon_artifacts": {
-            str(horizon): str(path.resolve().relative_to(PROJECT_ROOT))
-            for horizon, path in output_dirs.items()
+            str(horizon): output_dir.resolve().relative_to(PROJECT_ROOT).as_posix()
+            for horizon, output_dir in output_dirs.items()
         },
     }
     (MODEL_DIR / "model_manifest.json").write_text(
         json.dumps(manifest, indent=2),
         encoding="utf-8",
     )
+    return {"recent": recent_path, "best": best_path}
 
 
-def aggregate_and_report(output_dirs: dict[int, Path]) -> dict[str, object]:
-    """Build metrics, forecasts, confusion matrices, and learning curves."""
-    REPORT_DIR.mkdir(parents=True, exist_ok=True)
-    metrics_rows: list[dict[str, object]] = []
+def collect_metrics(output_dirs: dict[int, Path]) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    metric_rows: list[dict[str, object]] = []
     prediction_frames: list[pd.DataFrame] = []
     gradient_frames: list[pd.DataFrame] = []
 
     for horizon, output_dir in output_dirs.items():
-        metrics = json.loads(
-            (output_dir / f"metrics_horizon_{horizon}m.json").read_text(encoding="utf-8")
-        )
         predictions = pd.read_csv(
             output_dir / f"test_predictions_horizon_{horizon}m.csv",
             parse_dates=["time"],
         )
         predictions["forecast_horizon_months"] = horizon
-        predictions["tri_monthly_season"] = predictions["time"].map(tri_monthly_label)
+        predictions["tri_monthly_season"] = predictions["time"].map(tri_monthly_season)
         prediction_frames.append(predictions)
 
         gradient = pd.read_csv(
@@ -174,48 +145,69 @@ def aggregate_and_report(output_dirs: dict[int, Path]) -> dict[str, object]:
 
         actual_phase = predictions[f"actual_phase_lead_{horizon}m"].to_numpy()
         predicted_phase = predictions[f"predicted_phase_lead_{horizon}m"].to_numpy()
-        metrics_rows.append({
+        actual_oni = predictions[f"actual_oni_lead_{horizon}m"].to_numpy()
+        forecast_oni = predictions[f"lstm_oni_lead_{horizon}m"].to_numpy()
+        metric_rows.append({
             "split": "test",
             "forecast_horizon_months": horizon,
             "accuracy": accuracy_score(actual_phase, predicted_phase),
-            "balanced_accuracy": metrics["test"]["balanced_accuracy"],
             "macro_f1": f1_score(actual_phase, predicted_phase, average="macro", zero_division=0),
             "macro_precision": precision_score(
-                actual_phase, predicted_phase, average="macro", zero_division=0
+                actual_phase,
+                predicted_phase,
+                average="macro",
+                zero_division=0,
             ),
             "macro_recall": recall_score(
-                actual_phase, predicted_phase, average="macro", zero_division=0
+                actual_phase,
+                predicted_phase,
+                average="macro",
+                zero_division=0,
             ),
-            "oni_mse": mean_squared_error(
-                predictions[f"actual_oni_lead_{horizon}m"],
-                predictions[f"lstm_oni_lead_{horizon}m"],
-            ),
-            "oni_rmse": metrics["test"]["lstm_oni_rmse"],
+            "oni_mse": mean_squared_error(actual_oni, forecast_oni),
         })
         plot_confusion_matrix(actual_phase, predicted_phase, horizon)
 
+    metrics = pd.DataFrame(metric_rows)
     predictions = pd.concat(prediction_frames, ignore_index=True)
     gradients = pd.concat(gradient_frames, ignore_index=True)
-    metrics_frame = pd.DataFrame(metrics_rows)
+    return metrics, predictions, gradients
+
+
+def write_reports(
+    metrics: pd.DataFrame,
+    predictions: pd.DataFrame,
+    gradients: pd.DataFrame,
+) -> None:
+    REPORT_DIR.mkdir(parents=True, exist_ok=True)
+    metrics.to_csv(REPORT_DIR / "enso_metrics.csv", index=False)
     predictions.to_csv(REPORT_DIR / "enso_forecast_predictions.csv", index=False)
     gradients.to_csv(REPORT_DIR / "gradient_descent.csv", index=False)
-    metrics_frame.to_csv(REPORT_DIR / "enso_metrics.csv", index=False)
     plot_forecast_horizons(predictions)
     plot_gradient_descent(gradients)
+
     report = {
-        "metrics": metrics_frame.to_dict(orient="records"),
-        "output_directory": str(REPORT_DIR),
-        "forecast_horizons_months": sorted(output_dirs),
-        "tri_monthly_seasons": sorted(predictions["tri_monthly_season"].unique()),
+        "metrics": metrics.to_dict(orient="records"),
+        "forecast_horizons_months": [
+            int(value) for value in metrics["forecast_horizon_months"].unique()
+        ],
+        "tri_monthly_seasons": sorted(SEASONS),
+        "output_directory": REPORT_DIR.resolve().as_posix(),
     }
     (REPORT_DIR / "enso_training_report.json").write_text(
-        json.dumps(report, indent=2),
+        json.dumps(report, indent=2, default=str),
         encoding="utf-8",
     )
-    return report
+
+
+def aggregate_and_report(output_dirs: dict[int, Path]) -> dict[str, object]:
+    metrics, predictions, gradients = collect_metrics(output_dirs)
+    write_reports(metrics, predictions, gradients)
+    return json.loads((REPORT_DIR / "enso_training_report.json").read_text(encoding="utf-8"))
 
 
 def plot_confusion_matrix(actual: np.ndarray, predicted: np.ndarray, horizon: int) -> None:
+    REPORT_DIR.mkdir(parents=True, exist_ok=True)
     labels = np.array([0, 1, 2])
     matrix = confusion_matrix(actual, predicted, labels=labels)
     display = ConfusionMatrixDisplay(
@@ -280,7 +272,6 @@ def run(
     epochs: int = 300,
     seed: int = 42,
 ) -> dict[str, object]:
-    validate_sequence_inputs()
     output_dirs = train_ensemble(horizons=horizons, epochs=epochs, seed=seed)
     checkpoints = save_model_checkpoints(output_dirs)
     report = aggregate_and_report(output_dirs)
