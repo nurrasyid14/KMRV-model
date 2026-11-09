@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- KMRV mark: SST anomaly trace rising through the +0.5 °C threshold.
+       Palette mirrors tokens.css: tile = --color-paper-2, hairline = --color-rule-2, trace = --color-accent. -->
+  <rect width="32" height="32" rx="2" fill="#080f14"/>
+  <rect x="0.75" y="0.75" width="30.5" height="30.5" rx="1.5" fill="none" stroke="#353f44" stroke-width="1.5"/>
+  <line x1="5" y1="16.5" x2="27" y2="16.5" stroke="#353f44" stroke-width="1.5" stroke-dasharray="3 3" stroke-linecap="round"/>
+  <path d="M5.5 21.5 C 8 19.3 9.6 21.8 12 19.8 C 15 17.2 16.2 14.8 18.6 12.4 C 20.6 10.4 22 9 23.8 7.4"
+        fill="none" stroke="#bcf053" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="24.6" cy="6.4" r="2.9" fill="#bcf053"/>
+</svg>
