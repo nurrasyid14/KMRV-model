@@ -4,19 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="description" content="Dashboard proyeksi fase El Niño dan La Niña pada horizon 1, 3, dan 6 bulan, anomali suhu permukaan laut lima domain perairan, serta anomali curah hujan musiman Indonesia. Sumber data NOAA OISST v2.1, CPC NOAA, dan BOM." />
-    <title>KMRV · Proyeksi ENSO Maritim Indonesia</title>
-    <meta property="og:title" content="KMRV · Proyeksi ENSO Maritim Indonesia" />
-    <meta property="og:description" content="Peluang El Niño 64% terbentuk dalam tiga bulan ke depan. Anomali SST lima domain perairan dan deviasi hujan musiman Indonesia, dari arsip NOAA OISST v2.1." />
+    <meta name="description" content="Dashboard ENSO maritim: ONI, SOI, DMI, anomali suhu laut lima domain, dan evaluasi model Causal LSTM + LightGBM dari dataset Januari 2016 sampai Juni 2025." />
+    <title>lautan.id · Proyeksi ENSO di Laut Indonesia</title>
+    <meta property="og:title" content="lautan.id · Proyeksi ENSO di Laut Indonesia" />
+    <meta property="og:description" content="lautan.id: Platform evaluasi peramalan cerdas ENSO maritim Indonesia bertenaga Model KMRV (Causal LSTM + LightGBM)." />
     <meta property="og:type" content="website" />
-    <!-- Ganti dengan URL domain final saat deploy, crawler khusus minta URL absolut untuk og:image -->
-    <meta property="og:image" content="/og-card.png" />
+    <!-- OG URL: saat domain publik final sudah aktif, ganti og:image ke
+         "https://<domain>/og-card.png" dan TAMBAHKAN baris og:url
+         "https://<domain>/" - crawler pratinjau tautan WhatsApp/LinkedIn/Slack
+         menuntut URL absolut. Sementara ini memakai raw.githubusercontent.com
+         (repo publik, file ada di branch main); URL ini AKTIF setelah
+         "git push origin main" dijalankan. -->
+    <meta property="og:image" content="https://raw.githubusercontent.com/nurrasyid14/KMRV-model/main/frontend/public/og-card.png" />
+    <meta property="og:image:alt" content="Pratinjau dashboard KMRV: deret ONI dan anomali suhu laut lima domain." />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   </head>
   <body>

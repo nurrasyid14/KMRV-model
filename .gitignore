@@ -68,3 +68,6 @@ dataset/_extra_rainfall/
 # Design tooling artifacts
 .hallmark/
 
+
+.impeccable/
+.commandcode/

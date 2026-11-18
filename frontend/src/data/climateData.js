@@ -67,6 +67,29 @@ export const currentClimateState = {
   }
 };
 
+// =============================================================================
+// METRIK TERVERIFIKASI KMRV (hindcast horizon 1 bulan)
+// Satu-satunya hasil validasi yang didukung artefak pelatihan di repo:
+// - model/model_manifest.json → horizon validasi terbaik = 1 bulan
+// - model/enso_ensemble_1m/test_predictions_horizon_1m.csv → 7 data uji,
+//   Des 2024–Jun 2025. MAE KMRV = galat |lstm_oni − actual_oni| rata-rata;
+//   MAE persistensi = anomali aktual berurutan di kolom yang sama.
+//   RMSE KMRV 0,1796 cocok dengan metrics_horizon_1m.json (cross-check).
+// - model/enso_ensemble_1m/metrics_horizon_1m.json → validasi akurasi 0,7692,
+//   balanced 0,7917.
+// CATATAN KEJUJURAN: pada data uji terbatas ini MAE persistensi (0,11) masih
+// lebih kecil daripada KMRV (0,17) — angka tervalidasi ini BOLEH ditampilkan,
+// tetapi TIDAK BOLEH dipajang sebagai keunggulan KMRV atas persistensi.
+// =============================================================================
+export const validatedModelMetrics = {
+  horizon: "1 bulan",
+  testWindow: "Des 2024 - Jun 2025 (7 sampel)",
+  kmrvMae: 0.17,
+  persMae: 0.11,
+  validationAccuracy: 0.77,
+  validationBalancedAccuracy: 0.79
+};
+
 // 24 Bulan Historis RONI + 6 Bulan Prakiraan Model KMRV
 export const roniTimeSeries = [
   { date: 'Nov 24', value: -0.42, isForecast: false },
@@ -270,7 +293,7 @@ export const dataProvenanceRecords = [
     source: "RONI (Rolling ONI)",
     provider: "NOAA Climate Prediction Center (CPC)",
     variable: "Rata-rata bergerak 3 bulan anomali SST Niño 3.4",
-    resolution: "Skalar regional (5°N–5°S, 170°W–120°W)",
+    resolution: "Skalar regional (5°N-5°S, 170°W-120°W)",
     timeRange: "1950 s.d. saat ini (Bulanan)",
     license: "Domain Publik (Operasional)",
     lastFetch: "01 Nov 2026"
@@ -307,7 +330,7 @@ export const dataProvenanceRecords = [
 // Glosarium Iklim Ramah Awam
 export const climateGlossary = [
   {
-    term: "ENSO (El Niño–Southern Oscillation)",
+    term: "ENSO (El Niño-Southern Oscillation)",
     short: "Siklus interaksi laut dan atmosfer di Samudra Pasifik tropis.",
     detail: "ENSO terdiri dari tiga fase: El Niño (laut menghangat, curah hujan Indonesia cenderung berkurang), La Niña (laut mendingin, curah hujan Indonesia cenderung bertambah), dan Netral (kondisi mendekati rata-rata iklim).",
     analystNote: "Kopling osilasi antara sirkulasi Walker dan gelombang Kelvin ekuatorial bawah laut."
@@ -316,12 +339,12 @@ export const climateGlossary = [
     term: "RONI (Rolling ONI)",
     short: "Indeks operasional untuk memantau apakah El Niño sedang berlangsung.",
     detail: "RONI dihitung dari rata-rata bergerak 3 bulan anomali suhu di wilayah Pasifik tengah (Niño 3.4). Jika nilainya di atas +0,5 °C selama minimal 5 periode berurutan, kondisi operasional El Niño dinyatakan aktif.",
-    analystNote: "RONI menggunakan periode referensi klimatologi terbaru (1991–2020) yang diperbarui setiap 5 tahun."
+    analystNote: "RONI menggunakan periode referensi klimatologi terbaru (1991-2020) yang diperbarui setiap 5 tahun."
   },
   {
     term: "SST & Anomali SST",
     short: "Suhu permukaan laut dan seberapa jauh suhunya menyimpang dari rata-rata.",
-    detail: "SST (Sea Surface Temperature) adalah suhu air laut di lapisan paling atas (0–1 meter). Anomali adalah selisih antara suhu saat ini dengan rata-rata suhu normal puluhan tahun pada tanggal yang sama.",
+    detail: "SST (Sea Surface Temperature) adalah suhu air laut di lapisan paling atas (0-1 meter). Anomali adalah selisih antara suhu saat ini dengan rata-rata suhu normal puluhan tahun pada tanggal yang sama.",
     analystNote: "Diukur melalui sensor inframerah satelit AVHRR dan validasi buoy Argo secara harian."
   },
   {
@@ -334,7 +357,7 @@ export const climateGlossary = [
     term: "IOD & DMI (Indian Ocean Dipole)",
     short: "Dinamika suhu laut di Samudra Hindia yang turut mempengaruhi musim hujan Indonesia.",
     detail: "IOD Positif menyebabkan Samudra Hindia dekat Sumatra mendingin sehingga mengurangi hujan di Indonesia barat. IOD Negatif sebaliknya membawa tambahan pasokan uap air.",
-    analystNote: "Dihitung dari selisih anomali SST kutub barat Samudra Hindia (50°E–70°E, 10°S–10°N) dan timur (90°E–110°E, 10°S–0°)."
+    analystNote: "Dihitung dari selisih anomali SST kutub barat Samudra Hindia (50°E-70°E, 10°S-10°N) dan timur (90°E-110°E, 10°S-0°)."
   },
   {
     term: "Mengapa Prediksi Iklim Bersifat Probabilistik?",
