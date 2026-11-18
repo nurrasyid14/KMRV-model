@@ -1,0 +1,225 @@
+{
+  "total_samples": 114,
+  "time_start": "2016-01-01",
+  "time_end": "2025-06-01",
+  "monthly_contiguous": true,
+  "feature_count": 67,
+  "horizons_months": [
+    1,
+    3,
+    6
+  ],
+  "class_mapping": {
+    "0": "La Nina",
+    "1": "Neutral",
+    "2": "El Nino"
+  },
+  "fold_count": 1,
+  "folds": [
+    {
+      "fold": 1,
+      "train_start": "2016-01-01",
+      "train_end": "2021-12-01",
+      "validation_start": "2022-01-01",
+      "validation_end": "2023-12-01",
+      "test_start": "2024-01-01",
+      "test_end": "2025-06-01"
+    }
+  ],
+  "missing_class_periods": [
+    {
+      "dataset": "master",
+      "period": "2017",
+      "horizon_months": 1,
+      "class_name": "El Nino"
+    },
+    {
+      "dataset": "master",
+      "period": "2019",
+      "horizon_months": 1,
+      "class_name": "La Nina"
+    },
+    {
+      "dataset": "master",
+      "period": "2021",
+      "horizon_months": 1,
+      "class_name": "El Nino"
+    },
+    {
+      "dataset": "master",
+      "period": "2022",
+      "horizon_months": 1,
+      "class_name": "Neutral"
+    },
+    {
+      "dataset": "master",
+      "period": "2022",
+      "horizon_months": 1,
+      "class_name": "El Nino"
+    },
+    {
+      "dataset": "master",
+      "period": "2023",
+      "horizon_months": 1,
+      "class_name": "La Nina"
+    },
+    {
+      "dataset": "master",
+      "period": "2024",
+      "horizon_months": 1,
+      "class_name": "La Nina"
+    },
+    {
+      "dataset": "master",
+      "period": "2025",
+      "horizon_months": 1,
+      "class_name": "La Nina"
+    },
+    {
+      "dataset": "master",
+      "period": "2025",
+      "horizon_months": 1,
+      "class_name": "El Nino"
+    },
+    {
+      "dataset": "provided_test",
+      "period": "all",
+      "horizon_months": 1,
+      "class_name": "La Nina"
+    },
+    {
+      "dataset": "master",
+      "period": "2017",
+      "horizon_months": 3,
+      "class_name": "El Nino"
+    },
+    {
+      "dataset": "master",
+      "period": "2018",
+      "horizon_months": 3,
+      "class_name": "La Nina"
+    },
+    {
+      "dataset": "master",
+      "period": "2019",
+      "horizon_months": 3,
+      "class_name": "La Nina"
+    },
+    {
+      "dataset": "master",
+      "period": "2020",
+      "horizon_months": 3,
+      "class_name": "El Nino"
+    },
+    {
+      "dataset": "master",
+      "period": "2021",
+      "horizon_months": 3,
+      "class_name": "El Nino"
+    },
+    {
+      "dataset": "master",
+      "period": "2022",
+      "horizon_months": 3,
+      "class_name": "El Nino"
+    },
+    {
+      "dataset": "master",
+      "period": "2023",
+      "horizon_months": 3,
+      "class_name": "La Nina"
+    },
+    {
+      "dataset": "master",
+      "period": "2024",
+      "horizon_months": 3,
+      "class_name": "La Nina"
+    },
+    {
+      "dataset": "master",
+      "period": "2025",
+      "horizon_months": 3,
+      "class_name": "La Nina"
+    },
+    {
+      "dataset": "master",
+      "period": "2025",
+      "horizon_months": 3,
+      "class_name": "El Nino"
+    },
+    {
+      "dataset": "provided_test",
+      "period": "all",
+      "horizon_months": 3,
+      "class_name": "La Nina"
+    },
+    {
+      "dataset": "master",
+      "period": "2016",
+      "horizon_months": 6,
+      "class_name": "El Nino"
+    },
+    {
+      "dataset": "master",
+      "period": "2017",
+      "horizon_months": 6,
+      "class_name": "El Nino"
+    },
+    {
+      "dataset": "master",
+      "period": "2018",
+      "horizon_months": 6,
+      "class_name": "La Nina"
+    },
+    {
+      "dataset": "master",
+      "period": "2019",
+      "horizon_months": 6,
+      "class_name": "La Nina"
+    },
+    {
+      "dataset": "master",
+      "period": "2020",
+      "horizon_months": 6,
+      "class_name": "El Nino"
+    },
+    {
+      "dataset": "master",
+      "period": "2021",
+      "horizon_months": 6,
+      "class_name": "El Nino"
+    },
+    {
+      "dataset": "master",
+      "period": "2023",
+      "horizon_months": 6,
+      "class_name": "La Nina"
+    },
+    {
+      "dataset": "master",
+      "period": "2024",
+      "horizon_months": 6,
+      "class_name": "La Nina"
+    },
+    {
+      "dataset": "master",
+      "period": "2024",
+      "horizon_months": 6,
+      "class_name": "El Nino"
+    },
+    {
+      "dataset": "master",
+      "period": "2025",
+      "horizon_months": 6,
+      "class_name": "El Nino"
+    },
+    {
+      "dataset": "provided_test",
+      "period": "all",
+      "horizon_months": 6,
+      "class_name": "El Nino"
+    }
+  ],
+  "target_alignment": "target_oni_lead_h matches oni_anom shifted by h months",
+  "purge_rule": "train/validation targets must occur strictly before the next split"
+}

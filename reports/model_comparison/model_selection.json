@@ -1,0 +1,177 @@
+{
+  "selection_policy": [
+    "Use only the first pre-test validation period (fold 1)",
+    "Require actual validation coverage of all three fixed classes before ranking",
+    "Validation macro F1 (descending)",
+    "Validation balanced accuracy (descending)",
+    "Validation macro precision and recall (descending)",
+    "Validation ONI RMSE (ascending; common LSTM across classifiers)"
+  ],
+  "selection_note": "Later validation origins overlap earlier test origins in this short record, so they are excluded from global model-family selection. No global candidate is selected for a horizon when the initial validation period lacks any ENSO phase. Validation is also used for tree-classifier early stopping, so remaining rankings are provisional. LSTM epoch selection uses a train-internal chronological segment.",
+  "selection_validation_fold": 1,
+  "test_metrics_used_for_selection": false,
+  "selected_models": {
+    "1": {
+      "model": "XGBoost",
+      "imbalance_strategy": "balanced",
+      "selection_validation_fold": 1,
+      "selection_status": "provisional_candidate",
+      "validation_macro_f1": 0.7336182336182336,
+      "validation_balanced_accuracy": 0.7301587301587302,
+      "validation_macro_precision": 0.7444444444444445,
+      "validation_macro_recall": 0.7301587301587302,
+      "validation_actual_class_coverage": 3,
+      "validation_missing_actual_classes": [],
+      "validation_oni_rmse": 0.7168912835848744,
+      "selection_uses_test_metrics": false,
+      "selection_is_provisional": true,
+      "saved_model_directory": "C:\\Users\\Dell\\OneDrive - Politeknik Elektronika Negeri Surabaya\\Documents\\Sains data\\sem 5\\elnino prediction\\model\\backtesting_final_holdout\\horizon_1m\\xgboost_balanced",
+      "saved_model_fold": 1,
+      "final_holdout_evaluation": {
+        "classification": {
+          "accuracy": 0.5555555555555556,
+          "balanced_accuracy": 0.7333333333333334,
+          "macro_precision": 0.5833333333333334,
+          "macro_recall": 0.48888888888888893,
+          "macro_f1": 0.4978354978354978,
+          "weighted_f1": 0.6731601731601731,
+          "actual_class_counts": {
+            "0": 0,
+            "1": 15,
+            "2": 3
+          },
+          "predicted_class_counts": {
+            "0": 7,
+            "1": 7,
+            "2": 4
+          },
+          "missing_actual_classes": [
+            "La Nina"
+          ],
+          "missing_predicted_classes": []
+        },
+        "oni_regression": {
+          "oni_mse": 0.07210945535917856,
+          "oni_rmse": 0.26853203786360125,
+          "oni_mae": 0.18568135470565822,
+          "oni_r2": 0.7344303484701449
+        },
+        "test_period": {
+          "start": "2024-01-01",
+          "end": "2025-06-01"
+        }
+      }
+    },
+    "3": {
+      "model": "LightGBM",
+      "imbalance_strategy": "unweighted",
+      "selection_validation_fold": 1,
+      "selection_status": "provisional_candidate",
+      "validation_macro_f1": 0.48484848484848486,
+      "validation_balanced_accuracy": 0.45714285714285713,
+      "validation_macro_precision": 0.5555555555555555,
+      "validation_macro_recall": 0.45714285714285713,
+      "validation_actual_class_coverage": 3,
+      "validation_missing_actual_classes": [],
+      "validation_oni_rmse": 0.9960540378932324,
+      "selection_uses_test_metrics": false,
+      "selection_is_provisional": true,
+      "saved_model_directory": "C:\\Users\\Dell\\OneDrive - Politeknik Elektronika Negeri Surabaya\\Documents\\Sains data\\sem 5\\elnino prediction\\model\\backtesting_final_holdout\\horizon_3m\\lightgbm_unweighted",
+      "saved_model_fold": 1,
+      "final_holdout_evaluation": {
+        "classification": {
+          "accuracy": 0.2777777777777778,
+          "balanced_accuracy": 0.14705882352941177,
+          "macro_precision": 0.2777777777777778,
+          "macro_recall": 0.09803921568627451,
+          "macro_f1": 0.14492753623188406,
+          "weighted_f1": 0.4106280193236715,
+          "actual_class_counts": {
+            "0": 0,
+            "1": 17,
+            "2": 1
+          },
+          "predicted_class_counts": {
+            "0": 12,
+            "1": 6,
+            "2": 0
+          },
+          "missing_actual_classes": [
+            "La Nina"
+          ],
+          "missing_predicted_classes": [
+            "El Nino"
+          ]
+        },
+        "oni_regression": {
+          "oni_mse": 0.02798454793878398,
+          "oni_rmse": 0.1672858270708669,
+          "oni_mae": 0.1325888616922829,
+          "oni_r2": 0.6820439558793678
+        },
+        "test_period": {
+          "start": "2024-01-01",
+          "end": "2025-06-01"
+        }
+      }
+    },
+    "6": {
+      "model": "XGBoost",
+      "imbalance_strategy": "balanced",
+      "selection_validation_fold": 1,
+      "selection_status": "provisional_candidate",
+      "validation_macro_f1": 0.3063973063973064,
+      "validation_balanced_accuracy": 0.4047619047619048,
+      "validation_macro_precision": 0.24675324675324672,
+      "validation_macro_recall": 0.4047619047619048,
+      "validation_actual_class_coverage": 3,
+      "validation_missing_actual_classes": [],
+      "validation_oni_rmse": 1.0278540436511745,
+      "selection_uses_test_metrics": false,
+      "selection_is_provisional": true,
+      "saved_model_directory": "C:\\Users\\Dell\\OneDrive - Politeknik Elektronika Negeri Surabaya\\Documents\\Sains data\\sem 5\\elnino prediction\\model\\backtesting_final_holdout\\horizon_6m\\xgboost_balanced",
+      "saved_model_fold": 1,
+      "final_holdout_evaluation": {
+        "classification": {
+          "accuracy": 0.5555555555555556,
+          "balanced_accuracy": 0.7333333333333334,
+          "macro_precision": 0.42424242424242425,
+          "macro_recall": 0.48888888888888893,
+          "macro_f1": 0.35497835497835495,
+          "weighted_f1": 0.6017316017316018,
+          "actual_class_counts": {
+            "0": 3,
+            "1": 15,
+            "2": 0
+          },
+          "predicted_class_counts": {
+            "0": 11,
+            "1": 7,
+            "2": 0
+          },
+          "missing_actual_classes": [
+            "El Nino"
+          ],
+          "missing_predicted_classes": [
+            "El Nino"
+          ]
+        },
+        "oni_regression": {
+          "oni_mse": 0.09701101412092045,
+          "oni_rmse": 0.3114659116515328,
+          "oni_mae": 0.24349575027202564,
+          "oni_r2": -1.0679071675874017
+        },
+        "test_period": {
+          "start": "2024-01-01",
+          "end": "2025-06-01"
+        }
+      }
+    }
+  },
+  "selected_model_paths": {
+    "1": "C:\\Users\\Dell\\OneDrive - Politeknik Elektronika Negeri Surabaya\\Documents\\Sains data\\sem 5\\elnino prediction\\model\\backtesting_final_holdout\\horizon_1m\\xgboost_balanced",
+    "3": "C:\\Users\\Dell\\OneDrive - Politeknik Elektronika Negeri Surabaya\\Documents\\Sains data\\sem 5\\elnino prediction\\model\\backtesting_final_holdout\\horizon_3m\\lightgbm_unweighted",
+    "6": "C:\\Users\\Dell\\OneDrive - Politeknik Elektronika Negeri Surabaya\\Documents\\Sains data\\sem 5\\elnino prediction\\model\\backtesting_final_holdout\\horizon_6m\\xgboost_balanced"
+  }
+}

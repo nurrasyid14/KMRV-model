@@ -254,10 +254,70 @@ hari yang saling bertumpang tindih bukan sampel independen.
 4. **Baru setelah skill terukur:** tambahkan model probabilistik, kalibrasi,
    analisis dampak regional, dan antarmuka penyajian.
 
-Kode saat ini sudah mencakup pengunduhan SST OISST regional, konversi NetCDF
-ke Zarr, ringkasan EDA, beberapa utilitas preprocessing, dan rancangan
-penyimpanan PostgreSQL. Pengunduhan indeks iklim/hujan, training, hindcast,
-kalibrasi, dan prediksi dampak Indonesia **belum diimplementasikan**. [13]
+Kode saat ini mencakup pengunduhan SST OISST regional, konversi NetCDF ke Zarr,
+ringkasan EDA, utilitas preprocessing, rancangan penyimpanan PostgreSQL, serta
+training dan evaluasi hindcast temporal untuk fitur ENSO yang telah disiapkan.
+Pengunduhan indeks iklim/hujan secara otomatis, kalibrasi probabilitas, dan
+prediksi dampak Indonesia masih belum diimplementasikan. [13]
+
+### Menjalankan evaluasi ENSO temporal
+
+Entry point `main.py` menjalankan expanding-window backtesting pada
+`dataset/features_master_unscaled.csv` untuk horizon 1, 3, dan 6 bulan:
+
+```powershell
+python -m pip install -r requirements.txt
+python main.py --horizons 1 3 6 --epochs 300
+```
+
+Pipeline membandingkan Causal LSTM + LightGBM dan Causal LSTM + XGBoost,
+masing-masing tanpa dan dengan pembobotan kelas dari data classifier-training.
+Split selalu kronologis; target horizon dipurge di batas train/validation,
+dan fitur LSTM training untuk classifier dibuat dengan expanding-window
+out-of-fold forecasts. Audit, metrik fold, confusion matrix, perbandingan,
+visualisasi, dan laporan disimpan di `reports/`; checkpoint terpilih serta
+metadata disimpan di `model/backtesting_selected/`. Argumen
+`--legacy-training` masih tersedia untuk menjalankan pipeline fixed-split lama.
+
+Pemilihan epoch LSTM menggunakan validation internal yang seluruhnya berada
+di dalam periode train pada fold luar, lalu LSTM di-fit ulang pada periode
+train luar dengan jumlah epoch tetap. Validation dan test fold luar tidak
+digunakan untuk melatih LSTM pembentuk fitur. Kandidat classifier diranking
+hanya dari validation; prediksi label test dan metrik holdout baru dihitung
+setelah pemilihan. ONI regression dievaluasi terpisah dari klasifikasi, dengan
+prediksi/residual per split di `reports/backtesting/regression_predictions.csv`
+dan metrik di `regression_metrics.csv`.
+
+Strategi default menggunakan satu fold terminal: 72 bulan train, 24 bulan
+validasi (Jan 2022–Des 2023 untuk dataset saat ini), dan 18 bulan test terakhir.
+Validasi dipurge menurut horizon; test tidak digunakan untuk pemilihan model.
+Durasi validasi 18, 24, 30, dan 36 bulan dibandingkan secara kronologis di
+`reports/data_audit/validation_window_sweep.csv` dan `.json`. Diagnostik jumlah
+dan persentase kelas per horizon/split tersedia dalam
+`reports/backtesting/class_distribution_by_fold.csv` dan `.json`.
+Grid kelayakan fold kronologis (minimum train 60 dan 72 bulan) disimpan di
+`reports/data_audit/fold_feasibility_sweep.csv` dan `.json`; grid menandai
+cakupan kelas, dukungan kelas rendah, purge, konteks input, dan validation yang
+mengulang periode test fold sebelumnya. Plot residual ONI ada di
+`reports/visualizations/oni_residuals.png`.
+
+Audit lanjutan tanpa melatih ulang model dapat dibuat dengan:
+
+```powershell
+python -m src.ml.audit
+```
+
+Laporan disimpan di `reports/final_audit/`. Kandidat hanya dapat diranking pada
+validasi yang mencakup ketiga kelas. Ranking tetap provisional karena satu
+periode validasi yang sama dipakai untuk early stopping dan perbandingan;
+perluasan data historis dibutuhkan untuk mengukur kestabilan.
+
+Dataset fitur saat ini hanya memiliki 114 bulan (2016–2025), sehingga fold
+test saat ini tidak mencakup ketiga kelas pada semua horizon. Laporan
+mempertahankan fixed labels `[0, 1, 2]`, confusion matrix 3×3, serta diagnostik
+kelas aktual dan prediksi; skor pada test yang kehilangan kelas tidak
+membuktikan kemampuan mengenali fase yang tidak ada. Satu fold juga tidak
+menyediakan estimasi variabilitas antarperiode yang memadai.
 
 ## Interpretasi
 

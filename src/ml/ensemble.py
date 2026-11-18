@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-"""Causal LSTM + LightGBM ensemble for monthly ENSO phase forecasts.
+"""Causal LSTM + XGBoost ensemble for monthly ENSO phase forecasts.
 
-The LSTM predicts the future ONI value. LightGBM consumes the forecast and
+The LSTM predicts the future ONI value. XGBoost consumes the forecast and
 tabular climate features to classify El Niño, La Niña, and Neutral phases.
 Every split is processed chronologically; future split observations are never
 used to fit preprocessing or model parameters.
@@ -19,7 +19,6 @@ from pathlib import Path
 from typing import Iterable
 
 import joblib
-import lightgbm as lgb
 import numpy as np
 import pandas as pd
 import torch
@@ -33,6 +32,7 @@ from sklearn.metrics import (
 from sklearn.preprocessing import StandardScaler
 from torch import nn
 from torch.utils.data import DataLoader, TensorDataset
+from xgboost import XGBClassifier
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
@@ -40,7 +40,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 LSTM_MODULE = importlib.import_module("src.ml.2lstm")
 CausalLSTM = LSTM_MODULE.CausalLSTM
-from src.ml.lgbm import create_phase_classifier, train_phase_classifier
+from src.ml.xgb_classifier import create_phase_classifier, train_phase_classifier
 
 DEFAULT_DATA_DIR = PROJECT_ROOT / "dataset"
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "model" / "enso_ensemble"
@@ -101,7 +101,7 @@ def make_windows(values: np.ndarray, targets: np.ndarray, window: int) -> tuple[
 
 def train_lstm(
     train_windows: tuple[np.ndarray, np.ndarray],
-    validation_windows: tuple[np.ndarray, np.ndarray],
+    validation_windows: tuple[np.ndarray, np.ndarray] | None,
     feature_count: int,
     hidden_size: int,
     epochs: int,
@@ -111,7 +111,10 @@ def train_lstm(
 ) -> CausalLSTM:
     seed_everything(seed)
     train_x, train_y = train_windows
-    val_x, val_y = validation_windows
+    if validation_windows is None:
+        val_x = val_y = None
+    else:
+        val_x, val_y = validation_windows
     model = CausalLSTM(feature_count, hidden_size, dropout=0.1)
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
     loss_function = nn.MSELoss()
@@ -124,19 +127,29 @@ def train_lstm(
     best_state: dict[str, torch.Tensor] | None = None
     best_loss = float("inf")
     epochs_without_improvement = 0
-    val_x_tensor = torch.from_numpy(val_x)
-    val_y_tensor = torch.from_numpy(val_y)
+    val_x_tensor = None if validation_windows is None else torch.from_numpy(val_x)
+    val_y_tensor = None if validation_windows is None else torch.from_numpy(val_y)
     loss_history: list[dict[str, float]] = []
 
     for _ in range(epochs):
         model.train()
+        training_losses = []
         for batch_x, batch_y in loader:
             optimizer.zero_grad()
             prediction = model(batch_x)
             loss = loss_function(prediction, batch_y)
             loss.backward()
             optimizer.step()
+            training_losses.append(float(loss.item()))
 
+        if val_x_tensor is None or val_y_tensor is None:
+            loss_history.append(
+                {
+                    "epoch": float(len(loss_history) + 1),
+                    "training_mse": float(np.mean(training_losses)),
+                }
+            )
+            continue
         model.eval()
         with torch.no_grad():
             validation_loss = loss_function(model(val_x_tensor), val_y_tensor).item()
@@ -182,12 +195,12 @@ def tabular_ensemble_features(
     return features
 
 
-def train_lightgbm(
+def train_xgboost(
     features: pd.DataFrame,
     labels: np.ndarray,
     validation_features: pd.DataFrame,
     validation_labels: np.ndarray,
-) -> lgb.LGBMClassifier:
+) -> XGBClassifier:
     return train_phase_classifier(
         features,
         labels,
@@ -263,42 +276,43 @@ def main() -> None:
     validation_lstm_forecast = target_scaler.inverse_transform(validation_lstm_scaled.reshape(-1, 1)).reshape(-1)
     test_lstm_forecast = target_scaler.inverse_transform(test_lstm_scaled.reshape(-1, 1)).reshape(-1)
 
-    train_lgb_features = tabular_ensemble_features(
+    train_classifier_features = tabular_ensemble_features(
         train, feature_columns, train_lstm_forecast, args.window
     )
-    validation_lgb_features = tabular_ensemble_features(
+    validation_classifier_features = tabular_ensemble_features(
         validation, feature_columns, validation_lstm_forecast, args.window
     )
-    test_lgb_features = tabular_ensemble_features(
+    test_classifier_features = tabular_ensemble_features(
         test, feature_columns, test_lstm_forecast, args.window
     )
     train_labels = train[phase_target].to_numpy(dtype=np.int64)[args.window - 1:]
     validation_labels = validation[phase_target].to_numpy(dtype=np.int64)[args.window - 1:]
     test_labels = test[phase_target].to_numpy(dtype=np.int64)[args.window - 1:]
-    classifier = train_lightgbm(
-        train_lgb_features,
+    classifier = train_xgboost(
+        train_classifier_features,
         train_labels,
-        validation_lgb_features,
+        validation_classifier_features,
         validation_labels,
     )
 
-    validation_phase = classifier.predict(validation_lgb_features).astype(np.int64)
+    validation_phase = classifier.predict(validation_classifier_features).astype(np.int64)
     production_features = pd.concat(
-        [train_lgb_features, validation_lgb_features], ignore_index=True
+        [train_classifier_features, validation_classifier_features], ignore_index=True
     )
     production_labels = np.concatenate([train_labels, validation_labels])
     production_classifier = create_phase_classifier(
         random_state=args.seed,
-        iterations=max(1, classifier.best_iteration_),
+        iterations=max(1, classifier.best_iteration + 1),
+        early_stopping_rounds=None,
     )
     production_classifier.fit(production_features, production_labels)
-    test_phase = production_classifier.predict(test_lgb_features).astype(np.int64)
+    test_phase = production_classifier.predict(test_classifier_features).astype(np.int64)
     validation_actual_oni = validation[oni_target].to_numpy()[args.window - 1:]
     test_actual_oni = test[oni_target].to_numpy()[args.window - 1:]
     metrics = {
         "horizon_months": args.horizon,
         "window_months": args.window,
-        "model": "causal_lstm_lightgbm",
+        "model": "causal_lstm_xgboost",
         "class_mapping": PHASE_NAMES,
         "validation": {
             **classification_metrics(validation_labels, validation_phase),
@@ -331,8 +345,8 @@ def main() -> None:
         output_dir / f"gradient_descent_horizon_{args.horizon}m.csv",
         index=False,
     )
-    production_classifier.booster_.save_model(
-        str(output_dir / f"lightgbm_horizon_{args.horizon}m.txt")
+    production_classifier.save_model(
+        str(output_dir / f"xgboost_horizon_{args.horizon}m.json")
     )
     joblib.dump(feature_scaler, output_dir / f"feature_scaler_horizon_{args.horizon}m.joblib")
     joblib.dump(target_scaler, output_dir / f"target_scaler_horizon_{args.horizon}m.joblib")

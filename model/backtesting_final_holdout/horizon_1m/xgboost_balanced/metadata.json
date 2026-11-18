@@ -1,0 +1,222 @@
+{
+  "model_architecture": "CausalLSTM + XGBoost",
+  "classifier": "XGBoost",
+  "imbalance_strategy": "balanced",
+  "forecast_horizon_months": 1,
+  "training_period": {
+    "start": "2016-12-01",
+    "end": "2021-11-01"
+  },
+  "validation_period": {
+    "start": "2022-01-01",
+    "end": "2023-11-01"
+  },
+  "test_period": {
+    "start": "2024-01-01",
+    "end": "2025-06-01"
+  },
+  "classifier_training_period": {
+    "start": "2019-01-01",
+    "end": "2021-11-01",
+    "samples": 35
+  },
+  "feature_configuration": {
+    "window_months": 12,
+    "feature_columns": [
+      "oni_anom",
+      "oni_total",
+      "soi",
+      "dmi",
+      "sst_nino34",
+      "sst_nino34_zonal_grad",
+      "sst_karimata",
+      "sst_makassar",
+      "sst_jawa",
+      "sst_maluku",
+      "mhw_nino34",
+      "mhw_karimata",
+      "mhw_makassar",
+      "mhw_jawa",
+      "mhw_maluku",
+      "rain_malaysia",
+      "rain_hawaii",
+      "month_sin",
+      "month_cos",
+      "enso_coupling_index",
+      "oni_anom_lag1",
+      "oni_anom_lag2",
+      "oni_anom_lag3",
+      "oni_anom_lag6",
+      "oni_anom_lag12",
+      "soi_lag1",
+      "soi_lag2",
+      "soi_lag3",
+      "soi_lag6",
+      "soi_lag12",
+      "dmi_lag1",
+      "dmi_lag2",
+      "dmi_lag3",
+      "dmi_lag6",
+      "dmi_lag12",
+      "sst_nino34_lag1",
+      "sst_nino34_lag2",
+      "sst_nino34_lag3",
+      "sst_nino34_lag6",
+      "sst_nino34_lag12",
+      "sst_nino34_zonal_grad_lag1",
+      "sst_nino34_zonal_grad_lag2",
+      "sst_nino34_zonal_grad_lag3",
+      "sst_nino34_zonal_grad_lag6",
+      "sst_nino34_zonal_grad_lag12",
+      "sst_makassar_lag1",
+      "sst_makassar_lag2",
+      "sst_makassar_lag3",
+      "sst_makassar_lag6",
+      "sst_makassar_lag12",
+      "rain_malaysia_lag1",
+      "rain_malaysia_lag2",
+      "rain_malaysia_lag3",
+      "rain_malaysia_lag6",
+      "rain_malaysia_lag12",
+      "oni_anom_roll3_mean",
+      "oni_anom_roll3_std",
+      "oni_anom_roll6_mean",
+      "soi_roll3_mean",
+      "soi_roll3_std",
+      "soi_roll6_mean",
+      "dmi_roll3_mean",
+      "dmi_roll3_std",
+      "dmi_roll6_mean",
+      "sst_nino34_roll3_mean",
+      "sst_nino34_roll3_std",
+      "sst_nino34_roll6_mean"
+    ],
+    "classifier_extra_feature": "lstm_oni_forecast",
+    "training_forecasts": "causal expanding-window out-of-fold"
+  },
+  "hyperparameters": {
+    "lstm": {
+      "window": 12,
+      "hidden_size": 32,
+      "epochs": 300,
+      "batch_size": 16,
+      "learning_rate": 0.003,
+      "dropout": 0.1,
+      "refit_epochs": 6,
+      "epoch_selection_period": {
+        "start": "2021-01-01",
+        "end": "2021-11-01"
+      }
+    },
+    "classifier": {
+      "objective": "multi:softmax",
+      "base_score": null,
+      "booster": null,
+      "callbacks": null,
+      "colsample_bylevel": null,
+      "colsample_bynode": null,
+      "colsample_bytree": 0.8,
+      "device": null,
+      "early_stopping_rounds": 50,
+      "enable_categorical": false,
+      "eval_metric": "mlogloss",
+      "feature_types": null,
+      "feature_weights": null,
+      "gamma": null,
+      "grow_policy": null,
+      "importance_type": null,
+      "interaction_constraints": null,
+      "learning_rate": 0.03,
+      "max_bin": null,
+      "max_cat_threshold": null,
+      "max_cat_to_onehot": null,
+      "max_delta_step": null,
+      "max_depth": 3,
+      "max_leaves": null,
+      "min_child_weight": 1,
+      "missing": NaN,
+      "monotone_constraints": null,
+      "multi_strategy": null,
+      "n_estimators": 300,
+      "n_jobs": -1,
+      "num_parallel_tree": null,
+      "random_state": 10143,
+      "reg_alpha": null,
+      "reg_lambda": 1.0,
+      "sampling_method": null,
+      "scale_pos_weight": null,
+      "subsample": 0.8,
+      "tree_method": "hist",
+      "validate_parameters": null,
+      "verbosity": 0,
+      "num_class": 3
+    },
+    "class_weights_from_classifier_training_only": {
+      "0": 0.9722222222222222,
+      "1": 0.9722222222222222,
+      "2": 1.0606060606060606
+    }
+  },
+  "validation_metrics": {
+    "accuracy": 0.782608695652174,
+    "balanced_accuracy": 0.7301587301587302,
+    "macro_precision": 0.7444444444444445,
+    "macro_recall": 0.7301587301587302,
+    "macro_f1": 0.7336182336182336,
+    "weighted_f1": 0.7930137495354886,
+    "actual_class_counts": {
+      "0": 12,
+      "1": 4,
+      "2": 7
+    },
+    "predicted_class_counts": {
+      "0": 12,
+      "1": 5,
+      "2": 6
+    },
+    "missing_actual_classes": [],
+    "missing_predicted_classes": [],
+    "oni_mse": 0.5139331124799689,
+    "oni_rmse": 0.7168912835848744,
+    "oni_mae": 0.574671139454712,
+    "oni_r2": 0.49451282335543
+  },
+  "selected_using": "validation metrics only; test metrics were not used for selection",
+  "selection_validation_fold": 1,
+  "selection_is_provisional": true,
+  "training_timestamp_utc": "2026-11-18T15:11:26.650557+00:00",
+  "final_holdout_evaluation": {
+    "classification": {
+      "accuracy": 0.5555555555555556,
+      "balanced_accuracy": 0.7333333333333334,
+      "macro_precision": 0.5833333333333334,
+      "macro_recall": 0.48888888888888893,
+      "macro_f1": 0.4978354978354978,
+      "weighted_f1": 0.6731601731601731,
+      "actual_class_counts": {
+        "0": 0,
+        "1": 15,
+        "2": 3
+      },
+      "predicted_class_counts": {
+        "0": 7,
+        "1": 7,
+        "2": 4
+      },
+      "missing_actual_classes": [
+        "La Nina"
+      ],
+      "missing_predicted_classes": []
+    },
+    "oni_regression": {
+      "oni_mse": 0.07210945535917856,
+      "oni_rmse": 0.26853203786360125,
+      "oni_mae": 0.18568135470565822,
+      "oni_r2": 0.7344303484701449
+    },
+    "test_period": {
+      "start": "2024-01-01",
+      "end": "2025-06-01"
+    }
+  }
+}

@@ -1,16 +1,16 @@
 {
   "horizon_months": 6,
   "window_months": 12,
-  "model": "causal_lstm_lightgbm",
+  "model": "causal_lstm_xgboost",
   "class_mapping": {
     "0": "La Nina",
     "1": "Neutral",
     "2": "El Nino"
   },
   "validation": {
-    "accuracy": 0.0,
-    "balanced_accuracy": 0.0,
-    "macro_f1": 0.0,
+    "accuracy": 0.15384615384615385,
+    "balanced_accuracy": 0.5,
+    "macro_f1": 0.14814814814814814,
     "confusion_matrix": [
       [
         0,
@@ -18,32 +18,32 @@
         0
       ],
       [
-        2,
         0,
+        2,
         0
       ],
       [
-        11,
-        0,
+        6,
+        5,
         0
       ]
     ],
-    "lstm_oni_rmse": 1.2576584167230795
+    "lstm_oni_rmse": 1.271365757826621
   },
   "test": {
-    "accuracy": 0.0,
-    "balanced_accuracy": 0.0,
-    "macro_f1": 0.0,
+    "accuracy": 0.7142857142857143,
+    "balanced_accuracy": 0.6666666666666666,
+    "macro_f1": 0.5,
     "confusion_matrix": [
       [
+        1,
         0,
-        0,
-        3
+        2
       ],
       [
         0,
-        0,
-        4
+        4,
+        0
       ],
       [
         0,
@@ -51,6 +51,6 @@
         0
       ]
     ],
-    "lstm_oni_rmse": 0.21745361805342941
+    "lstm_oni_rmse": 0.22418565326190337
   }
 }

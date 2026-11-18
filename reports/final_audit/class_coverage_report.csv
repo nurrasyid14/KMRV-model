@@ -1,0 +1,37 @@
+fold,split,horizon_months,start_time,end_time,sample_count,post_window_sample_count,class_id,class_name,class_count,proportion,class_percentage,class_missing,actual_class_coverage,missing_actual_classes,coverage_status,purged_target_rows
+1,classifier_train_oof,1,2019-01-01,2021-11-01,35,35,0,La Nina,12,0.3428571428571428,34.28571428571428,False,3,[],complete_class_coverage,0
+1,classifier_train_oof,1,2019-01-01,2021-11-01,35,35,1,Neutral,12,0.3428571428571428,34.28571428571428,False,3,[],complete_class_coverage,0
+1,classifier_train_oof,1,2019-01-01,2021-11-01,35,35,2,El Nino,11,0.3142857142857143,31.428571428571427,False,3,[],complete_class_coverage,0
+1,test,1,2024-01-01,2025-06-01,18,18,0,La Nina,0,0.0,0.0,True,2,"[""La Nina""]",insufficient_class_coverage,0
+1,test,1,2024-01-01,2025-06-01,18,18,1,Neutral,15,0.8333333333333334,83.33333333333334,False,2,"[""La Nina""]",insufficient_class_coverage,0
+1,test,1,2024-01-01,2025-06-01,18,18,2,El Nino,3,0.1666666666666666,16.66666666666666,False,2,"[""La Nina""]",insufficient_class_coverage,0
+1,train,1,2016-12-01,2021-11-01,60,60,0,La Nina,17,0.2833333333333333,28.333333333333332,False,3,[],complete_class_coverage,1
+1,train,1,2016-12-01,2021-11-01,60,60,1,Neutral,27,0.45,45.0,False,3,[],complete_class_coverage,1
+1,train,1,2016-12-01,2021-11-01,60,60,2,El Nino,16,0.2666666666666666,26.66666666666666,False,3,[],complete_class_coverage,1
+1,validation,1,2022-01-01,2023-11-01,23,23,0,La Nina,12,0.5217391304347826,52.17391304347826,False,3,[],complete_class_coverage,1
+1,validation,1,2022-01-01,2023-11-01,23,23,1,Neutral,4,0.1739130434782608,17.391304347826082,False,3,[],complete_class_coverage,1
+1,validation,1,2022-01-01,2023-11-01,23,23,2,El Nino,7,0.3043478260869565,30.43478260869565,False,3,[],complete_class_coverage,1
+1,classifier_train_oof,3,2019-07-01,2021-09-01,27,27,0,La Nina,12,0.4444444444444444,44.44444444444444,False,3,[],complete_class_coverage,0
+1,classifier_train_oof,3,2019-07-01,2021-09-01,27,27,1,Neutral,9,0.3333333333333333,33.33333333333333,False,3,[],complete_class_coverage,0
+1,classifier_train_oof,3,2019-07-01,2021-09-01,27,27,2,El Nino,6,0.2222222222222222,22.22222222222222,False,3,[],complete_class_coverage,0
+1,test,3,2024-01-01,2025-06-01,18,18,0,La Nina,0,0.0,0.0,True,2,"[""La Nina""]",insufficient_class_coverage,0
+1,test,3,2024-01-01,2025-06-01,18,18,1,Neutral,17,0.9444444444444444,94.44444444444444,False,2,"[""La Nina""]",insufficient_class_coverage,0
+1,test,3,2024-01-01,2025-06-01,18,18,2,El Nino,1,0.0555555555555555,5.55555555555555,False,2,"[""La Nina""]",insufficient_class_coverage,0
+1,train,3,2016-12-01,2021-09-01,58,58,0,La Nina,17,0.293103448275862,29.3103448275862,False,3,[],complete_class_coverage,3
+1,train,3,2016-12-01,2021-09-01,58,58,1,Neutral,25,0.4310344827586206,43.103448275862064,False,3,[],complete_class_coverage,3
+1,train,3,2016-12-01,2021-09-01,58,58,2,El Nino,16,0.2758620689655172,27.58620689655172,False,3,[],complete_class_coverage,3
+1,validation,3,2022-01-01,2023-09-01,21,21,0,La Nina,10,0.4761904761904761,47.61904761904761,False,3,[],complete_class_coverage,3
+1,validation,3,2022-01-01,2023-09-01,21,21,1,Neutral,4,0.1904761904761904,19.04761904761904,False,3,[],complete_class_coverage,3
+1,validation,3,2022-01-01,2023-09-01,21,21,2,El Nino,7,0.3333333333333333,33.33333333333333,False,3,[],complete_class_coverage,3
+1,classifier_train_oof,6,2019-07-01,2021-06-01,24,24,0,La Nina,12,0.5,50.0,False,3,[],complete_class_coverage,0
+1,classifier_train_oof,6,2019-07-01,2021-06-01,24,24,1,Neutral,9,0.375,37.5,False,3,[],complete_class_coverage,0
+1,classifier_train_oof,6,2019-07-01,2021-06-01,24,24,2,El Nino,3,0.125,12.5,False,3,[],complete_class_coverage,0
+1,test,6,2024-01-01,2025-06-01,18,18,0,La Nina,3,0.1666666666666666,16.66666666666666,False,2,"[""El Nino""]",insufficient_class_coverage,0
+1,test,6,2024-01-01,2025-06-01,18,18,1,Neutral,15,0.8333333333333334,83.33333333333334,False,2,"[""El Nino""]",insufficient_class_coverage,0
+1,test,6,2024-01-01,2025-06-01,18,18,2,El Nino,0,0.0,0.0,True,2,"[""El Nino""]",insufficient_class_coverage,0
+1,train,6,2016-12-01,2021-06-01,55,55,0,La Nina,17,0.3090909090909091,30.909090909090907,False,3,[],complete_class_coverage,6
+1,train,6,2016-12-01,2021-06-01,55,55,1,Neutral,22,0.4,40.0,False,3,[],complete_class_coverage,6
+1,train,6,2016-12-01,2021-06-01,55,55,2,El Nino,16,0.2909090909090909,29.09090909090909,False,3,[],complete_class_coverage,6
+1,validation,6,2022-01-01,2023-06-01,18,18,0,La Nina,7,0.3888888888888889,38.88888888888889,False,3,[],complete_class_coverage,6
+1,validation,6,2022-01-01,2023-06-01,18,18,1,Neutral,4,0.2222222222222222,22.22222222222222,False,3,[],complete_class_coverage,6
+1,validation,6,2022-01-01,2023-06-01,18,18,2,El Nino,7,0.3888888888888889,38.88888888888889,False,3,[],complete_class_coverage,6

@@ -1,7 +1,7 @@
 {
   "horizon_months": 3,
   "window_months": 12,
-  "model": "causal_lstm_lightgbm",
+  "model": "causal_lstm_xgboost",
   "class_mapping": {
     "0": "La Nina",
     "1": "Neutral",
@@ -28,7 +28,7 @@
         0
       ]
     ],
-    "lstm_oni_rmse": 1.257454002958581
+    "lstm_oni_rmse": 1.2398634973870037
   },
   "test": {
     "accuracy": 1.0,
@@ -51,6 +51,6 @@
         0
       ]
     ],
-    "lstm_oni_rmse": 0.17404725937457927
+    "lstm_oni_rmse": 0.16657413811353036
   }
 }

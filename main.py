@@ -29,6 +29,11 @@ def parse_args() -> argparse.ArgumentParser:
         action="store_true",
         help="Run src/etl.py and src/utils.py conversion and EDA.",
     )
+    parser.add_argument(
+        "--legacy-training",
+        action="store_true",
+        help="Use the original fixed train/validation/test training pipeline instead of temporal backtesting.",
+    )
     return parser
 
 
@@ -41,6 +46,7 @@ def main() -> None:
         seed=args.seed,
         prepare_data=args.prepare_data,
         run_eda=args.run_eda,
+        legacy_training=args.legacy_training,
     )
     print(json.dumps(report, indent=2))
 

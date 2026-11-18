@@ -1,12 +1,15 @@
-"""LightGBM phase classifier shared by the ENSO ensemble."""
+"""LightGBM phase classifier shared by ENSO backtesting."""
 
 from __future__ import annotations
 
 import lightgbm as lgb
-import pandas as pd
 
 
-def create_phase_classifier(random_state: int = 42, iterations: int = 300) -> lgb.LGBMClassifier:
+def create_phase_classifier(
+    random_state: int = 42,
+    iterations: int = 300,
+    class_weight: dict[int, float] | None = None,
+) -> lgb.LGBMClassifier:
     return lgb.LGBMClassifier(
         objective="multiclass",
         num_class=3,
@@ -19,22 +22,27 @@ def create_phase_classifier(random_state: int = 42, iterations: int = 300) -> lg
         colsample_bytree=0.8,
         reg_lambda=1.0,
         random_state=random_state,
-        verbose=-1,
+        class_weight=class_weight,
+        verbosity=-1,
     )
 
 
 def train_phase_classifier(
-    train_features: pd.DataFrame,
+    train_features,
     train_labels,
-    validation_features: pd.DataFrame,
+    validation_features,
     validation_labels,
     random_state: int = 42,
+    class_weight: dict[int, float] | None = None,
 ) -> lgb.LGBMClassifier:
-    model = create_phase_classifier(random_state=random_state)
+    model = create_phase_classifier(
+        random_state=random_state,
+        class_weight=class_weight,
+    )
     model.fit(
         train_features,
         train_labels,
         eval_set=[(validation_features, validation_labels)],
-        callbacks=[lgb.early_stopping(50, verbose=False)],
+        callbacks=[lgb.early_stopping(50, verbose=False), lgb.log_evaluation(0)],
     )
     return model
