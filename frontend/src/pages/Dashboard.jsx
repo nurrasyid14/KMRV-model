@@ -14,7 +14,7 @@ const HORIZON_OPTIONS = [
   { value: '6', label: '6 bulan ke depan' },
 ];
 
-const best = metrics['1'];
+const _best = metrics['1'];
 
 export default function Dashboard() {
   const [selectedHorizon, setSelectedHorizon] = useState('1');
@@ -32,10 +32,10 @@ export default function Dashboard() {
     return d.toISOString().slice(0, 7);
   };
 
-  const activeInputRange = activePredictions.length > 0
+  const _activeInputRange = activePredictions.length > 0
     ? `${shortMonth(activePredictions[0].date.slice(0, 7))} – ${shortMonth(activePredictions[activePredictions.length - 1].date.slice(0, 7))}`
     : '';
-  const activeTargetRange = activePredictions.length > 0
+  const _activeTargetRange = activePredictions.length > 0
     ? `${shortMonth(addMonths(activePredictions[0].date, h))} – ${shortMonth(addMonths(activePredictions[activePredictions.length - 1].date, h))}`
     : '';
 

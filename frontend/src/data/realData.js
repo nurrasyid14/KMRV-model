@@ -6,12 +6,24 @@ export const realData = {
     "rows": 114,
     "source": "dataset/features_master_unscaled.csv",
     "bestValidationHorizon": 1,
-    "phaseRule": "El Nino >= +0,5 C; La Nina <= -0,5 C; Netral di antaranya",
+    "phaseRule": "El Nino > +0,5 C; La Nina < -0,5 C; Netral [-0,5, +0,5]",
     "climatology": "Anomali SST = SST - rata-rata bulan yang sama (2016-2025)"
   },
-  "latest": {
+  "latestSnapshot": {
+    "period": "2025-06",
     "date": "2025-06",
     "oni": -0.02,
+    "oni_anom": -0.02,
+    "soi": 0.5,
+    "dmi": -0.014,
+    "phase": "Netral",
+    "phaseRule": "oni_anom in [-0.5, +0.5]"
+  },
+  "latest": {
+    "period": "2025-06",
+    "date": "2025-06",
+    "oni": -0.02,
+    "oni_anom": -0.02,
     "soi": 0.5,
     "dmi": -0.014,
     "sst": {
@@ -33,10 +45,44 @@ export const realData = {
     "previousDate": "2025-05",
     "deltaOni": 0.02
   },
+  "domainAnomalies": [
+    {
+      "id": "nino34",
+      "label": "Pasifik Ni\u00f1o 3.4",
+      "value": -0.119,
+      "unit": "\u00b0C"
+    },
+    {
+      "id": "karimata",
+      "label": "Selat Karimata",
+      "value": 0.126,
+      "unit": "\u00b0C"
+    },
+    {
+      "id": "makassar",
+      "label": "Selat Makassar",
+      "value": 0.181,
+      "unit": "\u00b0C"
+    },
+    {
+      "id": "jawa",
+      "label": "Selatan Jawa",
+      "value": 0.262,
+      "unit": "\u00b0C"
+    },
+    {
+      "id": "maluku",
+      "label": "Maluku-Papua",
+      "value": 0.071,
+      "unit": "\u00b0C"
+    }
+  ],
   "history": [
     {
+      "period": "2016-01",
       "date": "2016-01",
       "oni": 2.5,
+      "oni_anom": 2.5,
       "soi": -3.6,
       "dmi": 0.265,
       "sst": {
@@ -56,8 +102,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2016-02",
       "date": "2016-02",
       "oni": 2.21,
+      "oni_anom": 2.21,
       "soi": -3.2,
       "dmi": -0.11,
       "sst": {
@@ -77,8 +125,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2016-03",
       "date": "2016-03",
       "oni": 1.69,
+      "oni_anom": 1.69,
       "soi": -0.1,
       "dmi": -0.008,
       "sst": {
@@ -98,8 +148,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2016-04",
       "date": "2016-04",
       "oni": 1.11,
+      "oni_anom": 1.11,
       "soi": -2.0,
       "dmi": 0.146,
       "sst": {
@@ -119,8 +171,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2016-05",
       "date": "2016-05",
       "oni": 0.57,
+      "oni_anom": 0.57,
       "soi": 0.7,
       "dmi": -0.113,
       "sst": {
@@ -140,8 +194,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2016-06",
       "date": "2016-06",
       "oni": 0.09,
+      "oni_anom": 0.09,
       "soi": 1.1,
       "dmi": -0.443,
       "sst": {
@@ -161,8 +217,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2016-07",
       "date": "2016-07",
       "oni": -0.19,
+      "oni_anom": -0.19,
       "soi": 0.7,
       "dmi": -0.757,
       "sst": {
@@ -182,8 +240,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2016-08",
       "date": "2016-08",
       "oni": -0.34,
+      "oni_anom": -0.34,
       "soi": 1.2,
       "dmi": -0.443,
       "sst": {
@@ -203,8 +263,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2016-09",
       "date": "2016-09",
       "oni": -0.42,
+      "oni_anom": -0.42,
       "soi": 2.0,
       "dmi": -0.437,
       "sst": {
@@ -224,8 +286,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2016-10",
       "date": "2016-10",
       "oni": -0.51,
+      "oni_anom": -0.51,
       "soi": -0.4,
       "dmi": -0.371,
       "sst": {
@@ -245,8 +309,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2016-11",
       "date": "2016-11",
       "oni": -0.49,
+      "oni_anom": -0.49,
       "soi": -0.2,
       "dmi": -0.382,
       "sst": {
@@ -266,8 +332,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2016-12",
       "date": "2016-12",
       "oni": -0.37,
+      "oni_anom": -0.37,
       "soi": 0.5,
       "dmi": -0.31,
       "sst": {
@@ -287,8 +355,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2017-01",
       "date": "2017-01",
       "oni": -0.08,
+      "oni_anom": -0.08,
       "soi": 0.3,
       "dmi": -0.086,
       "sst": {
@@ -308,8 +378,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2017-02",
       "date": "2017-02",
       "oni": 0.08,
+      "oni_anom": 0.08,
       "soi": -0.1,
       "dmi": 0.101,
       "sst": {
@@ -329,8 +401,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2017-03",
       "date": "2017-03",
       "oni": 0.27,
+      "oni_anom": 0.27,
       "soi": 1.5,
       "dmi": 0.357,
       "sst": {
@@ -350,8 +424,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2017-04",
       "date": "2017-04",
       "oni": 0.32,
+      "oni_anom": 0.32,
       "soi": -0.3,
       "dmi": 0.498,
       "sst": {
@@ -371,8 +447,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2017-05",
       "date": "2017-05",
       "oni": 0.35,
+      "oni_anom": 0.35,
       "soi": 0.4,
       "dmi": 0.536,
       "sst": {
@@ -392,8 +470,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2017-06",
       "date": "2017-06",
       "oni": 0.32,
+      "oni_anom": 0.32,
       "soi": -0.7,
       "dmi": 0.424,
       "sst": {
@@ -413,8 +493,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2017-07",
       "date": "2017-07",
       "oni": 0.14,
+      "oni_anom": 0.14,
       "soi": 1.3,
       "dmi": 0.52,
       "sst": {
@@ -434,8 +516,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2017-08",
       "date": "2017-08",
       "oni": -0.07,
+      "oni_anom": -0.07,
       "soi": 0.9,
       "dmi": 0.349,
       "sst": {
@@ -455,8 +539,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2017-09",
       "date": "2017-09",
       "oni": -0.23,
+      "oni_anom": -0.23,
       "soi": 1.0,
       "dmi": 0.035,
       "sst": {
@@ -476,8 +562,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2017-10",
       "date": "2017-10",
       "oni": -0.44,
+      "oni_anom": -0.44,
       "soi": 1.5,
       "dmi": 0.015,
       "sst": {
@@ -497,8 +585,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2017-11",
       "date": "2017-11",
       "oni": -0.61,
+      "oni_anom": -0.61,
       "soi": 1.5,
       "dmi": 0.289,
       "sst": {
@@ -518,8 +608,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2017-12",
       "date": "2017-12",
       "oni": -0.76,
+      "oni_anom": -0.76,
       "soi": -0.2,
       "dmi": 0.11,
       "sst": {
@@ -539,8 +631,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2018-01",
       "date": "2018-01",
       "oni": -0.71,
+      "oni_anom": -0.71,
       "soi": 1.8,
       "dmi": -0.2,
       "sst": {
@@ -560,8 +654,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2018-02",
       "date": "2018-02",
       "oni": -0.67,
+      "oni_anom": -0.67,
       "soi": -0.8,
       "dmi": 0.216,
       "sst": {
@@ -581,8 +677,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2018-03",
       "date": "2018-03",
       "oni": -0.55,
+      "oni_anom": -0.55,
       "soi": 2.4,
       "dmi": -0.12,
       "sst": {
@@ -602,8 +700,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2018-04",
       "date": "2018-04",
       "oni": -0.35,
+      "oni_anom": -0.35,
       "soi": 0.8,
       "dmi": -0.083,
       "sst": {
@@ -623,8 +723,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2018-05",
       "date": "2018-05",
       "oni": -0.07,
+      "oni_anom": -0.07,
       "soi": 0.6,
       "dmi": 0.122,
       "sst": {
@@ -644,8 +746,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2018-06",
       "date": "2018-06",
       "oni": 0.13,
+      "oni_anom": 0.13,
       "soi": -0.2,
       "dmi": 0.155,
       "sst": {
@@ -665,8 +769,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2018-07",
       "date": "2018-07",
       "oni": 0.2,
+      "oni_anom": 0.2,
       "soi": 0.4,
       "dmi": 0.053,
       "sst": {
@@ -686,8 +792,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2018-08",
       "date": "2018-08",
       "oni": 0.3,
+      "oni_anom": 0.3,
       "soi": -0.5,
       "dmi": 0.121,
       "sst": {
@@ -707,8 +815,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2018-09",
       "date": "2018-09",
       "oni": 0.52,
+      "oni_anom": 0.52,
       "soi": -1.5,
       "dmi": 0.604,
       "sst": {
@@ -728,8 +838,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2018-10",
       "date": "2018-10",
       "oni": 0.82,
+      "oni_anom": 0.82,
       "soi": 0.6,
       "dmi": 0.684,
       "sst": {
@@ -749,8 +861,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2018-11",
       "date": "2018-11",
       "oni": 1.04,
+      "oni_anom": 1.04,
       "soi": -0.1,
       "dmi": 0.5,
       "sst": {
@@ -770,8 +884,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2018-12",
       "date": "2018-12",
       "oni": 1.05,
+      "oni_anom": 1.05,
       "soi": 1.7,
       "dmi": 0.309,
       "sst": {
@@ -791,8 +907,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2019-01",
       "date": "2019-01",
       "oni": 0.99,
+      "oni_anom": 0.99,
       "soi": -0.1,
       "dmi": 0.387,
       "sst": {
@@ -812,8 +930,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2019-02",
       "date": "2019-02",
       "oni": 0.94,
+      "oni_anom": 0.94,
       "soi": -2.3,
       "dmi": 0.416,
       "sst": {
@@ -833,8 +953,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2019-03",
       "date": "2019-03",
       "oni": 0.87,
+      "oni_anom": 0.87,
       "soi": -0.5,
       "dmi": 0.225,
       "sst": {
@@ -854,8 +976,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2019-04",
       "date": "2019-04",
       "oni": 0.82,
+      "oni_anom": 0.82,
       "soi": 0.2,
       "dmi": 0.258,
       "sst": {
@@ -875,8 +999,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2019-05",
       "date": "2019-05",
       "oni": 0.71,
+      "oni_anom": 0.71,
       "soi": -0.7,
       "dmi": 0.54,
       "sst": {
@@ -896,8 +1022,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2019-06",
       "date": "2019-06",
       "oni": 0.59,
+      "oni_anom": 0.59,
       "soi": -0.7,
       "dmi": 0.605,
       "sst": {
@@ -917,8 +1045,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2019-07",
       "date": "2019-07",
       "oni": 0.38,
+      "oni_anom": 0.38,
       "soi": -0.6,
       "dmi": 0.597,
       "sst": {
@@ -938,8 +1068,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2019-08",
       "date": "2019-08",
       "oni": 0.2,
+      "oni_anom": 0.2,
       "soi": -0.2,
       "dmi": 0.436,
       "sst": {
@@ -959,8 +1091,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2019-09",
       "date": "2019-09",
       "oni": 0.31,
+      "oni_anom": 0.31,
       "soi": -1.9,
       "dmi": 0.892,
       "sst": {
@@ -980,8 +1114,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2019-10",
       "date": "2019-10",
       "oni": 0.51,
+      "oni_anom": 0.51,
       "soi": -0.6,
       "dmi": 0.964,
       "sst": {
@@ -1001,8 +1137,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2019-11",
       "date": "2019-11",
       "oni": 0.72,
+      "oni_anom": 0.72,
       "soi": -1.4,
       "dmi": 0.835,
       "sst": {
@@ -1022,8 +1160,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2019-12",
       "date": "2019-12",
       "oni": 0.75,
+      "oni_anom": 0.75,
       "soi": -0.9,
       "dmi": 0.243,
       "sst": {
@@ -1043,8 +1183,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2020-01",
       "date": "2020-01",
       "oni": 0.71,
+      "oni_anom": 0.71,
       "soi": 0.3,
       "dmi": 0.173,
       "sst": {
@@ -1064,8 +1206,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2020-02",
       "date": "2020-02",
       "oni": 0.66,
+      "oni_anom": 0.66,
       "soi": -0.1,
       "dmi": 0.054,
       "sst": {
@@ -1085,8 +1229,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2020-03",
       "date": "2020-03",
       "oni": 0.57,
+      "oni_anom": 0.57,
       "soi": -0.2,
       "dmi": 0.019,
       "sst": {
@@ -1106,8 +1252,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2020-04",
       "date": "2020-04",
       "oni": 0.33,
+      "oni_anom": 0.33,
       "soi": 0.3,
       "dmi": -0.011,
       "sst": {
@@ -1127,8 +1275,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2020-05",
       "date": "2020-05",
       "oni": 0.04,
+      "oni_anom": 0.04,
       "soi": 0.7,
       "dmi": 0.298,
       "sst": {
@@ -1148,8 +1298,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2020-06",
       "date": "2020-06",
       "oni": -0.18,
+      "oni_anom": -0.18,
       "soi": -0.6,
       "dmi": 0.455,
       "sst": {
@@ -1169,8 +1321,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2020-07",
       "date": "2020-07",
       "oni": -0.29,
+      "oni_anom": -0.29,
       "soi": 0.7,
       "dmi": 0.319,
       "sst": {
@@ -1190,8 +1344,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2020-08",
       "date": "2020-08",
       "oni": -0.43,
+      "oni_anom": -0.43,
       "soi": 1.8,
       "dmi": -0.183,
       "sst": {
@@ -1211,8 +1367,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2020-09",
       "date": "2020-09",
       "oni": -0.77,
+      "oni_anom": -0.77,
       "soi": 1.5,
       "dmi": -0.189,
       "sst": {
@@ -1232,8 +1390,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2020-10",
       "date": "2020-10",
       "oni": -1.0,
+      "oni_anom": -1.0,
       "soi": 0.8,
       "dmi": 0.074,
       "sst": {
@@ -1253,8 +1413,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2020-11",
       "date": "2020-11",
       "oni": -1.11,
+      "oni_anom": -1.11,
       "soi": 1.1,
       "dmi": 0.02,
       "sst": {
@@ -1274,8 +1436,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2020-12",
       "date": "2020-12",
       "oni": -1.06,
+      "oni_anom": -1.06,
       "soi": 3.0,
       "dmi": 0.031,
       "sst": {
@@ -1295,8 +1459,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2021-01",
       "date": "2021-01",
       "oni": -0.99,
+      "oni_anom": -0.99,
       "soi": 3.2,
       "dmi": 0.051,
       "sst": {
@@ -1316,8 +1482,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2021-02",
       "date": "2021-02",
       "oni": -0.85,
+      "oni_anom": -0.85,
       "soi": 2.5,
       "dmi": 0.243,
       "sst": {
@@ -1337,8 +1505,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2021-03",
       "date": "2021-03",
       "oni": -0.74,
+      "oni_anom": -0.74,
       "soi": 0.6,
       "dmi": 0.267,
       "sst": {
@@ -1358,8 +1528,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2021-04",
       "date": "2021-04",
       "oni": -0.56,
+      "oni_anom": -0.56,
       "soi": 0.6,
       "dmi": 0.25,
       "sst": {
@@ -1379,8 +1551,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2021-05",
       "date": "2021-05",
       "oni": -0.4,
+      "oni_anom": -0.4,
       "soi": 0.8,
       "dmi": 0.009,
       "sst": {
@@ -1400,8 +1574,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2021-06",
       "date": "2021-06",
       "oni": -0.31,
+      "oni_anom": -0.31,
       "soi": 0.7,
       "dmi": -0.002,
       "sst": {
@@ -1421,8 +1597,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2021-07",
       "date": "2021-07",
       "oni": -0.35,
+      "oni_anom": -0.35,
       "soi": 2.3,
       "dmi": -0.229,
       "sst": {
@@ -1442,8 +1620,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2021-08",
       "date": "2021-08",
       "oni": -0.46,
+      "oni_anom": -0.46,
       "soi": 1.0,
       "dmi": -0.099,
       "sst": {
@@ -1463,8 +1643,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2021-09",
       "date": "2021-09",
       "oni": -0.64,
+      "oni_anom": -0.64,
       "soi": 1.3,
       "dmi": -0.058,
       "sst": {
@@ -1484,8 +1666,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2021-10",
       "date": "2021-10",
       "oni": -0.77,
+      "oni_anom": -0.77,
       "soi": 1.2,
       "dmi": -0.091,
       "sst": {
@@ -1505,8 +1689,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2021-11",
       "date": "2021-11",
       "oni": -0.91,
+      "oni_anom": -0.91,
       "soi": 1.6,
       "dmi": 0.069,
       "sst": {
@@ -1526,8 +1712,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2021-12",
       "date": "2021-12",
       "oni": -0.83,
+      "oni_anom": -0.83,
       "soi": 2.5,
       "dmi": -0.12,
       "sst": {
@@ -1547,8 +1735,10 @@ export const realData = {
       "split": "train"
     },
     {
+      "period": "2022-01",
       "date": "2022-01",
       "oni": -0.76,
+      "oni_anom": -0.76,
       "soi": 0.8,
       "dmi": -0.056,
       "sst": {
@@ -1568,8 +1758,10 @@ export const realData = {
       "split": "val"
     },
     {
+      "period": "2022-02",
       "date": "2022-02",
       "oni": -0.68,
+      "oni_anom": -0.68,
       "soi": 1.8,
       "dmi": -0.082,
       "sst": {
@@ -1589,8 +1781,10 @@ export const realData = {
       "split": "val"
     },
     {
+      "period": "2022-03",
       "date": "2022-03",
       "oni": -0.77,
+      "oni_anom": -0.77,
       "soi": 2.9,
       "dmi": -0.093,
       "sst": {
@@ -1610,8 +1804,10 @@ export const realData = {
       "split": "val"
     },
     {
+      "period": "2022-04",
       "date": "2022-04",
       "oni": -0.86,
+      "oni_anom": -0.86,
       "soi": 2.8,
       "dmi": -0.068,
       "sst": {
@@ -1631,8 +1827,10 @@ export const realData = {
       "split": "val"
     },
     {
+      "period": "2022-05",
       "date": "2022-05",
       "oni": -0.83,
+      "oni_anom": -0.83,
       "soi": 2.4,
       "dmi": -0.122,
       "sst": {
@@ -1652,8 +1850,10 @@ export const realData = {
       "split": "val"
     },
     {
+      "period": "2022-06",
       "date": "2022-06",
       "oni": -0.73,
+      "oni_anom": -0.73,
       "soi": 2.8,
       "dmi": -0.335,
       "sst": {
@@ -1673,8 +1873,10 @@ export const realData = {
       "split": "val"
     },
     {
+      "period": "2022-07",
       "date": "2022-07",
       "oni": -0.7,
+      "oni_anom": -0.7,
       "soi": 1.3,
       "dmi": -0.195,
       "sst": {
@@ -1694,8 +1896,10 @@ export const realData = {
       "split": "val"
     },
     {
+      "period": "2022-08",
       "date": "2022-08",
       "oni": -0.78,
+      "oni_anom": -0.78,
       "soi": 1.7,
       "dmi": -0.246,
       "sst": {
@@ -1715,8 +1919,10 @@ export const realData = {
       "split": "val"
     },
     {
+      "period": "2022-09",
       "date": "2022-09",
       "oni": -0.87,
+      "oni_anom": -0.87,
       "soi": 2.7,
       "dmi": -0.322,
       "sst": {
@@ -1736,8 +1942,10 @@ export const realData = {
       "split": "val"
     },
     {
+      "period": "2022-10",
       "date": "2022-10",
       "oni": -0.89,
+      "oni_anom": -0.89,
       "soi": 2.8,
       "dmi": -0.691,
       "sst": {
@@ -1757,8 +1965,10 @@ export const realData = {
       "split": "val"
     },
     {
+      "period": "2022-11",
       "date": "2022-11",
       "oni": -0.82,
+      "oni_anom": -0.82,
       "soi": 0.5,
       "dmi": -0.269,
       "sst": {
@@ -1778,8 +1988,10 @@ export const realData = {
       "split": "val"
     },
     {
+      "period": "2022-12",
       "date": "2022-12",
       "oni": -0.7,
+      "oni_anom": -0.7,
       "soi": 3.5,
       "dmi": -0.091,
       "sst": {
@@ -1799,8 +2011,10 @@ export const realData = {
       "split": "val"
     },
     {
+      "period": "2023-01",
       "date": "2023-01",
       "oni": -0.55,
+      "oni_anom": -0.55,
       "soi": 2.3,
       "dmi": 0.11,
       "sst": {
@@ -1820,8 +2034,10 @@ export const realData = {
       "split": "val"
     },
     {
+      "period": "2023-02",
       "date": "2023-02",
       "oni": -0.33,
+      "oni_anom": -0.33,
       "soi": 2.3,
       "dmi": 0.157,
       "sst": {
@@ -1841,8 +2057,10 @@ export const realData = {
       "split": "val"
     },
     {
+      "period": "2023-03",
       "date": "2023-03",
       "oni": -0.11,
+      "oni_anom": -0.11,
       "soi": 0.3,
       "dmi": 0.414,
       "sst": {
@@ -1862,8 +2080,10 @@ export const realData = {
       "split": "val"
     },
     {
+      "period": "2023-04",
       "date": "2023-04",
       "oni": 0.19,
+      "oni_anom": 0.19,
       "soi": 0.4,
       "dmi": 0.56,
       "sst": {
@@ -1883,8 +2103,10 @@ export const realData = {
       "split": "val"
     },
     {
+      "period": "2023-05",
       "date": "2023-05",
       "oni": 0.46,
+      "oni_anom": 0.46,
       "soi": -1.7,
       "dmi": 0.443,
       "sst": {
@@ -1904,8 +2126,10 @@ export const realData = {
       "split": "val"
     },
     {
+      "period": "2023-06",
       "date": "2023-06",
       "oni": 0.73,
+      "oni_anom": 0.73,
       "soi": 0.4,
       "dmi": 0.665,
       "sst": {
@@ -1925,8 +2149,10 @@ export const realData = {
       "split": "val"
     },
     {
+      "period": "2023-07",
       "date": "2023-07",
       "oni": 1.0,
+      "oni_anom": 1.0,
       "soi": -0.4,
       "dmi": 0.498,
       "sst": {
@@ -1946,8 +2172,10 @@ export const realData = {
       "split": "val"
     },
     {
+      "period": "2023-08",
       "date": "2023-08",
       "oni": 1.25,
+      "oni_anom": 1.25,
       "soi": -1.4,
       "dmi": 0.826,
       "sst": {
@@ -1967,8 +2195,10 @@ export const realData = {
       "split": "val"
     },
     {
+      "period": "2023-09",
       "date": "2023-09",
       "oni": 1.5,
+      "oni_anom": 1.5,
       "soi": -2.1,
       "dmi": 0.946,
       "sst": {
@@ -1988,8 +2218,10 @@ export const realData = {
       "split": "val"
     },
     {
+      "period": "2023-10",
       "date": "2023-10",
       "oni": 1.74,
+      "oni_anom": 1.74,
       "soi": -0.8,
       "dmi": 0.804,
       "sst": {
@@ -2009,8 +2241,10 @@ export const realData = {
       "split": "val"
     },
     {
+      "period": "2023-11",
       "date": "2023-11",
       "oni": 1.9,
+      "oni_anom": 1.9,
       "soi": -1.3,
       "dmi": 0.92,
       "sst": {
@@ -2030,8 +2264,10 @@ export const realData = {
       "split": "val"
     },
     {
+      "period": "2023-12",
       "date": "2023-12",
       "oni": 1.99,
+      "oni_anom": 1.99,
       "soi": -0.4,
       "dmi": 0.852,
       "sst": {
@@ -2051,8 +2287,10 @@ export const realData = {
       "split": "val"
     },
     {
+      "period": "2024-01",
       "date": "2024-01",
       "oni": 1.84,
+      "oni_anom": 1.84,
       "soi": 0.8,
       "dmi": 0.765,
       "sst": {
@@ -2072,8 +2310,10 @@ export const realData = {
       "split": "test"
     },
     {
+      "period": "2024-02",
       "date": "2024-02",
       "oni": 1.53,
+      "oni_anom": 1.53,
       "soi": -2.3,
       "dmi": 0.327,
       "sst": {
@@ -2093,8 +2333,10 @@ export const realData = {
       "split": "test"
     },
     {
+      "period": "2024-03",
       "date": "2024-03",
       "oni": 1.18,
+      "oni_anom": 1.18,
       "soi": 0.6,
       "dmi": 0.421,
       "sst": {
@@ -2114,8 +2356,10 @@ export const realData = {
       "split": "test"
     },
     {
+      "period": "2024-04",
       "date": "2024-04",
       "oni": 0.77,
+      "oni_anom": 0.77,
       "soi": -0.3,
       "dmi": 0.44,
       "sst": {
@@ -2135,8 +2379,10 @@ export const realData = {
       "split": "test"
     },
     {
+      "period": "2024-05",
       "date": "2024-05",
       "oni": 0.43,
+      "oni_anom": 0.43,
       "soi": 0.8,
       "dmi": 0.298,
       "sst": {
@@ -2156,8 +2402,10 @@ export const realData = {
       "split": "test"
     },
     {
+      "period": "2024-06",
       "date": "2024-06",
       "oni": 0.18,
+      "oni_anom": 0.18,
       "soi": 0.1,
       "dmi": 0.197,
       "sst": {
@@ -2177,8 +2425,10 @@ export const realData = {
       "split": "test"
     },
     {
+      "period": "2024-07",
       "date": "2024-07",
       "oni": 0.06,
+      "oni_anom": 0.06,
       "soi": -1.2,
       "dmi": 0.033,
       "sst": {
@@ -2198,8 +2448,10 @@ export const realData = {
       "split": "test"
     },
     {
+      "period": "2024-08",
       "date": "2024-08",
       "oni": -0.04,
+      "oni_anom": -0.04,
       "soi": 1.5,
       "dmi": 0.267,
       "sst": {
@@ -2219,8 +2471,10 @@ export const realData = {
       "split": "test"
     },
     {
+      "period": "2024-09",
       "date": "2024-09",
       "oni": -0.12,
+      "oni_anom": -0.12,
       "soi": -0.2,
       "dmi": 0.115,
       "sst": {
@@ -2240,8 +2494,10 @@ export const realData = {
       "split": "test"
     },
     {
+      "period": "2024-10",
       "date": "2024-10",
       "oni": -0.19,
+      "oni_anom": -0.19,
       "soi": 0.8,
       "dmi": -0.196,
       "sst": {
@@ -2261,8 +2517,10 @@ export const realData = {
       "split": "test"
     },
     {
+      "period": "2024-11",
       "date": "2024-11",
       "oni": -0.29,
+      "oni_anom": -0.29,
       "soi": 0.8,
       "dmi": -0.382,
       "sst": {
@@ -2282,8 +2540,10 @@ export const realData = {
       "split": "test"
     },
     {
+      "period": "2024-12",
       "date": "2024-12",
       "oni": -0.43,
+      "oni_anom": -0.43,
       "soi": 1.9,
       "dmi": -0.331,
       "sst": {
@@ -2303,8 +2563,10 @@ export const realData = {
       "split": "test"
     },
     {
+      "period": "2025-01",
       "date": "2025-01",
       "oni": -0.46,
+      "oni_anom": -0.46,
       "soi": 0.3,
       "dmi": -0.196,
       "sst": {
@@ -2324,8 +2586,10 @@ export const realData = {
       "split": "test"
     },
     {
+      "period": "2025-02",
       "date": "2025-02",
       "oni": -0.22,
+      "oni_anom": -0.22,
       "soi": 0.9,
       "dmi": 0.017,
       "sst": {
@@ -2345,8 +2609,10 @@ export const realData = {
       "split": "test"
     },
     {
+      "period": "2025-03",
       "date": "2025-03",
       "oni": -0.08,
+      "oni_anom": -0.08,
       "soi": 2.8,
       "dmi": 0.058,
       "sst": {
@@ -2366,8 +2632,10 @@ export const realData = {
       "split": "test"
     },
     {
+      "period": "2025-04",
       "date": "2025-04",
       "oni": 0.02,
+      "oni_anom": 0.02,
       "soi": 0.9,
       "dmi": 0.149,
       "sst": {
@@ -2387,8 +2655,10 @@ export const realData = {
       "split": "test"
     },
     {
+      "period": "2025-05",
       "date": "2025-05",
       "oni": -0.04,
+      "oni_anom": -0.04,
       "soi": 0.7,
       "dmi": 0.107,
       "sst": {
@@ -2408,8 +2678,10 @@ export const realData = {
       "split": "test"
     },
     {
+      "period": "2025-06",
       "date": "2025-06",
       "oni": -0.02,
+      "oni_anom": -0.02,
       "soi": 0.5,
       "dmi": -0.014,
       "sst": {
@@ -2826,14 +3098,998 @@ export const realData = {
         "predicted_phase": 2
       }
     ]
+  },
+  "heatmap": [
+    {
+      "year": 2016,
+      "months": [
+        {
+          "month": 1,
+          "date": "2016-01",
+          "value": 2.5
+        },
+        {
+          "month": 2,
+          "date": "2016-02",
+          "value": 2.21
+        },
+        {
+          "month": 3,
+          "date": "2016-03",
+          "value": 1.69
+        },
+        {
+          "month": 4,
+          "date": "2016-04",
+          "value": 1.11
+        },
+        {
+          "month": 5,
+          "date": "2016-05",
+          "value": 0.57
+        },
+        {
+          "month": 6,
+          "date": "2016-06",
+          "value": 0.09
+        },
+        {
+          "month": 7,
+          "date": "2016-07",
+          "value": -0.19
+        },
+        {
+          "month": 8,
+          "date": "2016-08",
+          "value": -0.34
+        },
+        {
+          "month": 9,
+          "date": "2016-09",
+          "value": -0.42
+        },
+        {
+          "month": 10,
+          "date": "2016-10",
+          "value": -0.51
+        },
+        {
+          "month": 11,
+          "date": "2016-11",
+          "value": -0.49
+        },
+        {
+          "month": 12,
+          "date": "2016-12",
+          "value": -0.37
+        }
+      ]
+    },
+    {
+      "year": 2017,
+      "months": [
+        {
+          "month": 1,
+          "date": "2017-01",
+          "value": -0.08
+        },
+        {
+          "month": 2,
+          "date": "2017-02",
+          "value": 0.08
+        },
+        {
+          "month": 3,
+          "date": "2017-03",
+          "value": 0.27
+        },
+        {
+          "month": 4,
+          "date": "2017-04",
+          "value": 0.32
+        },
+        {
+          "month": 5,
+          "date": "2017-05",
+          "value": 0.35
+        },
+        {
+          "month": 6,
+          "date": "2017-06",
+          "value": 0.32
+        },
+        {
+          "month": 7,
+          "date": "2017-07",
+          "value": 0.14
+        },
+        {
+          "month": 8,
+          "date": "2017-08",
+          "value": -0.07
+        },
+        {
+          "month": 9,
+          "date": "2017-09",
+          "value": -0.23
+        },
+        {
+          "month": 10,
+          "date": "2017-10",
+          "value": -0.44
+        },
+        {
+          "month": 11,
+          "date": "2017-11",
+          "value": -0.61
+        },
+        {
+          "month": 12,
+          "date": "2017-12",
+          "value": -0.76
+        }
+      ]
+    },
+    {
+      "year": 2018,
+      "months": [
+        {
+          "month": 1,
+          "date": "2018-01",
+          "value": -0.71
+        },
+        {
+          "month": 2,
+          "date": "2018-02",
+          "value": -0.67
+        },
+        {
+          "month": 3,
+          "date": "2018-03",
+          "value": -0.55
+        },
+        {
+          "month": 4,
+          "date": "2018-04",
+          "value": -0.35
+        },
+        {
+          "month": 5,
+          "date": "2018-05",
+          "value": -0.07
+        },
+        {
+          "month": 6,
+          "date": "2018-06",
+          "value": 0.13
+        },
+        {
+          "month": 7,
+          "date": "2018-07",
+          "value": 0.2
+        },
+        {
+          "month": 8,
+          "date": "2018-08",
+          "value": 0.3
+        },
+        {
+          "month": 9,
+          "date": "2018-09",
+          "value": 0.52
+        },
+        {
+          "month": 10,
+          "date": "2018-10",
+          "value": 0.82
+        },
+        {
+          "month": 11,
+          "date": "2018-11",
+          "value": 1.04
+        },
+        {
+          "month": 12,
+          "date": "2018-12",
+          "value": 1.05
+        }
+      ]
+    },
+    {
+      "year": 2019,
+      "months": [
+        {
+          "month": 1,
+          "date": "2019-01",
+          "value": 0.99
+        },
+        {
+          "month": 2,
+          "date": "2019-02",
+          "value": 0.94
+        },
+        {
+          "month": 3,
+          "date": "2019-03",
+          "value": 0.87
+        },
+        {
+          "month": 4,
+          "date": "2019-04",
+          "value": 0.82
+        },
+        {
+          "month": 5,
+          "date": "2019-05",
+          "value": 0.71
+        },
+        {
+          "month": 6,
+          "date": "2019-06",
+          "value": 0.59
+        },
+        {
+          "month": 7,
+          "date": "2019-07",
+          "value": 0.38
+        },
+        {
+          "month": 8,
+          "date": "2019-08",
+          "value": 0.2
+        },
+        {
+          "month": 9,
+          "date": "2019-09",
+          "value": 0.31
+        },
+        {
+          "month": 10,
+          "date": "2019-10",
+          "value": 0.51
+        },
+        {
+          "month": 11,
+          "date": "2019-11",
+          "value": 0.72
+        },
+        {
+          "month": 12,
+          "date": "2019-12",
+          "value": 0.75
+        }
+      ]
+    },
+    {
+      "year": 2020,
+      "months": [
+        {
+          "month": 1,
+          "date": "2020-01",
+          "value": 0.71
+        },
+        {
+          "month": 2,
+          "date": "2020-02",
+          "value": 0.66
+        },
+        {
+          "month": 3,
+          "date": "2020-03",
+          "value": 0.57
+        },
+        {
+          "month": 4,
+          "date": "2020-04",
+          "value": 0.33
+        },
+        {
+          "month": 5,
+          "date": "2020-05",
+          "value": 0.04
+        },
+        {
+          "month": 6,
+          "date": "2020-06",
+          "value": -0.18
+        },
+        {
+          "month": 7,
+          "date": "2020-07",
+          "value": -0.29
+        },
+        {
+          "month": 8,
+          "date": "2020-08",
+          "value": -0.43
+        },
+        {
+          "month": 9,
+          "date": "2020-09",
+          "value": -0.77
+        },
+        {
+          "month": 10,
+          "date": "2020-10",
+          "value": -1.0
+        },
+        {
+          "month": 11,
+          "date": "2020-11",
+          "value": -1.11
+        },
+        {
+          "month": 12,
+          "date": "2020-12",
+          "value": -1.06
+        }
+      ]
+    },
+    {
+      "year": 2021,
+      "months": [
+        {
+          "month": 1,
+          "date": "2021-01",
+          "value": -0.99
+        },
+        {
+          "month": 2,
+          "date": "2021-02",
+          "value": -0.85
+        },
+        {
+          "month": 3,
+          "date": "2021-03",
+          "value": -0.74
+        },
+        {
+          "month": 4,
+          "date": "2021-04",
+          "value": -0.56
+        },
+        {
+          "month": 5,
+          "date": "2021-05",
+          "value": -0.4
+        },
+        {
+          "month": 6,
+          "date": "2021-06",
+          "value": -0.31
+        },
+        {
+          "month": 7,
+          "date": "2021-07",
+          "value": -0.35
+        },
+        {
+          "month": 8,
+          "date": "2021-08",
+          "value": -0.46
+        },
+        {
+          "month": 9,
+          "date": "2021-09",
+          "value": -0.64
+        },
+        {
+          "month": 10,
+          "date": "2021-10",
+          "value": -0.77
+        },
+        {
+          "month": 11,
+          "date": "2021-11",
+          "value": -0.91
+        },
+        {
+          "month": 12,
+          "date": "2021-12",
+          "value": -0.83
+        }
+      ]
+    },
+    {
+      "year": 2022,
+      "months": [
+        {
+          "month": 1,
+          "date": "2022-01",
+          "value": -0.76
+        },
+        {
+          "month": 2,
+          "date": "2022-02",
+          "value": -0.68
+        },
+        {
+          "month": 3,
+          "date": "2022-03",
+          "value": -0.77
+        },
+        {
+          "month": 4,
+          "date": "2022-04",
+          "value": -0.86
+        },
+        {
+          "month": 5,
+          "date": "2022-05",
+          "value": -0.83
+        },
+        {
+          "month": 6,
+          "date": "2022-06",
+          "value": -0.73
+        },
+        {
+          "month": 7,
+          "date": "2022-07",
+          "value": -0.7
+        },
+        {
+          "month": 8,
+          "date": "2022-08",
+          "value": -0.78
+        },
+        {
+          "month": 9,
+          "date": "2022-09",
+          "value": -0.87
+        },
+        {
+          "month": 10,
+          "date": "2022-10",
+          "value": -0.89
+        },
+        {
+          "month": 11,
+          "date": "2022-11",
+          "value": -0.82
+        },
+        {
+          "month": 12,
+          "date": "2022-12",
+          "value": -0.7
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "months": [
+        {
+          "month": 1,
+          "date": "2023-01",
+          "value": -0.55
+        },
+        {
+          "month": 2,
+          "date": "2023-02",
+          "value": -0.33
+        },
+        {
+          "month": 3,
+          "date": "2023-03",
+          "value": -0.11
+        },
+        {
+          "month": 4,
+          "date": "2023-04",
+          "value": 0.19
+        },
+        {
+          "month": 5,
+          "date": "2023-05",
+          "value": 0.46
+        },
+        {
+          "month": 6,
+          "date": "2023-06",
+          "value": 0.73
+        },
+        {
+          "month": 7,
+          "date": "2023-07",
+          "value": 1.0
+        },
+        {
+          "month": 8,
+          "date": "2023-08",
+          "value": 1.25
+        },
+        {
+          "month": 9,
+          "date": "2023-09",
+          "value": 1.5
+        },
+        {
+          "month": 10,
+          "date": "2023-10",
+          "value": 1.74
+        },
+        {
+          "month": 11,
+          "date": "2023-11",
+          "value": 1.9
+        },
+        {
+          "month": 12,
+          "date": "2023-12",
+          "value": 1.99
+        }
+      ]
+    },
+    {
+      "year": 2024,
+      "months": [
+        {
+          "month": 1,
+          "date": "2024-01",
+          "value": 1.84
+        },
+        {
+          "month": 2,
+          "date": "2024-02",
+          "value": 1.53
+        },
+        {
+          "month": 3,
+          "date": "2024-03",
+          "value": 1.18
+        },
+        {
+          "month": 4,
+          "date": "2024-04",
+          "value": 0.77
+        },
+        {
+          "month": 5,
+          "date": "2024-05",
+          "value": 0.43
+        },
+        {
+          "month": 6,
+          "date": "2024-06",
+          "value": 0.18
+        },
+        {
+          "month": 7,
+          "date": "2024-07",
+          "value": 0.06
+        },
+        {
+          "month": 8,
+          "date": "2024-08",
+          "value": -0.04
+        },
+        {
+          "month": 9,
+          "date": "2024-09",
+          "value": -0.12
+        },
+        {
+          "month": 10,
+          "date": "2024-10",
+          "value": -0.19
+        },
+        {
+          "month": 11,
+          "date": "2024-11",
+          "value": -0.29
+        },
+        {
+          "month": 12,
+          "date": "2024-12",
+          "value": -0.43
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "months": [
+        {
+          "month": 1,
+          "date": "2025-01",
+          "value": -0.46
+        },
+        {
+          "month": 2,
+          "date": "2025-02",
+          "value": -0.22
+        },
+        {
+          "month": 3,
+          "date": "2025-03",
+          "value": -0.08
+        },
+        {
+          "month": 4,
+          "date": "2025-04",
+          "value": 0.02
+        },
+        {
+          "month": 5,
+          "date": "2025-05",
+          "value": -0.04
+        },
+        {
+          "month": 6,
+          "date": "2025-06",
+          "value": -0.02
+        },
+        {
+          "month": 7,
+          "date": "2025-07",
+          "value": null
+        },
+        {
+          "month": 8,
+          "date": "2025-08",
+          "value": null
+        },
+        {
+          "month": 9,
+          "date": "2025-09",
+          "value": null
+        },
+        {
+          "month": 10,
+          "date": "2025-10",
+          "value": null
+        },
+        {
+          "month": 11,
+          "date": "2025-11",
+          "value": null
+        },
+        {
+          "month": 12,
+          "date": "2025-12",
+          "value": null
+        }
+      ]
+    }
+  ],
+  "annualPhases": [
+    {
+      "year": 2016,
+      "netral": 6,
+      "elNino": 5,
+      "laNina": 1,
+      "total": 12
+    },
+    {
+      "year": 2017,
+      "netral": 10,
+      "elNino": 0,
+      "laNina": 2,
+      "total": 12
+    },
+    {
+      "year": 2018,
+      "netral": 5,
+      "elNino": 4,
+      "laNina": 3,
+      "total": 12
+    },
+    {
+      "year": 2019,
+      "netral": 3,
+      "elNino": 9,
+      "laNina": 0,
+      "total": 12
+    },
+    {
+      "year": 2020,
+      "netral": 5,
+      "elNino": 3,
+      "laNina": 4,
+      "total": 12
+    },
+    {
+      "year": 2021,
+      "netral": 4,
+      "elNino": 0,
+      "laNina": 8,
+      "total": 12
+    },
+    {
+      "year": 2022,
+      "netral": 0,
+      "elNino": 0,
+      "laNina": 12,
+      "total": 12
+    },
+    {
+      "year": 2023,
+      "netral": 4,
+      "elNino": 7,
+      "laNina": 1,
+      "total": 12
+    },
+    {
+      "year": 2024,
+      "netral": 8,
+      "elNino": 4,
+      "laNina": 0,
+      "total": 12
+    },
+    {
+      "year": 2025,
+      "netral": 6,
+      "elNino": 0,
+      "laNina": 0,
+      "total": 6
+    }
+  ],
+  "forecastSeries": {
+    "1": [
+      {
+        "date": "03/25",
+        "actual": -0.08,
+        "prediction": null,
+        "isPrediction": false
+      },
+      {
+        "date": "04/25",
+        "actual": 0.02,
+        "prediction": null,
+        "isPrediction": false
+      },
+      {
+        "date": "05/25",
+        "actual": -0.04,
+        "prediction": null,
+        "isPrediction": false
+      },
+      {
+        "date": "06/25",
+        "actual": -0.02,
+        "prediction": -0.02,
+        "isPrediction": false
+      },
+      {
+        "date": "07/25",
+        "actual": -0.11,
+        "prediction": -0.27,
+        "isPrediction": true
+      }
+    ],
+    "3": [
+      {
+        "date": "03/25",
+        "actual": -0.08,
+        "prediction": null,
+        "isPrediction": false
+      },
+      {
+        "date": "04/25",
+        "actual": 0.02,
+        "prediction": null,
+        "isPrediction": false
+      },
+      {
+        "date": "05/25",
+        "actual": -0.04,
+        "prediction": null,
+        "isPrediction": false
+      },
+      {
+        "date": "06/25",
+        "actual": -0.02,
+        "prediction": -0.02,
+        "isPrediction": false
+      },
+      {
+        "date": "07/25",
+        "actual": -0.11,
+        "prediction": 0.086,
+        "isPrediction": true
+      },
+      {
+        "date": "08/25",
+        "actual": -0.26,
+        "prediction": -0.158,
+        "isPrediction": true
+      },
+      {
+        "date": "09/25",
+        "actual": -0.43,
+        "prediction": -0.383,
+        "isPrediction": true
+      }
+    ],
+    "6": [
+      {
+        "date": "03/25",
+        "actual": -0.08,
+        "prediction": null,
+        "isPrediction": false
+      },
+      {
+        "date": "04/25",
+        "actual": 0.02,
+        "prediction": null,
+        "isPrediction": false
+      },
+      {
+        "date": "05/25",
+        "actual": -0.04,
+        "prediction": null,
+        "isPrediction": false
+      },
+      {
+        "date": "06/25",
+        "actual": -0.02,
+        "prediction": -0.02,
+        "isPrediction": false
+      },
+      {
+        "date": "07/25",
+        "actual": -0.11,
+        "prediction": -0.134,
+        "isPrediction": true
+      },
+      {
+        "date": "08/25",
+        "actual": -0.26,
+        "prediction": -0.053,
+        "isPrediction": true
+      },
+      {
+        "date": "09/25",
+        "actual": -0.43,
+        "prediction": -0.256,
+        "isPrediction": true
+      },
+      {
+        "date": "10/25",
+        "actual": -0.57,
+        "prediction": -0.404,
+        "isPrediction": true
+      },
+      {
+        "date": "11/25",
+        "actual": -0.61,
+        "prediction": -0.838,
+        "isPrediction": true
+      },
+      {
+        "date": "12/25",
+        "actual": -0.6,
+        "prediction": -0.955,
+        "isPrediction": true
+      }
+    ]
+  },
+  "evaluation": {
+    "1": {
+      "label": "1 bulan",
+      "verdict": "Andal",
+      "tone": "good",
+      "accuracy": {
+        "val": 76.9,
+        "test": 71.4
+      },
+      "balanced": {
+        "val": 79.2,
+        "test": 71.4
+      },
+      "f1": {
+        "val": 66.8,
+        "test": 41.7
+      },
+      "rmse": {
+        "val": 1.175,
+        "test": 0.18
+      },
+      "maeModel": 0.172,
+      "maeBaseline": 0.108,
+      "matrix": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          5,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "matrixNote": "5 benar dari 7. Dua bulan Netral diprediksi sebagai La Ni\u00f1a."
+    },
+    "3": {
+      "label": "3 bulan",
+      "verdict": "Trivial majority class",
+      "tone": "warn",
+      "accuracy": {
+        "val": 23.1,
+        "test": 100.0
+      },
+      "balanced": null,
+      "f1": null,
+      "rmse": {
+        "val": 1.257,
+        "test": 0.174
+      },
+      "maeModel": 0.152,
+      "maeBaseline": 0.098,
+      "matrix": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          7,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "matrixNote": "Accuracy 100% semu \u2014 seluruh bulan uji Netral."
+    },
+    "6": {
+      "label": "6 bulan",
+      "verdict": "Gagal",
+      "tone": "bad",
+      "accuracy": {
+        "val": 0.0,
+        "test": 0.0
+      },
+      "balanced": null,
+      "f1": null,
+      "rmse": {
+        "val": 1.258,
+        "test": 0.217
+      },
+      "maeModel": 0.197,
+      "maeBaseline": 0.1,
+      "matrix": [
+        [
+          0,
+          0,
+          3
+        ],
+        [
+          0,
+          0,
+          4
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "matrixNote": "Akurasi 0,0%. Model selalu memilih satu kelas pada evaluasi kronologis."
+    }
   }
 };
 
+export const latestSnapshot = realData.latestSnapshot;
+export const domainAnomalies = realData.domainAnomalies;
+export const history = realData.history;
+export const evaluation = realData.evaluation;
+
 export const meta = realData.meta;
 export const latest = realData.latest;
-export const history = realData.history;
 export const regions = realData.regions;
 export const facts = realData.facts;
 export const metrics = realData.metrics;
 export const derived = realData.derived;
 export const testPredictions = realData.testPredictions;
+export const heatmap = realData.heatmap;
+export const annualPhases = realData.annualPhases;
+export const forecastSeries = realData.forecastSeries;

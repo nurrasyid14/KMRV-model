@@ -1,10 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- KMRV mark: SST anomaly trace rising through the +0.5 °C threshold.
-       Palette mirrors tokens.css: tile = --color-paper-2, hairline = --color-rule-2, trace = --color-accent. -->
-  <rect width="32" height="32" rx="2" fill="#080f14"/>
-  <rect x="0.75" y="0.75" width="30.5" height="30.5" rx="1.5" fill="none" stroke="#353f44" stroke-width="1.5"/>
-  <line x1="5" y1="16.5" x2="27" y2="16.5" stroke="#353f44" stroke-width="1.5" stroke-dasharray="3 3" stroke-linecap="round"/>
-  <path d="M5.5 21.5 C 8 19.3 9.6 21.8 12 19.8 C 15 17.2 16.2 14.8 18.6 12.4 C 20.6 10.4 22 9 23.8 7.4"
-        fill="none" stroke="#bcf053" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="24.6" cy="6.4" r="2.9" fill="#bcf053"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256"><title>Lautan.id Logo Symbol</title><g transform="translate(-23.3 -23.3) scale(1.182)">
+  
+  <path d="M 34,158 C 48,90 98,50 166,60 C 204,64 228,92 232,118 C 218,104 192,88 152,86 C 110,84 76,110 58,156 C 50,176 30,176 34,158 Z" fill="#1C382A" />
+  <path d="M 222,98 C 208,166 158,206 90,196 C 52,192 28,164 24,138 C 38,152 64,168 104,170 C 146,172 180,146 198,100 C 206,80 226,80 222,98 Z" fill="#1C382A" />
+</g></svg>

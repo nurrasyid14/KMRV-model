@@ -3,7 +3,7 @@ import React from 'react';
 const LABELS = ['La Niña', 'Netral', 'El Niño'];
 
 export default function ConfusionMatrix({ matrix, showSummary = true }) {
-  const max = Math.max(...matrix.flat(), 1);
+  const _max = Math.max(...matrix.flat(), 1);
   const total = matrix.flat().reduce((a, b) => a + b, 0);
   const correct = matrix.reduce((sum, row, i) => sum + row[i], 0);
   const accuracyPct = total > 0 ? Math.round((correct / total) * 100) : 0;
