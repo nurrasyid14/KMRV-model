@@ -1,0 +1,157 @@
+:root {
+  color-scheme: light;
+
+  /* Spacing Scale (4px base) */
+  --space-3xs: 2px;
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 36px;
+  --space-2xl: 56px;
+  --space-3xl: 80px;
+  --space-4xl: 120px;
+
+  /* Typography Scale */
+  --text-xs: 0.75rem;     /* 12px */
+  --text-sm: 0.84rem;     /* 13.5px */
+  --text-md: 0.95rem;     /* 15px */
+  --text-lg: 1.125rem;    /* 18px */
+  --text-xl: 1.35rem;     /* 21.6px */
+  --text-2xl: 1.65rem;    /* 26.4px */
+  --text-3xl: 2rem;       /* 32px */
+  --text-hero: 2.25rem;   /* 36px */
+  --text-display: 1.85rem;
+  --text-section: 1.25rem;
+  --text-title: 1.05rem;
+  --text-lead: 0.95rem;
+  --text-figure: 1.9rem;
+  --text-figure-lg: 2.65rem;
+
+  /* Timing & Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms;
+  --dur-short: 200ms;
+  --dur-long: 350ms;
+
+  /* Layout Invariants */
+  --container: 1320px;
+  --gutter: 28px;
+  --gap-panels: 20px;
+  --gap-columns: 20px;
+  --app-bar-height: 60px;
+  --z-base: 1;
+  --z-raised: 10;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-sticky-nav: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+  --z-tooltip: 600;
+
+  /* SaaS Light Theme Surfaces */
+  --color-paper: #f8fafc;         /* App canvas background: Slate 50 */
+  --color-paper-2: #ffffff;       /* Card surface: Pure White */
+  --color-paper-3: #f1f5f9;       /* Secondary card/row: Slate 100 */
+  --color-paper-hover: #f8fafc;   /* Row hover */
+  --color-cotton: #ffffff;
+  --color-desk: #f1f5f9;
+
+  /* SaaS Light Text Hierarchy */
+  --color-ink: #0f172a;           /* Primary text: Slate 900 */
+  --color-ink-2: #334155;         /* Secondary text: Slate 700 */
+  --color-muted: #64748b;         /* Muted text: Slate 500 */
+  --color-muted-light: #94a3b8;   /* Light muted: Slate 400 */
+  --color-print: #0f172a;
+
+  /* Crisp SaaS Borders */
+  --color-rule: #e2e8f0;          /* Card border: Slate 200 */
+  --color-rule-2: #cbd5e1;        /* Divider / Emphasis border: Slate 300 */
+  --color-control-border: #cbd5e1;
+
+  /* Modern SaaS Brand & Accent (Electric Blue / Modern Indigo) */
+  --color-brand: #2563eb;         /* Blue 600 */
+  --color-brand-hover: #1d4ed8;   /* Blue 700 */
+  --color-brand-active: #1e40af;  /* Blue 800 */
+  --color-brand-soft: #eff6ff;    /* Blue 50 */
+  --color-brand-border: #bfdbfe;  /* Blue 200 */
+  --color-brand-ink: #ffffff;
+  --color-brand-contrast: #ffffff;
+
+  --color-accent: #2563eb;
+  --color-accent-ink: #ffffff;
+  --color-accent-2: #1d4ed8;
+  --color-accent-hi: #1d4ed8;
+  --color-accent-line: #bfdbfe;
+  --color-accent-wash: #eff6ff;
+  --color-focus: #3b82f6;
+
+  /* ENSO Climate Semantics (Data Visualization) */
+  --color-elnino: #ea580c;           /* Amber-Orange 600 - Warm Anomaly */
+  --color-elnino-contrast: #ffffff;
+  --color-elnino-soft: #fff7ed;      /* Orange 50 */
+  --color-elnino-border: #fed7aa;    /* Orange 200 */
+
+  --color-lanina: #0284c7;           /* Sky 600 - Cool Anomaly */
+  --color-lanina-contrast: #ffffff;
+  --color-lanina-soft: #f0f9ff;      /* Sky 50 */
+  --color-lanina-border: #bae6fd;    /* Sky 200 */
+
+  --color-neutral: #64748b;          /* Slate 500 - Neutral Baseline */
+  --color-neutral-contrast: #ffffff;
+  --color-neutral-soft: #f8fafc;     /* Slate 50 */
+  --color-neutral-border: #e2e8f0;   /* Slate 200 */
+
+  --color-success: #10b981;          /* Emerald 500 */
+  --color-success-soft: #ecfdf5;     /* Emerald 50 */
+  --color-success-border: #a7f3d0;   /* Emerald 200 */
+
+  --color-warning: #f59e0b;          /* Amber 500 */
+  --color-warning-soft: #fffbeb;     /* Amber 50 */
+  --color-warning-border: #fde68a;   /* Amber 200 */
+
+  --color-error: #ef4444;            /* Red 500 */
+  --color-error-soft: #fef2f2;       /* Red 50 */
+
+  /* Visualization Specifics */
+  --color-track: #e2e8f0;
+  --color-band-fill: rgba(37, 99, 235, 0.12);
+  --color-mhw-active: #ea580c;
+  --color-mhw-soft: #fff7ed;
+  --color-dummy-tag: #475569;
+  --color-dummy-soft: #f1f5f9;
+  --color-kmrv-model: var(--color-brand);
+  --color-baseline: #94a3b8;
+
+  /* Modern Font Stacks */
+  --font-display: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
+  --font-body: var(--font-display);
+  --font-outlier: "Geist Mono", "SF Mono", Consolas, Menlo, monospace;
+  --font-numeric: var(--font-outlier);
+
+  /* Modern Radii */
+  --radius-card: 12px;
+  --radius-input: 8px;
+  --radius-pill: 9999px;
+  --radius-badge: 6px;
+  --rule-hair: 1px;
+
+  /* SaaS Multi-layered Card Shadows */
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
+  --shadow-card-hover: 0 6px 16px -2px rgb(0 0 0 / 0.08), 0 2px 6px -2px rgb(0 0 0 / 0.04);
+  --shadow-dropdown: 0 10px 20px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+
+  /* Cockpit / Geoaether Theme Additions */
+  --color-sky-top: #0284c7;
+  --color-sky-mid: #38bdf8;
+  --color-sky-bottom: #bae6fd;
+  --color-cyan-btn: #0ea5e9;
+  --color-cyan-btn-hover: #0284c7;
+  --radius-cockpit: 24px;
+  --shadow-cockpit: 0 25px 60px -15px rgba(2, 132, 199, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.4);
+}

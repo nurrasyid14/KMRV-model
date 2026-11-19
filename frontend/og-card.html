@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500;600&family=Atkinson+Hyperlegible+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  /* Render source for the OG preview card (1200x630). Palette from tokens.css. Re-render with:
+     chrome --headless=new --screenshot=public/og-card.png --window-size=1200,630 --virtual-time-budget=8000 og-card.html */
+  html, body { margin: 0; }
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    width: 1200px; height: 630px; overflow: hidden;
+    background: #1e1f22; color: #f4f4f5;
+    font-family: "Host Grotesk", system-ui, sans-serif;
+    display: flex; flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+  }
+  svg { display: block; }
+
+  .topbar {
+    height: 88px; flex: none;
+    border-bottom: 1px solid #34363a;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 56px;
+  }
+  .lockup { display: flex; align-items: center; gap: 14px; }
+  .brand-tile {
+    width: 46px; height: 46px; border-radius: 9px;
+    background: #f2ba52; color: #1b1c1e;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .brand-name { font-size: 22px; font-weight: 600; line-height: 1.1; }
+  .brand-tag { font-size: 14px; color: #b6b7ba; margin-top: 2px; }
+  .cta {
+    background: #f2ba52; color: #1b1c1e; border: 0; border-radius: 6px;
+    font: 600 15px "Host Grotesk", sans-serif;
+    padding: 12px 22px;
+  }
+
+  .main {
+    flex: 1; display: grid; grid-template-columns: 42% 1fr; gap: 48px;
+    padding: 42px 56px 26px;
+  }
+  .figure-label { font-size: 14px; color: #b6b7ba; }
+  .big-num {
+    font: 500 176px/1 "Atkinson Hyperlegible Mono", monospace;
+    color: #f2ba52; margin-top: 4px; letter-spacing: -0.02em;
+  }
+  .num-caption { font-size: 21px; color: #f4f4f5; margin-top: 6px; line-height: 1.35; }
+  .num-caption .soft { color: #b6b7ba; }
+
+  .chips { display: flex; align-items: baseline; margin-top: 44px; }
+  .chip { padding-right: 22px; }
+  .chip + .chip { border-left: 1px solid #34363a; padding-left: 22px; }
+  .chip-value { font: 500 17px "Atkinson Hyperlegible Mono", monospace; font-variant-numeric: tabular-nums; }
+  .chip-label { font-size: 13px; color: #b6b7ba; margin-top: 4px; }
+  .chip-value.warm { color: #f2ba52; }
+
+  .chart-panel {
+    background: #17181b; border: 1px solid #34363a; border-radius: 10px;
+    padding: 22px 22px 14px; display: flex; flex-direction: column;
+  }
+  .chart-note {
+    font: 400 12.5px "Atkinson Hyperlegible Mono", monospace; color: #b6b7ba;
+    margin-top: auto; padding-top: 10px;
+  }
+
+  .footnote {
+    flex: none; padding: 0 56px 22px; margin-top: 10px;
+    font-size: 13.5px; color: #8e9094; white-space: nowrap; overflow: hidden;
+  }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="lockup">
+      <div class="brand-tile">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="3.5" y1="12" x2="19.5" y2="12" stroke-dasharray="2.6 2.2"/>
+          <path d="M4.1 16.1 C 6 14.2 7.2 16.4 9 14.6 C 11.25 12.4 12.15 10.8 13.95 8.8 C 15.45 7.2 16.6 6.1 18 4.8"/>
+          <circle cx="19.2" cy="3.6" r="2.1" fill="currentColor" stroke="none"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-name">KMRV</div>
+        <div class="brand-tag">Proyeksi ENSO Maritim Indonesia</div>
+      </div>
+    </div>
+    <div class="cta">Buka dashboard</div>
+  </div>
+
+  <div class="main">
+    <div>
+      <div class="figure-label">Peluang El Niño &middot; horizon 3 bulan</div>
+      <div class="big-num">62%</div>
+      <p class="num-caption">terbentuk <span class="soft">dalam</span> 3 bulan <span class="soft">ke depan</span></p>
+
+      <div class="chips">
+        <div class="chip">
+          <div class="chip-value warm">+0,94 °C</div>
+          <div class="chip-label">RONI diproyeksikan</div>
+        </div>
+        <div class="chip">
+          <div class="chip-value">0,42 °C</div>
+          <div class="chip-label">MAE validasi</div>
+        </div>
+        <div class="chip">
+          <div class="chip-value">28 Okt</div>
+          <div class="chip-label">Rilis data</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-panel">
+      <svg width="100%" height="360" preserveAspectRatio="xMidYMin meet" viewBox="0 0 520 352" fill="none" role="img" aria-label="Trajektori ensemble KMRV melewati ambang El Niño">
+        <line x1="8" y1="252" x2="476" y2="252" stroke="#56585c" stroke-width="1.25"/>
+        <text x="476" y="244" text-anchor="end" fill="#8e9094" font-size="12.5" font-family="Atkinson Hyperlegible Mono, monospace">0,0 °C</text>
+
+        <line x1="8" y1="148" x2="480" y2="148" stroke="#f2ba52" stroke-width="1.5" stroke-dasharray="6 5"/>
+        <text x="8" y="136" fill="currentColor" color="#f2ba52" font-size="12.5" font-family="Atkinson Hyperlegible Mono, monospace">ambang El Niño +0,5 °C</text>
+
+        <path d="M8 282 C 120 272, 220 228, 300 138 Q 356 70, 424 42 L 424 118 Q 362 134, 302 196 C 240 258, 130 296, 8 306 Z"
+              fill="#7fa8e6" opacity="0.16"/>
+        <path d="M8 300 C 140 295, 240 268, 320 198 Q 378 148, 424 112" stroke="#8e9094" stroke-width="1.25" opacity="0.45" fill="none"/>
+        <path d="M8 300 C 150 290, 248 240, 328 140 Q 378 84, 424 50" stroke="#8e9094" stroke-width="1.25" opacity="0.45" fill="none"/>
+
+        <path d="M8 300 C 120 290, 220 250, 298 164 Q 358 94, 428 80" stroke="#f2ba52" stroke-width="5" stroke-linecap="round" fill="none"/>
+        <circle cx="428" cy="80" r="8" fill="#f2ba52"/>
+        <text x="416" y="70" text-anchor="end" fill="#f2ba52" font-size="13.5" font-weight="600" font-family="Atkinson Hyperlegible Mono, monospace">+0,94</text>
+      </svg>
+      <div class="chart-note">proyeksi ensemble KMRV vs ambang operasional · 28 Okt 2026</div>
+    </div>
+  </div>
+
+  <div class="footnote">
+    SST harian NOAA OISST v2.1 · CPC NOAA · BOM &nbsp;·&nbsp; Tugas Proyek Sistem Cerdas, Sains Data Terapan
+  </div>
+</body>
+</html>
