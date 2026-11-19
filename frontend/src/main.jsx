@@ -80,7 +80,7 @@ function SstPanel() {
 
 function ArchiveChart() {
   const [hover, setHover] = useState(null);
-  const width = 940, height = 280, padX = 6, padY = 24, min = -1.5, max = 3.0;
+  const width = 940, height = 280, padX = 6, padY = 24, min = -3.0, max = 3.0;
   const x = (i) => padX + i * ((width - padX * 2) / Math.max(oniArchive.length - 1, 1));
   const y = (v) => height - padY - ((v - min) / (max - min)) * (height - padY * 2);
 
@@ -105,7 +105,7 @@ function ArchiveChart() {
           <p className="eyebrow">ARSIP INDEKS</p>
           <h2>ONI historis</h2>
           <p className="panel-subtitle">
-            Seri bulanan observasi Jan 2016 – Jun 2025. Arsiran orange menandai fase El Niño (≥ +0,5 °C) dan biru menandai fase La Niña (≤ −0,5 °C).
+            Seri bulanan observasi Jan 2016 – Jun 2025. Skala simetris (−3,0 s.d. +3,0 °C). Arsiran oranye menandai El Niño (≥ +0,5 °C) dan biru menandai La Niña (≤ −0,5 °C).
           </p>
         </div>
         <div className="archive-range">Jan 2016 <span>→</span> Jun 2025</div>
@@ -133,6 +133,8 @@ function ArchiveChart() {
           <span>+1,0</span>
           <span>0</span>
           <span>−1,0</span>
+          <span>−2,0</span>
+          <span>−3,0</span>
         </div>
 
         <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Grafik ONI historis Januari 2016 hingga Juni 2025">
@@ -165,6 +167,7 @@ function ArchiveChart() {
           <line x1="0" x2={width} y1={y(2)} y2={y(2)} stroke="#edf2f7" strokeDasharray="4 4" />
           <line x1="0" x2={width} y1={y(1)} y2={y(1)} stroke="#edf2f7" strokeDasharray="4 4" />
           <line x1="0" x2={width} y1={y(-1)} y2={y(-1)} stroke="#edf2f7" strokeDasharray="4 4" />
+          <line x1="0" x2={width} y1={y(-2)} y2={y(-2)} stroke="#edf2f7" strokeDasharray="4 4" />
 
           {/* Grid vertikal per tahun */}
           {years.map(yr => {
@@ -213,9 +216,9 @@ function ArchiveChart() {
           <text x={width - 8} y={y(-0.5) + 13} textAnchor="end" fill="#0284c7" fontSize="9.5" fontWeight="600" fontFamily="var(--mono)">−0,5 La Niña</text>
 
           {/* Anotasi Peristiwa Historis */}
-          <text x={x(3)} y={y(2.5) + 24} textAnchor="start" fill="#c2410c" fontSize="9.5" fontWeight="600" fontFamily="var(--mono)">El Niño 2015–2016</text>
+          <text x={x(3)} y={y(2.5) + 22} textAnchor="start" fill="#c2410c" fontSize="9.5" fontWeight="600" fontFamily="var(--mono)">El Niño 2015–2016</text>
           <text x={x(35)} y={y(1.05) - 14} textAnchor="middle" fill="#c2410c" fontSize="10" fontWeight="600" fontFamily="var(--mono)">El Niño 2018–2019</text>
-          <text x={x(70)} y={y(0) - 16} textAnchor="middle" fill="#0369a1" fontSize="10" fontWeight="600" fontFamily="var(--mono)">La Niña 2020–2023</text>
+          <text x={x(70)} y={y(-1.07) + 26} textAnchor="middle" fill="#0369a1" fontSize="10" fontWeight="600" fontFamily="var(--mono)">La Niña 2020–2023</text>
           <text x={x(95)} y={y(1.99) - 14} textAnchor="middle" fill="#c2410c" fontSize="10" fontWeight="600" fontFamily="var(--mono)">El Niño 2023–2024</text>
 
           {/* Garis kurva utama */}
