@@ -667,7 +667,7 @@ function PlainExplanationCard({ item, horizon }) {
   return (
     <div className="explanation-card">
       <div className="subheading">
-        <h3>Penjelasan Awam</h3>
+        <h3>Penjelasan</h3>
         <span>PANDUAN PRAKTIS</span>
       </div>
 
