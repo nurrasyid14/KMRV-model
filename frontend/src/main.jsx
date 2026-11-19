@@ -76,7 +76,6 @@ function PhaseCard() {
           <p className="eyebrow">KONDISI TERKINI</p>
           <h2>Fase ENSO</h2>
         </div>
-        <span className="neutral-chip">● NETRAL</span>
       </div>
 
       <div className="phase-body">
