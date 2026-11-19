@@ -685,11 +685,6 @@ function PlainExplanationCard({ item, horizon }) {
           </div>
         ))}
       </div>
-
-      <div className={`explain-verdict ${item.tone}`}>
-        <span>ⓘ</span>
-        <p>{g.verdict}</p>
-      </div>
     </div>
   );
 }
