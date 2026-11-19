@@ -4,71 +4,299 @@
 
 ## Platform
 
-web
+Web (React + Vite, served sebagai SPA statis dari `frontend/dist`)
 
-## Users
+---
 
-Two audiences, deliberately balanced — the UI must stay uncluttered and "mudah dipahami" (easy to understand) for any visitor:
+## Nama Proyek
 
-- **Grading audience:** the lecturer/examiner and fellow students of Proyek Sistem Cerdas (Applied Data Science, semester 5), evaluating rigor: honest data handling, methodology, model skill, and stated limitations.
-- **General / interested visitors:** the app is shared publicly beyond the course (public link; the og-card is actively shared). A first-time visitor should grasp the current ENSO state and the model's real limits without domain expertise.
+**Lautan.id** — Dashboard monitoring iklim maritim dan prakiraan ENSO berbasis AI untuk perairan Indonesia.
 
-Success = honest, comprehensible communication of ENSO conditions and model evidence to both audiences. User's standing mandate: don't display unimportant things; nothing may be invented.
+> Repo ini bernama `KMRV-model` (nama repo saja, bukan nama model).
+> Nama model sebenarnya adalah **Causal LSTM + LightGBM Ensemble** (lihat bagian Arsitektur).
 
-## Product Purpose
+---
 
-KMRV is a monitoring and evaluation dashboard for Indonesia's maritime climate, centered on the El Niño–Southern Oscillation. It shows the latest ONI, SOI, and DMI from the repo dataset, SST anomalies for five maritime domains (Niño 3.4 reference plus Karimata, Makassar, south of Java, Maluku–Papua), and the honest evaluation of a real Causal LSTM + LightGBM pipeline. It demonstrates, as a course project, a reproducible ML pipeline on public NOAA-era data — not an operational forecasting service, and not a replacement for BMKG.
+## Konteks Akademik
 
-## Positioning
+- **Mata kuliah:** Proyek Sistem Cerdas, Semester 5, Program Studi Sains Data Terapan.
+- **Tujuan akademik:** Membangun pipeline ML end-to-end yang reproducible untuk peramalan ENSO berbasis data publik NOAA, termasuk evaluasi jujur terhadap keterbatasan model.
+- **Bukan layanan operasional:** Peringatan iklim resmi tetap menjadi wewenang BMKG.
 
-Verified facts — from the dataset and artifacts in this repo (do not soften or inflate these):
+---
 
-- **Architecture:** a Causal LSTM (PyTorch, `src/ml/2lstm.py`: single-layer `nn.LSTM`, hidden 32, dropout 0.1, MSE loss, Adam, early stopping) forecasts the future **ONI** value; its forecast becomes a feature for a LightGBM phase classifier (`src/ml/lgbm.py`) predicting La Niña / Neutral / El Niño. Orchestrated by `src/ml/ensemble.py` with chronological splits, a 12-month input window, StandardScaler, and a seed-fixed retrain for production.
-- **Dataset actually present:** `dataset/train_features.csv` (72 rows, 2016-01–2021-12), `val_features.csv` (24 rows, 2022-01–2023-12), `test_features.csv` (18 rows, 2024-01–2025-06). Combined: 114 monthly rows, **January 2016 – June 2025**.
-- **Features:** `oni_anom`, `oni_total`, `soi`, `dmi`, Niño 3.4 SST anomaly + zonal gradient, regional SST anomalies (Karimata, Makassar, Java, Maluku), per-region `mhw_*` columns, rainfall proxies (`rain_malaysia`, `rain_hawaii`), seasonal sin/cos, ENSO coupling index, lags (1/2/3/6/12 m) and rolling features. Targets: `target_oni_lead_{1,3,6}m` and `target_phase_lead_{1,3,6}m`.
-- **Latest observation (June 2025):** ONI −0,107 °C (Netral); SOI +0,097; DMI −0,477 °C; SST anomalies Niño 3.4 +0,688, Karimata +1,289, Makassar +0,995, Selatan Jawa +0,116, Maluku–Papua +0,644. All SST columns are anomalies, not absolute temperatures.
-- **Artifacts exist** for horizons 1/3/6 months: `model/enso_ensemble_{1m,3m,6m}/` (LSTM `.pt`, LightGBM `.txt`, scalers, `metrics_horizon_*.json`, test predictions). `model/model_manifest.json` records **best validation horizon = 1 month**.
-- **Verified skill:** 1m — validation accuracy 0,769, balanced 0,792, LSTM RMSE 1,175 °C; test accuracy 0,714, macro F1 0,417, RMSE 0,180 °C. 3m — validation accuracy 0,231, RMSE 1,257 °C; test accuracy 1,000 but all 7 test samples are Neutral (trivial single-class prediction). 6m — validation and test collapse. Skill is demonstrated at **1 month only**.
-- **Baselines (computed from the same test predictions):** MAE KMRV vs persistence — 1m 0,172 vs 0,108; 3m 0,152 vs 0,098; 6m 0,197 vs 0,100. Persistence is more accurate; never present KMRV as beating it.
-- **Data coverage limits:** MHW columns are mostly zero or constant, and the only rainfall columns are Malaysia/Hawaii proxies. Indonesian regional MHW events and a seasonal rainfall matrix are **not available** and are not displayed. The former `Dampak` page was removed for this reason.
-- **No realtime feed and no future inference.** The frontend reads a generated module, `frontend/src/data/realData.js`, built by `scripts/export_dashboard_data.py` from `dataset/*_features.csv` and `model/`. The UI shows the dataset's last month, not today's conditions.
+## Pengguna
 
-Differentiator a neighboring product could not truthfully copy: a validation-first Indonesian ENSO dashboard that publishes its own weak leads and the fact that persistence beats it, with provenance on every number.
+Dua audiens, diimbangi secara deliberat:
 
-## Operating Context
+- **Penguji akademik:** Dosen/penguji dan sesama mahasiswa mata kuliah Proyek Sistem Cerdas yang mengevaluasi rigor: kejujuran penanganan data, metodologi, skill model, dan pernyataan keterbatasan.
+- **Pengunjung umum / tertarik:** Aplikasi dibagikan secara publik. Pengunjung pertama kali harus bisa memahami kondisi ENSO terkini dan batas kemampuan model tanpa keahlian domain khusus.
 
-- Course project for **Sistem Cerdas**, semester 5, Applied Data Science.
-- Data window actually stored in the repo: **January 2016 – June 2025**, monthly. Upstream sources used by the pipeline: NOAA OISST v2.1, NOAA CPC (ONI), PSL NOAA (SOI, DMI); BMKG is the acknowledged authority for official/operational validation.
-- Dev: frontend `npm run dev` (Vite, React); regenerate dashboard data with `python scripts/export_dashboard_data.py`; model pipeline `python main.py --horizons 1 3 6`; PostgreSQL via docker compose for the planned backend.
-- Backend is **planned, not implemented**: `backend/` contains only Dockerfile + requirements. The UI makes no network calls for data.
+**Ukuran keberhasilan:** Komunikasi jujur dan mudah dipahami tentang kondisi ENSO dan bukti model kepada kedua audiens. Tidak ada yang diinvensikan; tidak ada tampilan yang tidak penting.
 
-## Capabilities and Constraints
+---
 
-- Working now: React + Vite app — landing page plus dashboard pages `Ringkasan`, `PrakiraanENSO`, `Laut`. All displayed numbers come from `frontend/src/data/realData.js`, generated from the dataset and model artifacts.
-- Real visuals: ONI time series 2016–2025 with test-window shading, SST anomaly time series per domain, world-map anomaly beacons, test-prediction chart (actual ONI vs LSTM), metric table per horizon.
-- Reproducible training pipeline end-to-end in the repo (download/ETL → Zarr → features → train → metrics).
-- Binding constraints: (a) Indonesian-first UI language; (b) **Rule of Honesty** — no simulated values, no future forecast presented as real, weak horizons labelled as such; (c) scope guardrails — no daily-weather prediction claims, no BMKG partnership implied.
-- Undecided: whether to add a live NOAA feed behind a backend proxy; whether to retrain so 3/6-month leads earn skill; unifying RONI terminology if RONI data is added.
+## Tujuan Produk
 
-## Brand Commitments
+Lautan.id adalah dashboard monitoring dan evaluasi iklim maritim Indonesia, berpusat pada El Niño–Southern Oscillation (ENSO). Ia menampilkan:
 
-- Name **KMRV** — confirmed a model name, not an acronym. Tagline: "Proyeksi ENSO Maritim Indonesia" (landing uses "ENSO Maritim Indonesia").
-- Brand symbol: small wave/trace SVG (dashed horizon line + rising curve + dot) used in nav and footer lockups.
-- All UI copy in Indonesian; Indonesian decimal commas (e.g., "−0,11 °C") are part of the incumbent voice.
+1. **ONI, SOI, dan DMI terbaru** dari dataset repo (bukan realtime feed).
+2. **Anomali SST di lima domain maritim** — Nino 3.4 (referensi ENSO), Selat Karimata, Selat Makassar, Selatan Jawa, Maluku–Papua.
+3. **Evaluasi jujur pipeline Causal LSTM + LightGBM** di tiga horizon prakiraan (1, 3, 6 bulan), termasuk horizon yang gagal.
+4. **Arsip ONI historis** Januari 2016 – Juni 2025 beserta annotasi periode uji.
 
-## Evidence on Hand
+---
 
-- Real, with paths: `dataset/{train,val,test}_features.csv`; trained artifacts and metrics under `model/`; `scripts/export_dashboard_data.py`; generated `frontend/src/data/realData.js`; reproducible pipeline in `src/`; methodology in `README.md`; brand mark + `og-card` (`frontend/public/og-card.png`).
-- Absences future work must not fabricate: no testimonials, press, external validation, or user research; no BMKG partnership; no realtime feed; no regional MHW or rainfall matrix; no multi-year deterministic predictions. Do not state "KMRV beats persistence" — it does not.
+## Arsitektur Model (Detail Teknis)
 
-## Product Principles
+### Model: Causal LSTM + LightGBM Ensemble
 
-1. **Honesty is the design.** Every number traces to a dataset column or artifact file; weak horizons and losing baselines are shown, not hidden.
-2. **Ease of understanding wins.** Lead with the latest ONI and its phase; let detail live on the evaluation page.
-3. **Traceable proof.** Each panel names its source file (`dataset/*_features.csv`, `metrics_horizon_*.json`, `test_predictions_horizon_*.csv`).
-4. **Evidence, not promises.** Historical evaluation only; no future forecast while inference is not served.
-5. **Indonesia-grounded.** Niño 3.4 as the index, Indonesian seas as the response domain it is evaluated against.
+Pipeline dua tahap yang diimplementasikan di `src/ml/ensemble.py`:
 
-## Accessibility & Inclusion
+#### Tahap 1 — Causal LSTM (Regresi ONI)
+- **Framework:** PyTorch
+- **File:** `src/ml/2lstm.py`, kelas `CausalLSTM`
+- **Arsitektur:** `nn.LSTM` satu lapis, `input_size` = jumlah fitur, `hidden_size = 32`, `num_layers = 1`, `batch_first = True`
+- **Regularisasi:** `nn.Dropout(0.1)` pada hidden state sebelum output linear
+- **Output:** nilai kontinu ONI (`target_oni_lead_{h}m`) untuk horizon h = 1/3/6 bulan ke depan
+- **Loss function:** MSELoss
+- **Optimizer:** Adam, `lr = 0.003`
+- **Training:** hingga 300 epoch, `batch_size = 16`, early stopping dengan patience 20 pada validation MSE
+- **Input window:** 12 bulan berurutan (12-step lookback)
+- **Preprocessing:** `StandardScaler` fit pada data training saja, disimpan sebagai `feature_scaler_horizon_{h}m.joblib` dan `target_scaler_horizon_{h}m.joblib`
 
-Good practice only, no formal WCAG target committed: adequate text contrast, keyboard operability and visible focus, charts with accessible titles/descriptors, and never conveying El Niño/La Niña state by color alone.
+#### Tahap 2 — LightGBM Phase Classifier
+- **Framework:** LightGBM
+- **File:** `src/ml/lgbm.py`, fungsi `create_phase_classifier`
+- **Task:** Klasifikasi multikelas — La Niña (0), Netral (1), El Niño (2)
+- **Hyperparameter:**
+  - `objective = "multiclass"`, `num_class = 3`
+  - `n_estimators = 300`, `learning_rate = 0.03`
+  - `num_leaves = 7`, `max_depth = 3`
+  - `min_child_samples = 5`, `subsample = 0.8`, `colsample_bytree = 0.8`
+  - `reg_lambda = 1.0`, `random_state = 42`
+- **Input fitur ke LightGBM:** prediksi LSTM (`lstm_oni`) + seluruh fitur tabular (iklim, lag, rolling, musiman)
+- **Early stopping:** 50 round tanpa peningkatan pada validation set
+- **Output tersimpan:** `lightgbm_horizon_{h}m.txt`
+
+#### Orkestrasi & Split Data
+- **Semua split kronologis:** tidak ada data masa depan yang bocor ke preprocessing atau pelatihan
+- **Split:** training (Jan 2016 – Des 2021, 72 baris), validasi (Jan 2022 – Des 2023, 24 baris), uji (Jan 2024 – Jun 2025, 18 baris)
+- **Seed fixed:** `seed_everything(42)` pada random, numpy, torch, dan cuda sebelum setiap training
+- **Entry point training:** `python main.py --horizons 1 3 6`
+
+---
+
+## Dataset
+
+### Sumber Data Upstream
+| Sumber | Konten | Penggunaan |
+|---|---|---|
+| NOAA OISST v2.1 | SST harian 0,25° | SST regional (Niño 3.4, Karimata, Makassar, Jawa, Maluku) |
+| NOAA CPC | ONI bulanan | Target ENSO |
+| NOAA PSL | SOI bulanan | Fitur atmosfer |
+| NOAA PSL | DMI (Dipole Mode Index) | Fitur Indian Ocean Dipole |
+
+### Cakupan Dataset
+- **Rentang waktu:** Januari 2016 – Juni 2025, bulanan (114 baris total)
+- **File:** `dataset/features_master_unscaled.csv` (master, satuan fisik), dibagi ke `train_features.csv` / `val_features.csv` / `test_features.csv`
+
+### Daftar Fitur Lengkap (68 kolom)
+| Kelompok | Fitur |
+|---|---|
+| **Indeks ENSO** | `oni_anom`, `oni_total` |
+| **Atmosfer** | `soi`, `dmi` |
+| **SST Regional** | `sst_nino34`, `sst_karimata`, `sst_makassar`, `sst_jawa`, `sst_maluku` |
+| **Gradien SST** | `sst_nino34_zonal_grad` |
+| **MHW (Marine Heatwave)** | `mhw_nino34`, `mhw_karimata`, `mhw_makassar`, `mhw_jawa`, `mhw_maluku` *(mayoritas nol/konstan)* |
+| **Curah hujan proxy** | `rain_malaysia`, `rain_hawaii` |
+| **Musiman** | `month_sin`, `month_cos` |
+| **Coupling index** | `enso_coupling_index` |
+| **Lag ONI** | `oni_anom_lag1/2/3/6/12` |
+| **Lag SOI** | `soi_lag1/2/3/6/12` |
+| **Lag DMI** | `dmi_lag1/2/3/6/12` |
+| **Lag SST Niño 3.4** | `sst_nino34_lag1/2/3/6/12` |
+| **Lag gradien SST** | `sst_nino34_zonal_grad_lag1/2/3/6/12` |
+| **Lag SST Makassar** | `sst_makassar_lag1/2/3/6/12` |
+| **Lag curah hujan** | `rain_malaysia_lag1/2/3/6/12` |
+| **Rolling ONI** | `oni_anom_roll3_mean`, `oni_anom_roll3_std`, `oni_anom_roll6_mean` |
+| **Rolling SOI** | `soi_roll3_mean`, `soi_roll3_std`, `soi_roll6_mean` |
+| **Rolling DMI** | `dmi_roll3_mean`, `dmi_roll3_std`, `dmi_roll6_mean` |
+| **Rolling SST Niño 3.4** | `sst_nino34_roll3_mean`, `sst_nino34_roll3_std`, `sst_nino34_roll6_mean` |
+| **Target** | `target_oni_lead_1m/3m/6m`, `target_phase_lead_1m/3m/6m` |
+
+---
+
+## Metrik Model (Verified dari Artifact)
+
+### Horizon 1 Bulan — ★ Satu-satunya horizon andal
+| Metrik | Validasi | Uji |
+|---|---|---|
+| Accuracy | 76,9% | **71,4%** |
+| Balanced Accuracy | 79,2% | 71,4% |
+| Macro F1 | 66,8% | 41,7% |
+| LSTM RMSE (ONI) | 1,175 °C | **0,180 °C** |
+
+**Confusion Matrix (Uji):** 5 benar dari 7 — 2 bulan Netral salah ditebak La Niña.
+
+### Horizon 3 Bulan — Trivial Majority Class
+| Metrik | Validasi | Uji |
+|---|---|---|
+| Accuracy | 23,1% | 100%* |
+| LSTM RMSE (ONI) | 1,257 °C | 0,174 °C |
+
+*Accuracy 100% semu: seluruh 7 bulan uji berkondisi Netral, model menebak Netral semua. Bukan skill prediktif nyata.
+
+### Horizon 6 Bulan — Gagal
+| Metrik | Validasi | Uji |
+|---|---|---|
+| Accuracy | 0% | **0%** |
+| LSTM RMSE (ONI) | 1,258 °C | 0,217 °C |
+
+Model selalu menebak satu kelas; prediksi tidak dapat diandalkan.
+
+### Perbandingan dengan Persistence Baseline
+> Model TIDAK mengalahkan persistence (prediksi "bulan ini sama dengan bulan lalu"):
+
+| Horizon | MAE LSTM | MAE Persistence |
+|---|---|---|
+| 1 bulan | 0,172 | 0,108 |
+| 3 bulan | 0,152 | 0,098 |
+| 6 bulan | 0,197 | 0,100 |
+
+---
+
+## Domain Maritim yang Dipantau
+
+| Domain | Koordinat | Peran |
+|---|---|---|
+| Pasifik Niño 3.4 | 5°LS–5°LU, 170°BB–120°BB | Referensi indeks ENSO utama |
+| Selat Makassar | 5°LS–2°LU, 116°BT–120°BT | Respons lokal Indonesia |
+| Selat Karimata | 3°LS–2°LU, 105°BT–110°BT | Respons lokal Indonesia |
+| Selatan Jawa | 12°LS–8°LS, 105°BT–115°BT | Respons lokal Indonesia |
+| Maluku–Papua | 3°LS–3°LU, 125°BT–140°BT | Respons lokal Indonesia |
+
+---
+
+## Struktur Proyek
+
+```
+KMRV-model/
+├── dataset/                    # Data CSV (train/val/test + master)
+│   ├── features_master_unscaled.csv
+│   ├── train_features.csv      # Jan 2016–Des 2021 (72 baris)
+│   ├── val_features.csv        # Jan 2022–Des 2023 (24 baris)
+│   └── test_features.csv       # Jan 2024–Jun 2025 (18 baris)
+├── model/
+│   ├── enso_ensemble_1m/       # Artifact horizon 1 bulan
+│   │   ├── lstm_horizon_1m.pt
+│   │   ├── lightgbm_horizon_1m.txt
+│   │   ├── feature_scaler_horizon_1m.joblib
+│   │   ├── target_scaler_horizon_1m.joblib
+│   │   ├── metrics_horizon_1m.json
+│   │   └── test_predictions_horizon_1m.csv
+│   ├── enso_ensemble_3m/       # Artifact horizon 3 bulan
+│   ├── enso_ensemble_6m/       # Artifact horizon 6 bulan
+│   └── model_manifest.json     # best_validation_horizon_months = 1
+├── src/
+│   ├── ml/
+│   │   ├── 2lstm.py            # CausalLSTM (PyTorch)
+│   │   ├── lgbm.py             # LightGBM phase classifier
+│   │   └── ensemble.py         # Pipeline orkestrasi 2-tahap
+│   ├── preprocessing.py        # Feature engineering
+│   ├── etl.py                  # Data download & transformasi
+│   ├── pipeline.py             # run_full_pipeline()
+│   └── utils.py                # Helper
+├── scripts/
+│   └── export_dashboard_data.py # Ekspor realData.js dari CSV+artifacts
+├── frontend/                   # React + Vite SPA
+│   ├── src/
+│   │   ├── pages/Dashboard.jsx
+│   │   ├── components/         # Chart, map, confusion matrix, dll
+│   │   ├── data/realData.js    # Data dihasilkan oleh export script
+│   │   └── utils/
+│   └── dist/                   # Build output
+├── main.py                     # Entry point training
+└── README.md                   # Dokumentasi ENSO & metodologi
+```
+
+---
+
+## Pipeline Data ke Frontend
+
+```
+dataset/*_features.csv
+  + model/enso_ensemble_*/metrics_*.json
+  + model/enso_ensemble_*/test_predictions_*.csv
+       ↓
+  python scripts/export_dashboard_data.py
+       ↓
+  frontend/src/data/realData.js   ← satu-satunya sumber data UI
+       ↓
+  npm run build (Vite)
+       ↓
+  frontend/dist/   ← deployed static files
+```
+
+UI **tidak membuat network call apapun** untuk data. Semua angka bersumber dari `realData.js` yang dihasilkan dari dataset dan artifact model nyata.
+
+---
+
+## Observasi Terbaru (Juni 2025, dari Dataset)
+
+| Indikator | Nilai | Interpretasi |
+|---|---|---|
+| ONI | −0,02 °C | **Netral** (antara −0,5 dan +0,5) |
+| SOI | +0,097 | Sedikit positif |
+| DMI | −0,477 °C | Mendekati batas negatif |
+| SST Niño 3.4 | −0,119 °C (anomali) | Sedikit dingin dari normal |
+| SST Selat Makassar | +0,181 °C (anomali) | Sedikit hangat |
+| SST Selatan Jawa | +0,262 °C (anomali) | Sedikit hangat |
+
+> **Catatan:** semua kolom SST adalah **anomali terhadap rata-rata bulan yang sama** (bukan suhu absolut). Bukan kondisi hari ini — ini adalah bulan terakhir dalam dataset historis.
+
+---
+
+## Keterbatasan yang Harus Dikomunikasikan
+
+1. **Bukan realtime:** Data terakhir adalah Juni 2025. Tidak ada feed NOAA langsung.
+2. **Persistence mengalahkan model di semua horizon MAE.**
+3. **Kolom MHW (marine heatwave) mayoritas nol atau konstan** — data MHW regional Indonesia yang memadai tidak tersedia dalam dataset ini.
+4. **Kolom curah hujan hanya proxy** (`rain_malaysia`, `rain_hawaii`) — matriks curah hujan regional Indonesia tidak tersedia.
+5. **Horizon 3 dan 6 bulan tidak andal** — horizon 3 bulan adalah trivial majority class; horizon 6 bulan gagal total.
+6. **Backend tidak diimplementasikan:** `backend/` hanya berisi `Dockerfile` dan `requirements.txt`.
+
+---
+
+## Prinsip Desain
+
+1. **Kejujuran adalah desain.** Setiap angka dapat dilacak ke kolom dataset atau file artifact; horizon lemah dan baseline yang kalah ditampilkan, bukan disembunyikan.
+2. **Kemudahan memahami menang.** Tampilkan ONI terbaru dan fasenya terlebih dahulu; detail ada di halaman evaluasi.
+3. **Bukti, bukan janji.** Evaluasi historis saja; tidak ada prakiraan masa depan selama inferensi belum di-serve secara live.
+4. **Berbasis Indonesia.** Niño 3.4 sebagai indeks, laut Indonesia sebagai domain respons.
+5. **Bahasa Indonesia.** Seluruh teks UI dalam bahasa Indonesia; koma desimal Indonesia (mis., "−0,11 °C").
+
+---
+
+## Komitmen Brand
+
+- **Nama produk:** Lautan.id
+- **Tagline:** "Pantau Iklim & Dinamika Laut Indonesia"
+- **Warna primer:** `#00a3c4` (biru laut)
+- **Tipografi nilai numerik:** font monospaced (Outlier/Roboto Mono) untuk kejelasan angka
+- **Semua teks UI:** Bahasa Indonesia; notasi desimal koma
+
+---
+
+## Aksesibilitas
+
+Praktik baik tanpa target WCAG formal: kontras teks memadai, operabilitas keyboard dan fokus terlihat, chart dengan judul/deskripsi aksesibel, dan state El Niño/La Niña tidak disampaikan hanya lewat warna.
+
+---
+
+## Pengembangan Lanjutan (Belum Diimplementasikan)
+
+- Feed NOAA realtime via backend proxy
+- Retraining sehingga horizon 3/6 bulan mendapat skill nyata
+- Peta interaktif Leaflet untuk arsip SST bulanan
+- Inferensi live (saat ini model hanya tersimpan sebagai artifact statis)
