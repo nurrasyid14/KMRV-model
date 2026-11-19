@@ -7,6 +7,7 @@ from typing import NamedTuple
 
 from src.learning import run as run_learning
 from src.etl import ExploratoryDataAnalysis
+from src.ml.backtesting import run_backtesting
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
@@ -41,7 +42,7 @@ PIPELINE_STAGES = (
     PipelineStage(
         "Model learning",
         "implemented",
-        "Causal LSTM ONI forecasts combined with LightGBM ENSO phase classification.",
+        "Causal LSTM ONI forecasts evaluated with temporal backtesting and LightGBM/XGBoost phase classifiers.",
     ),
     PipelineStage(
         "Inference and prediction persistence",
@@ -55,11 +56,13 @@ PIPELINE_CALL_GRAPH = {
     "src.pipeline.run_full_pipeline": [
         "src.pipeline.run_source_eda",
         "src.pipeline.run_data_preprocessing",
+        "src.pipeline.run_enso_backtesting",
         "src.pipeline.run_enso_training",
     ],
     "src.pipeline.run_source_eda": ["src.etl.ExploratoryDataAnalysis", "src.utils.NCEncoder"],
     "src.pipeline.run_data_preprocessing": ["src.preprocessing.main"],
     "src.pipeline.run_enso_training": ["src.learning.run"],
+    "src.pipeline.run_enso_backtesting": ["src.ml.backtesting.run_backtesting"],
     "src.learning.run": [
         "src.learning.validate_sequence_inputs",
         "src.utils.Preprocess.create_sliding_windows",
@@ -67,9 +70,22 @@ PIPELINE_CALL_GRAPH = {
         "src.ml.ensemble",
         "src.learning.aggregate_and_report",
     ],
+    "src.ml.backtesting.run_backtesting": [
+        "src.ml.temporal.load_feature_data",
+        "src.ml.temporal.build_expanding_folds",
+        "src.ml.backtesting._oof_lstm_forecasts",
+        "src.ml.backtesting._fit_lstm",
+        "src.ml.ensemble.train_lstm",
+        "src.ml.ensemble.predict_lstm",
+        "src.ml.lgbm_classifier.create_phase_classifier",
+        "src.ml.xgb_classifier.create_phase_classifier",
+        "src.ml.evaluation.classification_evaluation",
+        "src.ml.evaluation.regression_evaluation",
+        "src.ml.reporting.write_backtest_reports",
+    ],
     "src.ml.ensemble": [
         "src.ml.2lstm.CausalLSTM",
-        "src.ml.lgbm.train_phase_classifier",
+        "src.ml.xgb_classifier.train_phase_classifier",
     ],
 }
 
@@ -81,6 +97,21 @@ def run_enso_training(
 ) -> dict[str, object]:
     """Train all requested ENSO horizons and generate report artifacts."""
     return run_learning(horizons=horizons, epochs=epochs, seed=seed)
+
+
+def run_enso_backtesting(
+    horizons: tuple[int, ...] = (1, 3, 6),
+    epochs: int = 300,
+    seed: int = 42,
+) -> dict[str, object]:
+    """Run expanding-window evaluation using the audited monthly feature master."""
+    data_path = PROJECT_ROOT / "dataset" / "features_master_unscaled.csv"
+    return run_backtesting(
+        data_path=data_path,
+        horizons=horizons,
+        epochs=epochs,
+        seed=seed,
+    )
 
 
 def run_data_preprocessing() -> Path:
@@ -120,6 +151,7 @@ def run_full_pipeline(
     seed: int = 42,
     prepare_data: bool = False,
     run_eda: bool = False,
+    legacy_training: bool = False,
 ) -> dict[str, object]:
     import json
 
@@ -127,7 +159,10 @@ def run_full_pipeline(
         run_source_eda()
     if prepare_data:
         run_data_preprocessing()
-    report = run_enso_training(horizons=horizons, epochs=epochs, seed=seed)
+    if legacy_training:
+        report = run_enso_training(horizons=horizons, epochs=epochs, seed=seed)
+    else:
+        report = run_enso_backtesting(horizons=horizons, epochs=epochs, seed=seed)
     report["call_graph"] = PIPELINE_CALL_GRAPH
     reports_dir = PROJECT_ROOT / "reports"
     reports_dir.mkdir(parents=True, exist_ok=True)

@@ -5,6 +5,7 @@
   "src.pipeline.run_full_pipeline": [
     "src.pipeline.run_source_eda",
     "src.pipeline.run_data_preprocessing",
+    "src.pipeline.run_enso_backtesting",
     "src.pipeline.run_enso_training"
   ],
   "src.pipeline.run_source_eda": [
@@ -17,6 +18,9 @@
   "src.pipeline.run_enso_training": [
     "src.learning.run"
   ],
+  "src.pipeline.run_enso_backtesting": [
+    "src.ml.backtesting.run_backtesting"
+  ],
   "src.learning.run": [
     "src.learning.validate_sequence_inputs",
     "src.utils.Preprocess.create_sliding_windows",
@@ -24,8 +28,21 @@
     "src.ml.ensemble",
     "src.learning.aggregate_and_report"
   ],
+  "src.ml.backtesting.run_backtesting": [
+    "src.ml.temporal.load_feature_data",
+    "src.ml.temporal.build_expanding_folds",
+    "src.ml.backtesting._oof_lstm_forecasts",
+    "src.ml.backtesting._fit_lstm",
+    "src.ml.ensemble.train_lstm",
+    "src.ml.ensemble.predict_lstm",
+    "src.ml.lgbm_classifier.create_phase_classifier",
+    "src.ml.xgb_classifier.create_phase_classifier",
+    "src.ml.evaluation.classification_evaluation",
+    "src.ml.evaluation.regression_evaluation",
+    "src.ml.reporting.write_backtest_reports"
+  ],
   "src.ml.ensemble": [
     "src.ml.2lstm.CausalLSTM",
-    "src.ml.lgbm.train_phase_classifier"
+    "src.ml.xgb_classifier.train_phase_classifier"
   ]
 }

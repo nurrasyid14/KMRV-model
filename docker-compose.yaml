@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # 1. Database PostgreSQL dengan ekstensi PostGIS (Spasial)
   postgres-db:
@@ -24,29 +22,29 @@ services:
       timeout: 5s
       retries: 5
 
-  # 2. PyTorch Model Inference Service (Deep Learning & NetCDF Processing)
+  # 2. Final ENSO model inference service
   model-service:
     build:
-      context: ./model
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: model/Dockerfile
     container_name: mhw_pytorch_service
     restart: always
     ports:
       - "8001:8001"
     volumes:
-      - ./model/models:/app/models
-      - ./model/data:/app/data
+      - ./model/final_retrained:/app/models/final_retrained:ro
+      - ./dataset/features_master_unscaled.csv:/app/dataset/features_master_unscaled.csv:ro
     environment:
       - TZ=Asia/Jakarta
       - PYTHONUNBUFFERED=1
-    # Jika menggunakan GPU NVIDIA, hapus komentar pada blok di bawah:
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
+      - MODEL_ARTIFACTS_DIR=/app/models/final_retrained
+      - FEATURES_FILE=/app/dataset/features_master_unscaled.csv
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8001/health', timeout=2).read()"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 60s
 
   # 3. FastAPI Backend API
   fastapi-backend:
@@ -58,14 +56,17 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgresql+psycopg2://${DB_MEMBER_USER}:${DB_MEMBER_PASSWORD}@postgres-db:5432/${POSTGRES_DB}
       - MODEL_SERVICE_URL=http://model-service:8001
       - TZ=Asia/Jakarta
     depends_on:
-      postgres-db:
-        condition: service_healthy
       model-service:
-        condition: service_started
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2).read()"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
 
   # 4. Frontend Web Server (Nginx melayani HTML/CSS/JS)
   frontend:
@@ -77,7 +78,8 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - fastapi-backend
+      fastapi-backend:
+        condition: service_healthy
 
 volumes:
   postgres_data:

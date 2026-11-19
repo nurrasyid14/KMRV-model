@@ -1,0 +1,12 @@
+**
+!model/
+model/**
+!model/Dockerfile
+!model/requirements.txt
+!model/service.py
+!src/
+src/**
+!src/__init__.py
+!src/ml/
+src/ml/**
+!src/ml/2lstm.py

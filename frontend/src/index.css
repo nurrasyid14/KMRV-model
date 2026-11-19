@@ -3019,6 +3019,37 @@ a.app-link-tab {
   height: auto;
 }
 
+.lp-live-forecast-card {
+  margin-bottom: 12px;
+}
+
+.lp-live-forecast-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.lp-live-forecast-heading .chart-subtitle {
+  margin: 3px 0 0;
+}
+
+.lp-live-forecast-card .lp-inner-cards {
+  margin-top: 10px;
+}
+
+.lp-live-forecast-note {
+  margin: 10px 0 4px;
+  color: #64748b;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.lp-live-forecast-error {
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
 .lp-chart-toolbar {
   display: flex;
   justify-content: flex-end;

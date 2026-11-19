@@ -3,15 +3,35 @@
     {
       "split": "test",
       "forecast_horizon_months": 1,
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "macro_precision": 1.0,
+      "macro_recall": 1.0,
+      "oni_mse": 0.021457567082677646
+    },
+    {
+      "split": "test",
+      "forecast_horizon_months": 3,
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "macro_precision": 1.0,
+      "macro_recall": 1.0,
+      "oni_mse": 0.027746942240032785
+    },
+    {
+      "split": "test",
+      "forecast_horizon_months": 6,
       "accuracy": 0.7142857142857143,
-      "macro_f1": 0.4166666666666667,
-      "macro_precision": 0.5,
-      "macro_recall": 0.35714285714285715,
-      "oni_mse": 0.03226710558915998
+      "macro_f1": 0.5,
+      "macro_precision": 0.6666666666666666,
+      "macro_recall": 0.4444444444444444,
+      "oni_mse": 0.050259208137569844
     }
   ],
   "forecast_horizons_months": [
-    1
+    1,
+    3,
+    6
   ],
   "tri_monthly_seasons": [
     "AMJ",
@@ -27,5 +47,5 @@
     "OND",
     "SON"
   ],
-  "output_directory": "E:/KMRV-model/reports"
+  "output_directory": "C:/Users/Dell/OneDrive - Politeknik Elektronika Negeri Surabaya/Documents/Sains data/sem 5/elnino prediction/reports"
 }

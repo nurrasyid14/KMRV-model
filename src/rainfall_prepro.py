@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 """
-Aggregate raw Malaysia and Hawaii rainfall observations into monthly CSVs.
+Aggregate raw Malaysia and Hawaii rainfall observations into one monthly CSV.
 
 Run this script before ``python src/preprocessing.py`` so the monthly rainfall
-files are included in the hierarchical Zarr store.
+comparison is included in the hierarchical Zarr store.
 
 Defaults are relative to this script, so the command works from any directory:
     python src/rainfall_prepro.py
 
-The outputs are dataset/data_rainfall_monthly/malaysia.csv and hawaii.csv.
+The output is dataset/data_rainfall_monthly/rainfall_comparison.csv.
 """
 
 from __future__ import annotations
@@ -37,11 +37,16 @@ MISSING_VALUES = ["NA", "NaN", "", "-999", "-9999"]
 
 
 def warn_missing_months(frame: pd.DataFrame, label: str) -> None:
-    observed = pd.DatetimeIndex(frame["time"])
-    missing = MONTHS.difference(observed)
+    values = frame.drop(columns=["time", "n_obs", "n_stations"], errors="ignore")
+    missing = pd.DatetimeIndex(
+        frame.loc[~values.notna().any(axis=1), "time"]
+    )
     if len(missing):
         labels = ", ".join(m.strftime("%Y-%m") for m in missing)
-        print(f"[WARNING] {label}: no data for {len(missing)} month(s): {labels}")
+        print(
+            f"[WARNING] {label}: no rainfall values for "
+            f"{len(missing)} month(s): {labels}"
+        )
 
 
 def aggregate_malaysia(csv_path: Path) -> pd.DataFrame:
@@ -159,8 +164,30 @@ def aggregate_hawaii(root: Path) -> pd.DataFrame:
     return regional
 
 
+def combine_rainfall(malaysia: pd.DataFrame, hawaii: pd.DataFrame) -> pd.DataFrame:
+    """Align the monthly Malaysia and Hawaii rainfall features on one timeline."""
+    malaysia_features = malaysia[["time", "rfh", "r1h"]].rename(
+        columns={"rfh": "malaysia_rfh_mm", "r1h": "malaysia_r1h_mm"}
+    )
+    hawaii_features = hawaii[["time", "rain_total_mm"]].rename(
+        columns={"rain_total_mm": "hawaii_rain_mm"}
+    )
+    comparison = pd.DataFrame({"time": MONTHS})
+    comparison = comparison.merge(
+        malaysia_features, on="time", how="left", validate="one_to_one"
+    )
+    comparison = comparison.merge(
+        hawaii_features, on="time", how="left", validate="one_to_one"
+    )
+    return comparison
+
+
 def find_malaysia_csv() -> Path:
     source_dir = DATASET_DIR / "data_rainfall"
+    preferred = source_dir / "Malaysia.csv"
+    if preferred.is_file():
+        return preferred
+
     candidates = sorted(source_dir.glob("*.csv"))
     if len(candidates) != 1:
         names = ", ".join(str(path) for path in candidates) or "(tidak ada)"
@@ -180,7 +207,10 @@ def main() -> int:
     parser.add_argument(
         "--malaysia-csv",
         type=Path,
-        help="CSV mentah Malaysia (default: satu-satunya CSV di dataset/data_rainfall)",
+        help=(
+            "CSV mentah Malaysia (default: Malaysia.csv di dataset/data_rainfall; "
+            "jika tidak ada, gunakan satu-satunya CSV yang ditemukan)"
+        ),
     )
     parser.add_argument(
         "--hawaii-dir",
@@ -192,7 +222,7 @@ def main() -> int:
         "--output-dir",
         type=Path,
         default=DATASET_DIR / "data_rainfall_monthly",
-        help="Folder CSV bulanan keluaran",
+        help="Folder keluaran CSV perbandingan bulanan",
     )
     args = parser.parse_args()
 
@@ -209,16 +239,14 @@ def main() -> int:
         malaysia = aggregate_malaysia(malaysia_csv)
         hawaii = aggregate_hawaii(hawaii_dir)
         failures = hawaii.attrs.pop("failed_files", [])
+        comparison = combine_rainfall(malaysia, hawaii)
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        malaysia_path = output_dir / "malaysia.csv"
-        hawaii_path = output_dir / "hawaii.csv"
-        malaysia.to_csv(malaysia_path, index=False)
-        hawaii.to_csv(hawaii_path, index=False)
+        comparison_path = output_dir / "rainfall_comparison.csv"
+        comparison.to_csv(comparison_path, index=False)
         warn_missing_months(malaysia, "Malaysia")
         warn_missing_months(hawaii, "Hawaii")
-        print(f"Malaysia: {len(malaysia)} bulan -> {malaysia_path}")
-        print(f"Hawaii: {len(hawaii)} bulan -> {hawaii_path}")
+        print(f"Perbandingan Malaysia–Hawaii: {len(comparison)} bulan -> {comparison_path}")
         return 1 if failures else 0
     except Exception as exc:
         print(f"ERROR: {exc}", file=sys.stderr)

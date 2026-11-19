@@ -8,7 +8,7 @@ export default function FooterNotes() {
       <div className="footer-meta-bar">
         <div className="footer-brand-meta">
           <span className="footer-model-badge">lautan.id</span>
-          <span className="footer-meta-item">Model KMRV (Causal LSTM + LightGBM Ensemble)</span>
+          <span className="footer-meta-item">Causal LSTM + classifier terpilih per horizon</span>
           <span className="footer-meta-item">
             Dataset: {monthLabel(meta.datasetStart)} – {monthLabel(meta.datasetEnd)}
           </span>
@@ -16,11 +16,11 @@ export default function FooterNotes() {
 
         <div className="footer-sources-meta">
           <span className="source-tag">dataset/*_features.csv</span>
-          <span className="source-tag">model/enso_ensemble_*</span>
+          <span className="source-tag">model/final_retrained/</span>
         </div>
 
         <div className="footer-disclaimer-meta">
-          <span>Bukan feed realtime. Peringatan resmi tetap milik BMKG.</span>
+          <span>Prediksi memakai input terakhir yang tersedia; bukan feed real-time. Peringatan resmi tetap milik BMKG.</span>
         </div>
       </div>
     </footer>

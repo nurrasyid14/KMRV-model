@@ -1,0 +1,119 @@
+{
+  "forecast_origin": "2025-06-01",
+  "forecast_months_requested": 18,
+  "supported_horizons": [
+    1,
+    3,
+    6
+  ],
+  "months": [
+    {
+      "horizon_months": 1,
+      "forecast_generated": true,
+      "status": "direct_model_forecast",
+      "reason": null
+    },
+    {
+      "horizon_months": 2,
+      "forecast_generated": false,
+      "status": "unsupported_by_current_model",
+      "reason": "No validated direct model exists for this lead; no interpolation or recursion is applied."
+    },
+    {
+      "horizon_months": 3,
+      "forecast_generated": true,
+      "status": "direct_model_forecast",
+      "reason": null
+    },
+    {
+      "horizon_months": 4,
+      "forecast_generated": false,
+      "status": "unsupported_by_current_model",
+      "reason": "No validated direct model exists for this lead; no interpolation or recursion is applied."
+    },
+    {
+      "horizon_months": 5,
+      "forecast_generated": false,
+      "status": "unsupported_by_current_model",
+      "reason": "No validated direct model exists for this lead; no interpolation or recursion is applied."
+    },
+    {
+      "horizon_months": 6,
+      "forecast_generated": true,
+      "status": "direct_model_forecast",
+      "reason": null
+    },
+    {
+      "horizon_months": 7,
+      "forecast_generated": false,
+      "status": "unsupported_by_current_model",
+      "reason": "No validated direct model exists for this lead; no interpolation or recursion is applied."
+    },
+    {
+      "horizon_months": 8,
+      "forecast_generated": false,
+      "status": "unsupported_by_current_model",
+      "reason": "No validated direct model exists for this lead; no interpolation or recursion is applied."
+    },
+    {
+      "horizon_months": 9,
+      "forecast_generated": false,
+      "status": "unsupported_by_current_model",
+      "reason": "No validated direct model exists for this lead; no interpolation or recursion is applied."
+    },
+    {
+      "horizon_months": 10,
+      "forecast_generated": false,
+      "status": "unsupported_by_current_model",
+      "reason": "No validated direct model exists for this lead; no interpolation or recursion is applied."
+    },
+    {
+      "horizon_months": 11,
+      "forecast_generated": false,
+      "status": "unsupported_by_current_model",
+      "reason": "No validated direct model exists for this lead; no interpolation or recursion is applied."
+    },
+    {
+      "horizon_months": 12,
+      "forecast_generated": false,
+      "status": "unsupported_by_current_model",
+      "reason": "No validated direct model exists for this lead; no interpolation or recursion is applied."
+    },
+    {
+      "horizon_months": 13,
+      "forecast_generated": false,
+      "status": "unsupported_by_current_model",
+      "reason": "No validated direct model exists for this lead; no interpolation or recursion is applied."
+    },
+    {
+      "horizon_months": 14,
+      "forecast_generated": false,
+      "status": "unsupported_by_current_model",
+      "reason": "No validated direct model exists for this lead; no interpolation or recursion is applied."
+    },
+    {
+      "horizon_months": 15,
+      "forecast_generated": false,
+      "status": "unsupported_by_current_model",
+      "reason": "No validated direct model exists for this lead; no interpolation or recursion is applied."
+    },
+    {
+      "horizon_months": 16,
+      "forecast_generated": false,
+      "status": "unsupported_by_current_model",
+      "reason": "No validated direct model exists for this lead; no interpolation or recursion is applied."
+    },
+    {
+      "horizon_months": 17,
+      "forecast_generated": false,
+      "status": "unsupported_by_current_model",
+      "reason": "No validated direct model exists for this lead; no interpolation or recursion is applied."
+    },
+    {
+      "horizon_months": 18,
+      "forecast_generated": false,
+      "status": "unsupported_by_current_model",
+      "reason": "No validated direct model exists for this lead; no interpolation or recursion is applied."
+    }
+  ]
+}

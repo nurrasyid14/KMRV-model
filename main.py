@@ -29,18 +29,47 @@ def parse_args() -> argparse.ArgumentParser:
         action="store_true",
         help="Run src/etl.py and src/utils.py conversion and EDA.",
     )
+    parser.add_argument(
+        "--legacy-training",
+        action="store_true",
+        help="Use the original fixed train/validation/test training pipeline instead of temporal backtesting.",
+    )
+    parser.add_argument(
+        "--final-retrain",
+        action="store_true",
+        help="Retrain the frozen validation-selected models on all eligible history and forecast supported leads.",
+    )
+    parser.add_argument(
+        "--forecast-months",
+        type=int,
+        default=None,
+        help="Forecast support window in months (default: 18 in final retraining mode).",
+    )
     return parser
 
 
 def main() -> None:
     parser = parse_args()
     args = parser.parse_args()
+    if args.final_retrain or args.forecast_months is not None:
+        from src.ml.final_retraining import run_final_retraining
+
+        report = run_final_retraining(
+            forecast_months=(
+                args.forecast_months
+                if args.forecast_months is not None
+                else 18
+            ),
+        )
+        print(json.dumps(report, indent=2))
+        return
     report = run_full_pipeline(
         horizons=tuple(args.horizons),
         epochs=args.epochs,
         seed=args.seed,
         prepare_data=args.prepare_data,
         run_eda=args.run_eda,
+        legacy_training=args.legacy_training,
     )
     print(json.dumps(report, indent=2))
 
