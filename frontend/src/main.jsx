@@ -85,16 +85,17 @@ function ForecastPanel() {
     .map(d => `${x(series.indexOf(d))},${y(d.actual)}`)
     .join(' ');
 
-  const predictedPoints = series
-    .filter(d => d.prediction !== null && d.prediction !== undefined)
+  const predPoints = series.filter(d => d.prediction !== null && d.prediction !== undefined);
+  const predictedPoints = predPoints
     .map(d => `${x(series.indexOf(d))},${y(d.prediction)}`)
     .join(' ');
 
-  const bands = [
-    { label: 'El Niño (≥ +0,5)', from: 0.5, to: max, tone: 'elnino' },
-    { label: 'Netral (−0,5 s.d. +0,5)', from: -0.5, to: 0.5, tone: 'neutral' },
-    { label: 'La Niña (≤ −0,5)', from: min, to: -0.5, tone: 'lanina' }
-  ];
+  // Area arsiran di bawah/atas kurva proyeksi terhadap baseline nol (y=0)
+  const predAreaPoints = predPoints.length > 0
+    ? `${x(series.indexOf(predPoints[0]))},${y(0)} ` +
+      predPoints.map(d => `${x(series.indexOf(d))},${y(d.prediction)}`).join(' ') +
+      ` ${x(series.indexOf(predPoints[predPoints.length - 1]))},${y(0)}`
+    : '';
 
   const tooltipStyle = hover ? { left: `${Math.min(78, Math.max(4, (hover.x / width) * 100))}%`, top: `${Math.max(4, (hover.y / height) * 100 - 18)}%` } : {};
 
@@ -105,7 +106,7 @@ function ForecastPanel() {
           <p className="eyebrow">PRAKIRAAN TIME SERIES</p>
           <h2>ONI aktual vs proyeksi model</h2>
           <p className="panel-subtitle">
-            Garis biru adalah observasi aktual. Garis putus-putus merah-coral adalah proyeksi model untuk {horizon} bulan ke depan.
+            Garis biru adalah observasi aktual. Garis putus-putus merah-coral dengan arsiran adalah proyeksi model untuk {horizon} bulan ke depan.
           </p>
         </div>
         <div className="forecast-controls">
@@ -131,7 +132,14 @@ function ForecastPanel() {
       <div className="forecast-legend">
         <span><i className="line-key actual-key"></i> Aktual observasi</span>
         <span><i className="line-key prediction-key"></i> Proyeksi model ({horizon} bln ke depan)</span>
-        <span><i className="window-key"></i> Jendela proyeksi target</span>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+          <span style={{ width: '12px', height: '12px', background: '#fff7ed', border: '1px solid #f97316', borderRadius: '2px', display: 'inline-block' }}></span>
+          Arsiran orange (El Niño ≥ +0,5)
+        </span>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+          <span style={{ width: '12px', height: '12px', background: '#f0f9ff', border: '1px solid #0284c7', borderRadius: '2px', display: 'inline-block' }}></span>
+          Arsiran biru (La Niña ≤ −0,5)
+        </span>
       </div>
 
       <div className="forecast-chart-wrap">
@@ -143,31 +151,66 @@ function ForecastPanel() {
         </div>
 
         <svg className="forecast-chart" viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Prakiraan ONI aktual dan proyeksi horizon ${horizon} bulan`}>
-          {/* Zona proyeksi */}
-          <rect x={splitX} y="0" width={width - splitX} height={height} className="test-window" />
+          <defs>
+            {/* Pattern arsiran diagonal orange (El Niño) */}
+            <pattern id="hatch-orange" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+              <line x1="0" y1="0" x2="0" y2="7" stroke="#f97316" strokeWidth="1.2" strokeOpacity="0.45" />
+            </pattern>
 
-          {/* Ambang batas ENSO */}
-          {bands.map(b => (
-            <g key={b.label}>
-              <rect x="0" y={y(b.to)} width={width} height={y(b.from) - y(b.to)} className={`phase-band ${b.tone}`} />
-              <text x={width - 8} y={y((b.from + b.to) / 2) + 3} textAnchor="end" className="phase-label">{b.label}</text>
-            </g>
-          ))}
+            {/* Pattern arsiran diagonal biru (La Niña) */}
+            <pattern id="hatch-blue" width="7" height="7" patternTransform="rotate(-45)" patternUnits="userSpaceOnUse">
+              <line x1="0" y1="0" x2="0" y2="7" stroke="#0284c7" strokeWidth="1.2" strokeOpacity="0.45" />
+            </pattern>
 
+            {/* Gradien lembut untuk proyeksi */}
+            <linearGradient id="grad-pred-warm" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#f97316" stopOpacity="0.3" />
+              <stop offset="100%" stopColor="#f97316" stopOpacity="0.04" />
+            </linearGradient>
+
+            <linearGradient id="grad-pred-cool" x1="0" y1="1" x2="0" y2="0">
+              <stop offset="0%" stopColor="#0284c7" stopOpacity="0.32" />
+              <stop offset="100%" stopColor="#0284c7" stopOpacity="0.04" />
+            </linearGradient>
+          </defs>
+
+          {/* Jendela proyeksi dasar */}
+          <rect x={splitX} y="0" width={width - splitX} height={height} className="test-window" fill="#f8fafc" />
+
+          {/* Arsiran zona El Niño (di atas +0,5) pada area proyeksi */}
+          <rect x={splitX} y={y(max)} width={width - splitX} height={Math.max(0, y(0.5) - y(max))} fill="#fff7ed" />
+          <rect x={splitX} y={y(max)} width={width - splitX} height={Math.max(0, y(0.5) - y(max))} fill="url(#hatch-orange)" />
+
+          {/* Arsiran zona La Niña (di bawah -0,5) pada area proyeksi */}
+          <rect x={splitX} y={y(-0.5)} width={width - splitX} height={Math.max(0, y(min) - y(-0.5))} fill="#f0f9ff" />
+          <rect x={splitX} y={y(-0.5)} width={width - splitX} height={Math.max(0, y(min) - y(-0.5))} fill="url(#hatch-blue)" />
+
+          {/* Garis nol dan garis ambang berlabel */}
           <line x1="0" x2={width} y1={y(0)} y2={y(0)} className="forecast-zero" />
-          <line x1="0" x2={width} y1={y(0.5)} y2={y(0.5)} className="forecast-grid" strokeDasharray="3 3" />
-          <line x1="0" x2={width} y1={y(-0.5)} y2={y(-0.5)} className="forecast-grid" strokeDasharray="3 3" />
+          <line x1="0" x2={width} y1={y(0.5)} y2={y(0.5)} stroke="#f97316" strokeWidth="1.2" strokeDasharray="4 3" />
+          <text x={width - 8} y={y(0.5) - 6} textAnchor="end" fill="#ea580c" fontSize="9.5" fontWeight="600" fontFamily="var(--mono)">+0,5 El Niño</text>
+
+          <line x1="0" x2={width} y1={y(-0.5)} y2={y(-0.5)} stroke="#0284c7" strokeWidth="1.2" strokeDasharray="4 3" />
+          <text x={width - 8} y={y(-0.5) + 13} textAnchor="end" fill="#0284c7" fontSize="9.5" fontWeight="600" fontFamily="var(--mono)">−0,5 La Niña</text>
 
           {/* Batas observasi */}
           <line x1={splitX} x2={splitX} y1="0" y2={height} className="test-divider" />
           <text x={splitX - 6} y="16" textAnchor="end" fill="#64748b" fontSize="10" fontFamily="var(--mono)">Batas Observasi (06/25)</text>
           <text x={splitX + 8} y="16" textAnchor="start" fill="#e87561" fontSize="10" fontWeight="600" fontFamily="var(--mono)">Proyeksi {horizon} Bulan →</text>
 
+          {/* Arsiran area di bawah kurva proyeksi */}
+          {predAreaPoints && (
+            <>
+              <polygon points={predAreaPoints} fill="url(#grad-pred-cool)" />
+              <polygon points={predAreaPoints} fill="url(#hatch-blue)" opacity="0.65" />
+            </>
+          )}
+
           {/* Garis aktual */}
           <polyline points={actualPoints} className="forecast-actual-line" />
 
           {/* Garis prediksi */}
-          <polyline points={predictedPoints} className="forecast-prediction-line" />
+          <polyline points={predictedPoints} className="forecast-prediction-line" stroke="#e87561" strokeWidth="2.4" strokeDasharray="6 3" />
 
           {/* Titik-titik dan interaksi */}
           {series.map((d, i) => {
