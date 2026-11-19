@@ -582,9 +582,6 @@ function ClassificationSummary({ item, horizon }) {
   const netralPred = (item.matrix[0][1] + item.matrix[1][1] + item.matrix[2][1]);
   const elNinoPred = (item.matrix[0][2] + item.matrix[1][2] + item.matrix[2][2]);
 
-  const correct = item.matrix[0][0] + item.matrix[1][1] + item.matrix[2][2];
-  const incorrect = total - correct;
-
   const probs = [
     {
       label: 'Netral',
@@ -612,7 +609,7 @@ function ClassificationSummary({ item, horizon }) {
   return (
     <div className="class-summary">
       <div className="subheading">
-        <h3>Kemungkinan & Ketepatan Klasifikasi</h3>
+        <h3>Kemungkinan & Peluang Klasifikasi</h3>
         <span className="mono">Uji n = 7 bulan</span>
       </div>
 
@@ -630,36 +627,68 @@ function ClassificationSummary({ item, horizon }) {
           </div>
         ))}
       </div>
+    </div>
+  );
+}
 
-      <div className="test-outcome-strip">
-        <div className="outcome-box correct-box">
-          <span className="outcome-count mono">{correct}</span>
-          <div className="outcome-desc">
-            <strong>Bulan Tepat</strong>
-            <small>Tebakan cocok dengan realitas</small>
-          </div>
-        </div>
-        <div className="outcome-box incorrect-box">
-          <span className="outcome-count mono">{incorrect}</span>
-          <div className="outcome-desc">
-            <strong>Bulan Meleset</strong>
-            <small>Penyimpangan fase model</small>
-          </div>
-        </div>
+function PlainExplanationCard({ item, horizon }) {
+  const guides = {
+    1: {
+      headline: 'Sinyal 1 Bulan: Cukup Andal dengan Sedikit Bias Dingin',
+      points: [
+        { label: 'Ketepatan Tebakan', desc: '5 dari 7 bulan uji berhasil ditebak dengan benar pada fase Netral (Akurasi 71,4%).' },
+        { label: 'Kelemahan Model', desc: 'Terdapat bias dingin: 2 bulan netral sempat keliru diprediksi sebagai La Niña.' },
+        { label: 'Rekomendasi', desc: 'Satu-satunya horizon yang dapat dipertimbangkan untuk membaca kecenderungan jangka pendek.' }
+      ],
+      verdict: 'Layak dibaca sebagai sinyal bantu, tetap pantau pembaruan resmi BMKG.'
+    },
+    3: {
+      headline: 'Sinyal 3 Bulan: Akurasi Semu (Tebakan Mayoritas)',
+      points: [
+        { label: 'Fakta di Lapangan', desc: 'Akurasi tercatat 100%, tetapi seluruh 7 bulan uji memang berstatus Netral.' },
+        { label: 'Perilaku Model', desc: 'Model hanya menebak Netral terus-menerus tanpa mendeteksi dinamika perubahan.' },
+        { label: 'Rekomendasi', desc: 'Jangan terkecoh angka 100%. Daya prediksi sejati untuk 3 bulan ke depan masih lemah.' }
+      ],
+      verdict: 'Perlu kehati-hatian tinggi: tidak disarankan untuk perencanaan berisiko.'
+    },
+    6: {
+      headline: 'Sinyal 6 Bulan: Gagal Total (Kehilangan Arah Prediksi)',
+      points: [
+        { label: 'Hasil Uji', desc: 'Akurasi 0,0%. Seluruh tebakan meleset karena model selalu menebak La Niña padahal riilnya Netral.' },
+        { label: 'Penyebab Teknis', desc: 'Akumulasi error sekuensial Causal LSTM jarak jauh menyebabkan model kehilangan sinyal.' },
+        { label: 'Rekomendasi', desc: 'Hindari penggunaan horizon 6 bulan ini sebagai dasar pengambilan keputusan apa pun.' }
+      ],
+      verdict: 'Model kehilangan daya prediksi pada horizon 6 bulan.'
+    }
+  };
+
+  const g = guides[horizon] || guides[1];
+
+  return (
+    <div className="explanation-card">
+      <div className="subheading">
+        <h3>Penjelasan Awam</h3>
+        <span>PANDUAN PRAKTIS</span>
       </div>
 
-      <div className="plain-explanation">
-        <p>
-          {horizon === 1 && (
-            <><strong>Penjelasan Awam:</strong> Dari 7 bulan uji, model menebak benar <strong>5 kali ({fmt(item.accuracy.test, 1)}%)</strong> pada fase Netral. Model memiliki bias sedikit terlalu dingin sehingga 2 bulan sempat disangka La Niña.</>
-          )}
-          {horizon === 3 && (
-            <><strong>Penjelasan Awam:</strong> Akurasi 100% terjadi karena seluruh data uji kebetulan Netral dan model menebak <strong>Netral untuk semua bulan</strong>, bukan karena model mahir meramal.</>
-          )}
-          {horizon === 6 && (
-            <><strong>Penjelasan Awam:</strong> Model <strong>gagal total (0% benar)</strong>. Model menebak La Niña untuk semua bulan padahal kondisi riil Netral. Jangan dipakai untuk pengambilan keputusan.</>
-          )}
-        </p>
+      <div className="explain-headline">
+        <strong>{g.headline}</strong>
+      </div>
+
+      <div className="explain-points">
+        {g.points.map((pt, i) => (
+          <div key={i} className="explain-point">
+            <span className="point-bullet">↳</span>
+            <div>
+              <strong>{pt.label}:</strong> <span>{pt.desc}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className={`explain-verdict ${item.tone}`}>
+        <span>ⓘ</span>
+        <p>{g.verdict}</p>
       </div>
     </div>
   );
@@ -674,7 +703,62 @@ function EvaluationPanel() {
     ['MAE model', fmt(item.maeModel, 3), 'neutral'],
     ['MAE persistence', fmt(item.maeBaseline, 3), item.maeBaseline < item.maeModel ? 'bad' : 'good']
   ];
-  return <section className="panel eval-panel" id="evaluation"><div className="panel-heading eval-heading"><div><p className="eyebrow">BUKTI MODEL</p><h2>Evaluasi prakiraan ENSO</h2></div><div className="horizon-tabs" role="tablist" aria-label="Pilih horizon prakiraan">{[1, 3, 6].map(h => <button key={h} onClick={() => setHorizon(h)} className={horizon === h ? 'selected' : ''} role="tab" aria-selected={horizon === h}>{h} bln</button>)}</div></div><div className={`verdict-banner ${item.tone}`}><span className="verdict-icon">{item.tone === 'good' ? '✓' : item.tone === 'warn' ? '!' : '×'}</span><div><strong>Horizon {item.label}: {item.verdict}</strong><p>{horizon === 1 ? 'Satu-satunya horizon dengan sinyal yang relatif dapat dipertimbangkan — tetap kalah dari persistence.' : horizon === 3 ? 'Akurasi 100% terlihat tinggi, tetapi seluruh data uji adalah kelas Netral sehingga metrik ini menyesatkan.' : 'Model selalu memilih satu kelas pada evaluasi; jangan gunakan sebagai dasar prakiraan.'}</p></div><span className="artifact-tag">ARTIFACT VERIFIED</span></div><div className="metrics-strip">{metrics.map(([label, value, tone]) => <div className="metric" key={label}><span>{label}</span><strong className={`mono ${tone}`}>{value}</strong></div>)}</div><div className="eval-detail"><div className="matrix-card"><ClassificationSummary item={item} horizon={horizon} /></div><div className="baseline-card"><div className="subheading"><h3>Model vs persistence</h3><span>MAE ONI · lebih kecil lebih baik</span></div><div className="compare-bars"><div className="compare-row"><span>Ensemble</span><div><i style={{ width: `${item.maeModel / .22 * 100}%` }}></i></div><strong className="mono">{fmt(item.maeModel, 3)}</strong></div><div className="compare-row baseline"><span>Persistence</span><div><i style={{ width: `${item.maeBaseline / .22 * 100}%` }}></i></div><strong className="mono">{fmt(item.maeBaseline, 3)}</strong></div></div><div className="baseline-callout"><span>↘</span><p>Persistence mengungguli model pada horizon ini.</p></div><div className="validation-mini"><div><span>Validasi</span><strong className="mono">{fmt(item.accuracy.val, 1)}% akurasi</strong></div><div><span>RMSE LSTM</span><strong className="mono">{fmt(item.rmse.val, 3)} °C</strong></div></div></div></div></section>;
+  return (
+    <section className="panel eval-panel" id="evaluation">
+      <div className="panel-heading eval-heading">
+        <div>
+          <p className="eyebrow">BUKTI MODEL</p>
+          <h2>Evaluasi prakiraan ENSO</h2>
+        </div>
+        <div className="horizon-tabs" role="tablist" aria-label="Pilih horizon prakiraan">
+          {[1, 3, 6].map(h => (
+            <button
+              key={h}
+              onClick={() => setHorizon(h)}
+              className={horizon === h ? 'selected' : ''}
+              role="tab"
+              aria-selected={horizon === h}
+            >
+              {h} bln
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className={`verdict-banner ${item.tone}`}>
+        <span className="verdict-icon">{item.tone === 'good' ? '✓' : item.tone === 'warn' ? '!' : '×'}</span>
+        <div>
+          <strong>Horizon {item.label}: {item.verdict}</strong>
+          <p>
+            {horizon === 1
+              ? 'Satu-satunya horizon dengan sinyal yang relatif dapat dipertimbangkan — tetap kalah dari persistence.'
+              : horizon === 3
+              ? 'Akurasi 100% terlihat tinggi, tetapi seluruh data uji adalah kelas Netral sehingga metrik ini menyesatkan.'
+              : 'Model selalu memilih satu kelas pada evaluasi; jangan gunakan sebagai dasar prakiraan.'}
+          </p>
+        </div>
+        <span className="artifact-tag">ARTIFACT VERIFIED</span>
+      </div>
+
+      <div className="metrics-strip">
+        {metrics.map(([label, value, tone]) => (
+          <div className="metric" key={label}>
+            <span>{label}</span>
+            <strong className={`mono ${tone}`}>{value}</strong>
+          </div>
+        ))}
+      </div>
+
+      <div className="eval-detail">
+        <div className="matrix-card">
+          <ClassificationSummary item={item} horizon={horizon} />
+        </div>
+        <div className="baseline-card">
+          <PlainExplanationCard item={item} horizon={horizon} />
+        </div>
+      </div>
+    </section>
+  );
 }
 
 function MethodPanel() {
