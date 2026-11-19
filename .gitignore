@@ -64,3 +64,12 @@ Thumbs.db
 dataset/sst_5_wilayah/sst_5_wilayah_2015_2025.nc
 dataset/climate_dataset.zarr/
 dataset/_extra_rainfall/
+
+# Design tooling artifacts
+.hallmark/
+
+
+.impeccable/
+.commandcode/
+
+*.zip

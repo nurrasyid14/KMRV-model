@@ -1,0 +1,56 @@
+{
+  "horizon_months": 1,
+  "window_months": 12,
+  "model": "causal_lstm_lightgbm",
+  "class_mapping": {
+    "0": "La Nina",
+    "1": "Neutral",
+    "2": "El Nino"
+  },
+  "validation": {
+    "accuracy": 0.7692307692307693,
+    "balanced_accuracy": 0.7916666666666666,
+    "macro_f1": 0.6682539682539682,
+    "confusion_matrix": [
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        2,
+        2,
+        0
+      ],
+      [
+        0,
+        1,
+        7
+      ]
+    ],
+    "lstm_oni_rmse": 1.1751062499040221
+  },
+  "test": {
+    "accuracy": 0.7142857142857143,
+    "balanced_accuracy": 0.7142857142857143,
+    "macro_f1": 0.4166666666666667,
+    "confusion_matrix": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        5,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ]
+    ],
+    "lstm_oni_rmse": 0.179630472021112
+  }
+}
