@@ -576,9 +576,93 @@ function ForecastPanel() {
   );
 }
 
-function Matrix({ matrix }) {
-  const labels = ['La Niña', 'Netral', 'El Niño'];
-  return <div className="matrix-wrap"><div className="matrix-y-label">AKTUAL</div><div className="matrix-content"><div className="matrix-pred">PREDIKSI</div><div className="matrix-table"><div className="matrix-corner"></div>{labels.map(l => <div className="matrix-head" key={`h-${l}`}>{l}</div>)}{matrix.map((row, i) => <React.Fragment key={labels[i]}><div className="matrix-row-label">{labels[i]}</div>{row.map((n, j) => <div className={`matrix-cell ${n > 0 ? (i === j ? 'correct' : 'incorrect') : ''}`} key={`${i}-${j}`}>{n}</div>)}</React.Fragment>)}</div></div></div>;
+function ClassificationSummary({ item, horizon }) {
+  const total = 7;
+  const laNinaPred = (item.matrix[0][0] + item.matrix[1][0] + item.matrix[2][0]);
+  const netralPred = (item.matrix[0][1] + item.matrix[1][1] + item.matrix[2][1]);
+  const elNinoPred = (item.matrix[0][2] + item.matrix[1][2] + item.matrix[2][2]);
+
+  const correct = item.matrix[0][0] + item.matrix[1][1] + item.matrix[2][2];
+  const incorrect = total - correct;
+
+  const probs = [
+    {
+      label: 'Netral',
+      pct: Math.round((netralPred / total) * 100),
+      color: '#10b981',
+      bg: '#ecfdf5',
+      note: horizon === 3 ? 'Tebakan seragam' : horizon === 1 ? 'Paling dominan' : '0 tebakan'
+    },
+    {
+      label: 'La Niña',
+      pct: Math.round((laNinaPred / total) * 100),
+      color: '#0284c7',
+      bg: '#f0f9ff',
+      note: horizon === 1 ? 'Bias dingin (2 bln)' : horizon === 6 ? 'Meleset total' : '0 tebakan'
+    },
+    {
+      label: 'El Niño',
+      pct: Math.round((elNinoPred / total) * 100),
+      color: '#f97316',
+      bg: '#fff7ed',
+      note: 'Tidak terdeteksi'
+    }
+  ];
+
+  return (
+    <div className="class-summary">
+      <div className="subheading">
+        <h3>Kemungkinan & Ketepatan Klasifikasi</h3>
+        <span className="mono">Uji n = 7 bulan</span>
+      </div>
+
+      <div className="prob-list">
+        {probs.map(p => (
+          <div key={p.label} className="prob-row">
+            <div className="prob-header">
+              <span className="prob-name" style={{ color: p.color }}>● Fase {p.label}</span>
+              <span className="prob-badge" style={{ background: p.bg, color: p.color }}>{p.note}</span>
+              <strong className="prob-pct mono">{p.pct}%</strong>
+            </div>
+            <div className="prob-track">
+              <div className="prob-fill" style={{ width: `${Math.max(p.pct > 0 ? 5 : 0, p.pct)}%`, backgroundColor: p.color }}></div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="test-outcome-strip">
+        <div className="outcome-box correct-box">
+          <span className="outcome-count mono">{correct}</span>
+          <div className="outcome-desc">
+            <strong>Bulan Tepat</strong>
+            <small>Tebakan cocok dengan realitas</small>
+          </div>
+        </div>
+        <div className="outcome-box incorrect-box">
+          <span className="outcome-count mono">{incorrect}</span>
+          <div className="outcome-desc">
+            <strong>Bulan Meleset</strong>
+            <small>Penyimpangan fase model</small>
+          </div>
+        </div>
+      </div>
+
+      <div className="plain-explanation">
+        <p>
+          {horizon === 1 && (
+            <><strong>Penjelasan Awam:</strong> Dari 7 bulan uji, model menebak benar <strong>5 kali ({fmt(item.accuracy.test, 1)}%)</strong> pada fase Netral. Model memiliki bias sedikit terlalu dingin sehingga 2 bulan sempat disangka La Niña.</>
+          )}
+          {horizon === 3 && (
+            <><strong>Penjelasan Awam:</strong> Akurasi 100% terjadi karena seluruh data uji kebetulan Netral dan model menebak <strong>Netral untuk semua bulan</strong>, bukan karena model mahir meramal.</>
+          )}
+          {horizon === 6 && (
+            <><strong>Penjelasan Awam:</strong> Model <strong>gagal total (0% benar)</strong>. Model menebak La Niña untuk semua bulan padahal kondisi riil Netral. Jangan dipakai untuk pengambilan keputusan.</>
+          )}
+        </p>
+      </div>
+    </div>
+  );
 }
 
 function EvaluationPanel() {
@@ -590,7 +674,7 @@ function EvaluationPanel() {
     ['MAE model', fmt(item.maeModel, 3), 'neutral'],
     ['MAE persistence', fmt(item.maeBaseline, 3), item.maeBaseline < item.maeModel ? 'bad' : 'good']
   ];
-  return <section className="panel eval-panel" id="evaluation"><div className="panel-heading eval-heading"><div><p className="eyebrow">BUKTI MODEL</p><h2>Evaluasi prakiraan ENSO</h2></div><div className="horizon-tabs" role="tablist" aria-label="Pilih horizon prakiraan">{[1, 3, 6].map(h => <button key={h} onClick={() => setHorizon(h)} className={horizon === h ? 'selected' : ''} role="tab" aria-selected={horizon === h}>{h} bln</button>)}</div></div><div className={`verdict-banner ${item.tone}`}><span className="verdict-icon">{item.tone === 'good' ? '✓' : item.tone === 'warn' ? '!' : '×'}</span><div><strong>Horizon {item.label}: {item.verdict}</strong><p>{horizon === 1 ? 'Satu-satunya horizon dengan sinyal yang relatif dapat dipertimbangkan — tetap kalah dari persistence.' : horizon === 3 ? 'Akurasi 100% terlihat tinggi, tetapi seluruh data uji adalah kelas Netral sehingga metrik ini menyesatkan.' : 'Model selalu memilih satu kelas pada evaluasi; jangan gunakan sebagai dasar prakiraan.'}</p></div><span className="artifact-tag">ARTIFACT VERIFIED</span></div><div className="metrics-strip">{metrics.map(([label, value, tone]) => <div className="metric" key={label}><span>{label}</span><strong className={`mono ${tone}`}>{value}</strong></div>)}</div><div className="eval-detail"><div className="matrix-card"><div className="subheading"><h3>Confusion matrix · uji</h3><span>n = 7</span></div><Matrix matrix={item.matrix} /><p className="matrix-note">{item.matrixNote}</p></div><div className="baseline-card"><div className="subheading"><h3>Model vs persistence</h3><span>MAE ONI · lebih kecil lebih baik</span></div><div className="compare-bars"><div className="compare-row"><span>Ensemble</span><div><i style={{ width: `${item.maeModel / .22 * 100}%` }}></i></div><strong className="mono">{fmt(item.maeModel, 3)}</strong></div><div className="compare-row baseline"><span>Persistence</span><div><i style={{ width: `${item.maeBaseline / .22 * 100}%` }}></i></div><strong className="mono">{fmt(item.maeBaseline, 3)}</strong></div></div><div className="baseline-callout"><span>↘</span><p>Persistence mengungguli model pada horizon ini.</p></div><div className="validation-mini"><div><span>Validasi</span><strong className="mono">{fmt(item.accuracy.val, 1)}% akurasi</strong></div><div><span>RMSE LSTM</span><strong className="mono">{fmt(item.rmse.val, 3)} °C</strong></div></div></div></div></section>;
+  return <section className="panel eval-panel" id="evaluation"><div className="panel-heading eval-heading"><div><p className="eyebrow">BUKTI MODEL</p><h2>Evaluasi prakiraan ENSO</h2></div><div className="horizon-tabs" role="tablist" aria-label="Pilih horizon prakiraan">{[1, 3, 6].map(h => <button key={h} onClick={() => setHorizon(h)} className={horizon === h ? 'selected' : ''} role="tab" aria-selected={horizon === h}>{h} bln</button>)}</div></div><div className={`verdict-banner ${item.tone}`}><span className="verdict-icon">{item.tone === 'good' ? '✓' : item.tone === 'warn' ? '!' : '×'}</span><div><strong>Horizon {item.label}: {item.verdict}</strong><p>{horizon === 1 ? 'Satu-satunya horizon dengan sinyal yang relatif dapat dipertimbangkan — tetap kalah dari persistence.' : horizon === 3 ? 'Akurasi 100% terlihat tinggi, tetapi seluruh data uji adalah kelas Netral sehingga metrik ini menyesatkan.' : 'Model selalu memilih satu kelas pada evaluasi; jangan gunakan sebagai dasar prakiraan.'}</p></div><span className="artifact-tag">ARTIFACT VERIFIED</span></div><div className="metrics-strip">{metrics.map(([label, value, tone]) => <div className="metric" key={label}><span>{label}</span><strong className={`mono ${tone}`}>{value}</strong></div>)}</div><div className="eval-detail"><div className="matrix-card"><ClassificationSummary item={item} horizon={horizon} /></div><div className="baseline-card"><div className="subheading"><h3>Model vs persistence</h3><span>MAE ONI · lebih kecil lebih baik</span></div><div className="compare-bars"><div className="compare-row"><span>Ensemble</span><div><i style={{ width: `${item.maeModel / .22 * 100}%` }}></i></div><strong className="mono">{fmt(item.maeModel, 3)}</strong></div><div className="compare-row baseline"><span>Persistence</span><div><i style={{ width: `${item.maeBaseline / .22 * 100}%` }}></i></div><strong className="mono">{fmt(item.maeBaseline, 3)}</strong></div></div><div className="baseline-callout"><span>↘</span><p>Persistence mengungguli model pada horizon ini.</p></div><div className="validation-mini"><div><span>Validasi</span><strong className="mono">{fmt(item.accuracy.val, 1)}% akurasi</strong></div><div><span>RMSE LSTM</span><strong className="mono">{fmt(item.rmse.val, 3)} °C</strong></div></div></div></div></section>;
 }
 
 function MethodPanel() {
