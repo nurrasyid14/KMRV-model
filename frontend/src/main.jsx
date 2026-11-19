@@ -60,8 +60,8 @@ function Sidebar({ active, setActive }) {
   </aside>;
 }
 
-function Topbar({ onAbout }) {
-  return <header className="topbar"><div className="crumb"><span>Dashboard</span><b>/</b><strong>Kondisi terbaru</strong></div><div className="top-actions"><div className="status-pill"><span></span> DATA HISTORIS</div><button className="about-btn" onClick={onAbout}><Icon name="info" /> Tentang data</button></div></header>;
+function Topbar() {
+  return <header className="topbar"><div className="crumb"><span>Dashboard</span><b>/</b><strong>Kondisi terbaru</strong></div></header>;
 }
 
 function StatCard({ label, value, unit, meta, accent, icon }) {
@@ -69,7 +69,72 @@ function StatCard({ label, value, unit, meta, accent, icon }) {
 }
 
 function PhaseCard() {
-  return <article className="phase-card"><div className="phase-top"><div><p className="eyebrow">KONDISI TERKINI</p><h2>Fase ENSO</h2></div><span className="neutral-chip">● NETRAL</span></div><div className="phase-main"><div className="phase-orbit"><div className="orbit-ring"></div><div className="orbit-dot"></div><span>ONI</span></div><div><div className="phase-title">{latest.phase}</div><p>{latest.note}</p></div></div><div className="phase-scale"><div className="scale-track"><span className="scale-marker" style={{ left: `${((latest.oni + 2) / 4) * 100}%` }}></span></div><div><span>La Niña</span><span>Netral</span><span>El Niño</span></div></div></article>;
+  return (
+    <article className="phase-card">
+      <div className="phase-top">
+        <div>
+          <p className="eyebrow">KONDISI TERKINI</p>
+          <h2>Fase ENSO</h2>
+        </div>
+        <span className="neutral-chip">● NETRAL</span>
+      </div>
+
+      <div className="phase-body">
+        <div className="phase-left">
+          <div className="phase-main">
+            <div className="phase-orbit">
+              <div className="orbit-ring"></div>
+              <div className="orbit-dot"></div>
+              <span>ONI</span>
+            </div>
+            <div>
+              <div className="phase-title">{latest.phase}</div>
+              <p>{latest.note}</p>
+            </div>
+          </div>
+          <div className="phase-scale">
+            <div className="scale-track">
+              <span className="scale-marker" style={{ left: `${((latest.oni + 2) / 4) * 100}%` }}></span>
+            </div>
+            <div>
+              <span>La Niña</span>
+              <span>Netral</span>
+              <span>El Niño</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="phase-right">
+          <div className="phase-param-box">
+            <div className="param-item">
+              <div className="param-icon"><Icon name="wave" /></div>
+              <div className="param-text">
+                <span className="param-label">AMBANG BATAS FASE</span>
+                <strong>−0,5 °C s.d. +0,5 °C</strong>
+                <small>Standar NOAA CPC: deviasi SST Niño 3.4</small>
+              </div>
+            </div>
+            <div className="param-item">
+              <div className="param-icon"><Icon name="chart" /></div>
+              <div className="param-text">
+                <span className="param-label">KOPEL ATMOSFER & LAUT</span>
+                <strong>Sirkulasi Walker Seimbang</strong>
+                <small>Indeks SOI ({signed(latest.soi, 2)}) mengonfirmasi kondisi netral</small>
+              </div>
+            </div>
+            <div className="param-item">
+              <div className="param-icon"><Icon name="check" /></div>
+              <div className="param-text">
+                <span className="param-label">DAMPAK REGIONAL INDONESIA</span>
+                <strong>Pola Cuaca Normal</strong>
+                <small>Tidak ada deviasi curah hujan ekstrem akibat ENSO</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  );
 }
 
 function SstPanel() {
@@ -558,7 +623,7 @@ function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  return <div className="app-shell"><Sidebar active={active} setActive={setActive} /><main className="main"><Topbar onAbout={() => setAboutOpen(true)} /><div className="content"><section className="hero" id="overview"><div><div className="live-line"><span className="pulse"></span> SNAPSHOT DATASET · {activeDate.toUpperCase()}</div><h1>Pantau iklim &<br /><em>dinamika laut</em> Indonesia.</h1><p className="hero-copy">Sinyal ENSO terkini, anomali laut regional, dan bukti performa model — dalam satu ruang pantau yang jujur.</p></div><div className="hero-stamp"><span>PEMBARUAN TERAKHIR</span><strong>{activeDate}</strong><small>114 baris data bulanan</small></div></section><section className="latest-grid"><PhaseCard /><div className="stat-stack"><StatCard label="ONI" value={signed(latest.oni)} unit="°C" meta="Indeks Niño 3.4 · anomali" accent="primary" icon="wave" /><StatCard label="SOI" value={signed(latest.soi, 3)} unit="" meta="Southern Oscillation Index" icon="chart" /><StatCard label="DMI" value={signed(latest.dmi, 3)} unit="°C" meta="Dipole Mode Index" accent="coral" icon="wave" /></div></section><SstPanel /><ArchiveChart /><ForecastPanel /><EvaluationPanel /><MethodPanel /><section className="limitations" id="limitations"><div><p className="eyebrow">CATATAN PENTING</p><h2>Gunakan sebagai<br /><em>bukti, bukan janji.</em></h2></div><div className="limitation-grid"><div><span>↳</span><p>Data historis hingga <strong>Juni 2025</strong>, bukan kondisi hari ini.</p></div><div><span>↳</span><p>Model belum disajikan sebagai <strong>inferensi live</strong>.</p></div><div><span>↳</span><p>Peringatan iklim resmi tetap wewenang <strong>BMKG</strong>.</p></div></div></section><footer><span>© 2025 LAUTAN.ID</span><span>PROYEK SISTEM CERDAS · SEMESTER 5</span><span>Data bersumber dari NOAA · Dataset lokal</span></footer></div></main>{aboutOpen && <Limitations onClose={() => setAboutOpen(false)} />}</div>;
+  return <div className="app-shell"><Sidebar active={active} setActive={setActive} /><main className="main"><Topbar /><div className="content"><section className="hero" id="overview"><div><h1>Pantau iklim &<br /><em>dinamika laut</em> Indonesia.</h1><p className="hero-copy">Sinyal ENSO terkini, anomali laut regional, dan bukti performa model — dalam satu ruang pantau yang jujur.</p></div><div className="hero-stamp"><span>PEMBARUAN TERAKHIR</span><strong>{activeDate}</strong><small>114 baris data bulanan</small></div></section><section className="latest-grid"><PhaseCard /><div className="stat-stack"><StatCard label="ONI" value={signed(latest.oni)} unit="°C" meta="Indeks Niño 3.4 · anomali" accent="primary" icon="wave" /><StatCard label="SOI" value={signed(latest.soi, 3)} unit="" meta="Southern Oscillation Index" icon="chart" /><StatCard label="DMI" value={signed(latest.dmi, 3)} unit="°C" meta="Dipole Mode Index" accent="coral" icon="wave" /></div></section><SstPanel /><ArchiveChart /><ForecastPanel /><EvaluationPanel /><MethodPanel /><section className="limitations" id="limitations"><div><p className="eyebrow">CATATAN PENTING</p><h2>Gunakan sebagai<br /><em>bukti, bukan janji.</em></h2></div><div className="limitation-grid"><div><span>↳</span><p>Data historis hingga <strong>Juni 2025</strong>, bukan kondisi hari ini.</p></div><div><span>↳</span><p>Model belum disajikan sebagai <strong>inferensi live</strong>.</p></div><div><span>↳</span><p>Peringatan iklim resmi tetap wewenang <strong>BMKG</strong>.</p></div></div></section><footer><span>© 2025 LAUTAN.ID</span><span>PROYEK SISTEM CERDAS · SEMESTER 5</span><span>Data bersumber dari NOAA · Dataset lokal</span></footer></div></main>{aboutOpen && <Limitations onClose={() => setAboutOpen(false)} />}</div>;
 }
 
 createRoot(document.getElementById('root')).render(<App />);
