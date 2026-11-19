@@ -72,19 +72,197 @@ function ForecastPanel() {
   const [hover, setHover] = useState(null);
   const series = forecastSeries[horizon] || [];
   const verdict = evaluation[horizon];
-  const width = 920, height = 270, padX = 26, padY = 22, min = -1.5, max = 2.8;
+  const width = 920, height = 270, padX = 40, padY = 24, min = -1.2, max = 0.6;
   const x = (i) => padX + i * ((width - padX * 2) / Math.max(series.length - 1, 1));
   const y = (v) => height - padY - ((v - min) / (max - min)) * (height - padY * 2);
-  const actualPoints = series.filter(d => d.actual !== null && d.actual !== undefined).map(d => `${x(series.indexOf(d))},${y(d.actual)}`).join(' ');
-  const predictedPoints = series.filter(d => d.prediction !== null && d.prediction !== undefined).map(d => `${x(series.indexOf(d))},${y(d.prediction)}`).join(' ');
-  const testStart = width * .842;
+
+  // Indeks batas observasi (06/25) adalah 3
+  const splitIdx = 3;
+  const splitX = x(splitIdx);
+
+  const actualPoints = series
+    .filter(d => d.actual !== null && d.actual !== undefined)
+    .map(d => `${x(series.indexOf(d))},${y(d.actual)}`)
+    .join(' ');
+
+  const predictedPoints = series
+    .filter(d => d.prediction !== null && d.prediction !== undefined)
+    .map(d => `${x(series.indexOf(d))},${y(d.prediction)}`)
+    .join(' ');
+
   const bands = [
-    { label: 'El Niño', from: .5, to: max, tone: 'elnino' },
-    { label: 'Netral', from: -.5, to: .5, tone: 'neutral' },
-    { label: 'La Niña', from: min, to: -.5, tone: 'lanina' }
+    { label: 'El Niño (≥ +0,5)', from: 0.5, to: max, tone: 'elnino' },
+    { label: 'Netral (−0,5 s.d. +0,5)', from: -0.5, to: 0.5, tone: 'neutral' },
+    { label: 'La Niña (≤ −0,5)', from: min, to: -0.5, tone: 'lanina' }
   ];
+
   const tooltipStyle = hover ? { left: `${Math.min(78, Math.max(4, (hover.x / width) * 100))}%`, top: `${Math.max(4, (hover.y / height) * 100 - 18)}%` } : {};
-  return <section className="panel forecast-panel" id="forecast"><div className="panel-heading forecast-heading"><div><p className="eyebrow">PRAKIRAAN TIME SERIES</p><h2>ONI aktual vs prediksi</h2><p className="panel-subtitle">Lihat bagaimana sinyal model bergerak terhadap nilai aktual per bulan.</p></div><div className="forecast-controls"><div className="horizon-tabs" role="tablist" aria-label="Pilih horizon chart time series">{[1, 3, 6].map(h => <button key={h} onClick={() => { setHorizon(h); setHover(null); }} className={horizon === h ? 'selected' : ''} role="tab" aria-selected={horizon === h}>{h} bulan</button>)}</div><span className={`reliability-badge ${verdict.tone}`}><i></i>{verdict.verdict}</span></div></div><div className="forecast-legend"><span><i className="line-key actual-key"></i> Aktual</span><span><i className="line-key prediction-key"></i> Prediksi model</span><span><i className="window-key"></i> Periode uji · Jan 2024–Jun 2025</span></div><div className="forecast-chart-wrap"><div className="forecast-y-labels"><span>+2,0</span><span>+1,0</span><span>0</span><span>−1,0</span></div><svg className="forecast-chart" viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Time series ONI aktual dan prediksi horizon ${horizon} bulan`}><rect x={testStart} y="0" width={width - testStart} height={height} className="test-window"/>{bands.map(b => <g key={b.label}><rect x="0" y={y(b.to)} width={width} height={y(b.from) - y(b.to)} className={`phase-band ${b.tone}`}/><text x={width - 8} y={y((b.from + b.to) / 2) + 3} textAnchor="end" className="phase-label">{b.label}</text></g>)}<line x1="0" x2={width} y1={y(0)} y2={y(0)} className="forecast-zero"/><line x1="0" x2={width} y1={y(1)} y2={y(1)} className="forecast-grid"/><line x1="0" x2={width} y1={y(-1)} y2={y(-1)} className="forecast-grid"/><line x1={testStart} x2={testStart} y1="0" y2={height} className="test-divider"/>{series.length > 0 && <><polyline points={actualPoints} className="forecast-actual-line"/><polyline points={predictedPoints} className="forecast-prediction-line"/>{series.map((d, i) => <g key={`${d.date}-${i}`} onMouseEnter={() => setHover({ ...d, x: x(i), y: y(d.prediction ?? d.actual) })} onMouseLeave={() => setHover(null)}><circle cx={x(i)} cy={y(d.actual ?? d.prediction)} r="5" className="forecast-hit" tabIndex="0"><title>{`${d.date} · aktual ${d.actual ?? '—'} · prediksi ${d.prediction ?? '—'}`}</title></circle></g>)}</>}{series.length === 0 && <text x={width / 2} y={y(0) - 8} textAnchor="middle" className="chart-empty">Data time series belum tersedia di artifact yang diunggah</text>}</svg>{hover && <div className="forecast-tooltip" style={tooltipStyle}><strong>{hover.date}</strong><span>Aktual <b>{hover.actual ?? '—'}</b></span><span>Prediksi <b>{hover.prediction ?? '—'}</b></span></div>}<div className="forecast-x-labels"><span>2016</span><span>2018</span><span>2020</span><span>2022</span><span>2024</span><span>2025</span></div></div><div className="forecast-footnote"><span>ⓘ</span><p>Chart diisi dari <code>test_predictions_horizon_*.csv</code>. Garis putus-putus menunjukkan tebakan model Causal LSTM pada periode uji.</p></div></section>;
+
+  return (
+    <section className="panel forecast-panel" id="forecast">
+      <div className="panel-heading forecast-heading">
+        <div>
+          <p className="eyebrow">PRAKIRAAN TIME SERIES</p>
+          <h2>ONI aktual vs proyeksi model</h2>
+          <p className="panel-subtitle">
+            Garis biru adalah observasi aktual. Garis putus-putus merah-coral adalah proyeksi model untuk {horizon} bulan ke depan.
+          </p>
+        </div>
+        <div className="forecast-controls">
+          <div className="horizon-tabs" role="tablist" aria-label="Pilih horizon chart time series">
+            {[1, 3, 6].map(h => (
+              <button
+                key={h}
+                onClick={() => { setHorizon(h); setHover(null); }}
+                className={horizon === h ? 'selected' : ''}
+                role="tab"
+                aria-selected={horizon === h}
+              >
+                {h} bulan
+              </button>
+            ))}
+          </div>
+          <span className={`reliability-badge ${verdict.tone}`}>
+            <i />{verdict.verdict}
+          </span>
+        </div>
+      </div>
+
+      <div className="forecast-legend">
+        <span><i className="line-key actual-key"></i> Aktual observasi</span>
+        <span><i className="line-key prediction-key"></i> Proyeksi model ({horizon} bln ke depan)</span>
+        <span><i className="window-key"></i> Jendela proyeksi target</span>
+      </div>
+
+      <div className="forecast-chart-wrap">
+        <div className="forecast-y-labels">
+          <span>+0,5</span>
+          <span>0</span>
+          <span>−0,5</span>
+          <span>−1,0</span>
+        </div>
+
+        <svg className="forecast-chart" viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Prakiraan ONI aktual dan proyeksi horizon ${horizon} bulan`}>
+          {/* Zona proyeksi */}
+          <rect x={splitX} y="0" width={width - splitX} height={height} className="test-window" />
+
+          {/* Ambang batas ENSO */}
+          {bands.map(b => (
+            <g key={b.label}>
+              <rect x="0" y={y(b.to)} width={width} height={y(b.from) - y(b.to)} className={`phase-band ${b.tone}`} />
+              <text x={width - 8} y={y((b.from + b.to) / 2) + 3} textAnchor="end" className="phase-label">{b.label}</text>
+            </g>
+          ))}
+
+          <line x1="0" x2={width} y1={y(0)} y2={y(0)} className="forecast-zero" />
+          <line x1="0" x2={width} y1={y(0.5)} y2={y(0.5)} className="forecast-grid" strokeDasharray="3 3" />
+          <line x1="0" x2={width} y1={y(-0.5)} y2={y(-0.5)} className="forecast-grid" strokeDasharray="3 3" />
+
+          {/* Batas observasi */}
+          <line x1={splitX} x2={splitX} y1="0" y2={height} className="test-divider" />
+          <text x={splitX - 6} y="16" textAnchor="end" fill="#64748b" fontSize="10" fontFamily="var(--mono)">Batas Observasi (06/25)</text>
+          <text x={splitX + 8} y="16" textAnchor="start" fill="#e87561" fontSize="10" fontWeight="600" fontFamily="var(--mono)">Proyeksi {horizon} Bulan →</text>
+
+          {/* Garis aktual */}
+          <polyline points={actualPoints} className="forecast-actual-line" />
+
+          {/* Garis prediksi */}
+          <polyline points={predictedPoints} className="forecast-prediction-line" />
+
+          {/* Titik-titik dan interaksi */}
+          {series.map((d, i) => {
+            const posX = x(i);
+            const posY = y(d.prediction ?? d.actual);
+            return (
+              <g
+                key={`${d.date}-${i}`}
+                onMouseEnter={() => setHover({ ...d, x: posX, y: posY })}
+                onMouseLeave={() => setHover(null)}
+              >
+                <circle
+                  cx={posX}
+                  cy={y(d.actual)}
+                  r="5"
+                  className="forecast-hit"
+                  tabIndex="0"
+                />
+                {d.isPrediction && (
+                  <circle
+                    cx={posX}
+                    cy={y(d.prediction)}
+                    r="5"
+                    fill="#e87561"
+                    stroke="#fff"
+                    strokeWidth="2"
+                  />
+                )}
+                {/* Nilai numerik di atas titik proyeksi */}
+                {d.isPrediction && (
+                  <text
+                    x={posX}
+                    y={y(d.prediction) - 10}
+                    textAnchor="middle"
+                    fill="#e87561"
+                    fontSize="11"
+                    fontWeight="700"
+                    fontFamily="var(--mono)"
+                  >
+                    {d.prediction.toFixed(2).replace('.', ',')}
+                  </text>
+                )}
+              </g>
+            );
+          })}
+        </svg>
+
+        {hover && (
+          <div className="forecast-tooltip" style={tooltipStyle}>
+            <strong>Bulan: {hover.date}</strong>
+            <span>Aktual: <b>{hover.actual !== null ? `${signed(hover.actual)} °C` : '—'}</b></span>
+            {hover.prediction !== null && (
+              <span>Prediksi: <b>{signed(hover.prediction)} °C</b></span>
+            )}
+          </div>
+        )}
+
+        {/* Dynamic X labels */}
+        <div
+          className="forecast-x-labels"
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            paddingLeft: `${padX}px`,
+            paddingRight: `${padX}px`,
+            position: 'absolute',
+            bottom: '6px',
+            left: 0,
+            right: 0
+          }}
+        >
+          {series.map((d) => (
+            <span
+              key={d.date}
+              style={{
+                fontFamily: 'var(--mono)',
+                fontSize: '10px',
+                fontWeight: d.isPrediction ? 700 : 500,
+                color: d.isPrediction ? '#e87561' : '#64748b'
+              }}
+            >
+              {d.date}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div className="forecast-footnote">
+        <span>ⓘ</span>
+        <p>
+          Batas observasi data historis adalah <strong>Juni 2025</strong>. Pilihan tab horizon (1, 3, 6 bulan) menampilkan lintasan peramalan model ke depan dari batas observasi tersebut.
+        </p>
+      </div>
+    </section>
+  );
 }
 
 function Matrix({ matrix }) {
