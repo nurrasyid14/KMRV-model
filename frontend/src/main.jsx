@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { evaluation, forecastSeries, latest, oniArchive, splitMeta, sstDomains } from './data';
 import './styles.css';
@@ -15,19 +15,21 @@ function Icon({ name }) {
     grid: <><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></>,
     chart: <><path d="M4 19V5"/><path d="M4 19h17"/><path d="m7 15 4-5 3 2 5-7"/></>,
     history: <><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l3 2"/></>,
+    check: <><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="9"/></>,
     info: <><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></>,
     arrow: <><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></>,
     external: <><path d="M14 3h7v7"/><path d="m21 3-9 9"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></>,
     wave: <path d="M3 12c2.2-7 4.8 7 7 0s4.8-7 7 0 4.8 7 7 0"/>
   };
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]}</svg>;
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name] || paths.info}</svg>;
 }
 
 function Sidebar({ active, setActive }) {
   const items = [
     ['overview', 'Ikhtisar', 'grid'],
-    ['evaluation', 'Evaluasi model', 'chart'],
     ['archive', 'Arsip ONI', 'history'],
+    ['forecast', 'Prakiraan', 'chart'],
+    ['evaluation', 'Evaluasi model', 'check'],
     ['method', 'Panduan baca', 'info']
   ];
   return <aside className="sidebar">
@@ -35,7 +37,25 @@ function Sidebar({ active, setActive }) {
     <div className="sidebar-rule"></div>
     <p className="nav-label">NAVIGASI</p>
     <nav aria-label="Navigasi dashboard">
-      {items.map(([id, label, icon]) => <button key={id} className={`nav-item ${active === id ? 'active' : ''}`} onClick={() => { setActive(id); document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }}><Icon name={icon} /><span>{label}</span>{active === id && <i />}</button>)}
+      {items.map(([id, label, icon]) => (
+        <button
+          key={id}
+          className={`nav-item ${active === id ? 'active' : ''}`}
+          onClick={() => {
+            setActive(id);
+            const el = document.getElementById(id);
+            if (el) {
+              const yOffset = -80;
+              const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+              window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+          }}
+        >
+          <Icon name={icon} />
+          <span>{label}</span>
+          {active === id && <i />}
+        </button>
+      ))}
     </nav>
   </aside>;
 }
@@ -59,12 +79,193 @@ function SstPanel() {
 }
 
 function ArchiveChart() {
-  const width = 900, height = 260, padX = 22, padY = 20, min = -1.5, max = 2.8;
+  const [hover, setHover] = useState(null);
+  const width = 940, height = 280, padX = 6, padY = 24, min = -1.5, max = 3.0;
   const x = (i) => padX + i * ((width - padX * 2) / Math.max(oniArchive.length - 1, 1));
   const y = (v) => height - padY - ((v - min) / (max - min)) * (height - padY * 2);
+
   const points = oniArchive.map((d, i) => `${x(i)},${y(d.value)}`).join(' ');
-  const area = oniArchive.length ? `${padX},${y(0)} ${points} ${x(oniArchive.length - 1)},${y(0)}` : '';
-  return <section className="panel archive-panel" id="archive"><div className="panel-heading"><div><p className="eyebrow">ARSIP INDEKS</p><h2>ONI historis</h2></div><div className="archive-range">Jan 2016 <span>→</span> Jun 2025</div></div><div className="chart-legend"><span><i className="legend-block train"></i> Train · 72 bulan</span><span><i className="legend-block val"></i> Validasi · 24 bulan</span><span><i className="legend-block test"></i> Uji · 18 bulan</span></div><div className="line-chart"><div className="y-labels"><span>+2,0</span><span>+1,0</span><span>0</span><span>−1,0</span></div><svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Grafik ONI historis Januari 2016 hingga Juni 2025"><defs><linearGradient id="oniFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#00a3c4" stopOpacity=".28"/><stop offset="1" stopColor="#00a3c4" stopOpacity="0"/></linearGradient></defs><line x1="0" x2={width} y1={y(0)} y2={y(0)} className="zero-axis"/><line x1="0" x2={width} y1={y(1)} y2={y(1)} className="grid-axis"/><line x1="0" x2={width} y1={y(-1)} y2={y(-1)} className="grid-axis"/>{oniArchive.length ? <><polygon points={area} fill="url(#oniFill)"/><polyline points={points} className="oni-line"/><circle cx={x(oniArchive.length - 1)} cy={y(oniArchive[oniArchive.length - 1].value)} r="5" className="last-point"/></> : <text x={width / 2} y={y(0) - 8} textAnchor="middle" className="chart-empty">Seri arsip tidak tersedia di lampiran</text>}</svg><div className="x-labels"><span>2016</span><span>2018</span><span>2020</span><span>2022</span><span>2024</span><span>2025</span></div></div><div className="archive-callout"><span className="callout-mark">↗</span><div><strong>Terakhir: {latest.date}</strong><p>ONI {signed(latest.oni)} °C · Fase Netral</p></div><span className="callout-note">Seri bulanan lengkap dihitung dari dataset historis 2016–2025.</span></div></section>;
+  const fullArea = oniArchive.length
+    ? `${x(0)},${y(0)} ${points} ${x(oniArchive.length - 1)},${y(0)}`
+    : '';
+
+  const years = [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+
+  const tooltipStyle = hover
+    ? {
+        left: `${Math.min(84, Math.max(4, (hover.x / width) * 100))}%`,
+        top: `${Math.max(4, (hover.y / height) * 100 - 18)}%`
+      }
+    : {};
+
+  return (
+    <section className="panel archive-panel" id="archive">
+      <div className="panel-heading">
+        <div>
+          <p className="eyebrow">ARSIP INDEKS</p>
+          <h2>ONI historis</h2>
+          <p className="panel-subtitle">
+            Seri bulanan observasi Jan 2016 – Jun 2025. Arsiran orange menandai fase El Niño (≥ +0,5 °C) dan biru menandai fase La Niña (≤ −0,5 °C).
+          </p>
+        </div>
+        <div className="archive-range">Jan 2016 <span>→</span> Jun 2025</div>
+      </div>
+
+      <div className="archive-legend">
+        <span>
+          <i className="line-key" style={{ borderTop: '2.4px solid #1e293b', width: '20px' }}></i>
+          Aktual ONI (2016–2025)
+        </span>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+          <span style={{ width: '12px', height: '12px', background: '#fff7ed', border: '1px solid #f97316', borderRadius: '2px', display: 'inline-block' }}></span>
+          El Niño (≥ +0,5)
+        </span>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+          <span style={{ width: '12px', height: '12px', background: '#f0f9ff', border: '1px solid #0284c7', borderRadius: '2px', display: 'inline-block' }}></span>
+          La Niña (≤ −0,5)
+        </span>
+      </div>
+
+      <div className="line-chart">
+        <div className="y-labels">
+          <span>+3,0</span>
+          <span>+2,0</span>
+          <span>+1,0</span>
+          <span>0</span>
+          <span>−1,0</span>
+        </div>
+
+        <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Grafik ONI historis Januari 2016 hingga Juni 2025">
+          <defs>
+            <clipPath id="archive-clip-warm">
+              <rect x="0" y="0" width={width} height={y(0)} />
+            </clipPath>
+            <clipPath id="archive-clip-cool">
+              <rect x="0" y={y(0)} width={width} height={height - y(0)} />
+            </clipPath>
+
+            <pattern id="archive-hatch-orange" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+              <line x1="0" y1="0" x2="0" y2="7" stroke="#f97316" strokeWidth="1.2" strokeOpacity="0.45" />
+            </pattern>
+            <pattern id="archive-hatch-blue" width="7" height="7" patternTransform="rotate(-45)" patternUnits="userSpaceOnUse">
+              <line x1="0" y1="0" x2="0" y2="7" stroke="#0284c7" strokeWidth="1.2" strokeOpacity="0.45" />
+            </pattern>
+
+            <linearGradient id="archive-grad-warm" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#f97316" stopOpacity="0.32" />
+              <stop offset="100%" stopColor="#f97316" stopOpacity="0.04" />
+            </linearGradient>
+            <linearGradient id="archive-grad-cool" x1="0" y1="1" x2="0" y2="0">
+              <stop offset="0%" stopColor="#0284c7" stopOpacity="0.32" />
+              <stop offset="100%" stopColor="#0284c7" stopOpacity="0.04" />
+            </linearGradient>
+          </defs>
+
+          {/* Grid horizontal */}
+          <line x1="0" x2={width} y1={y(2)} y2={y(2)} stroke="#edf2f7" strokeDasharray="4 4" />
+          <line x1="0" x2={width} y1={y(1)} y2={y(1)} stroke="#edf2f7" strokeDasharray="4 4" />
+          <line x1="0" x2={width} y1={y(-1)} y2={y(-1)} stroke="#edf2f7" strokeDasharray="4 4" />
+
+          {/* Grid vertikal per tahun */}
+          {years.map(yr => {
+            const idx = (yr - 2016) * 12;
+            const posX = x(idx);
+            return (
+              <g key={yr}>
+                <line x1={posX} x2={posX} y1={padY} y2={height - padY} stroke="#f1f5f9" strokeDasharray="3 3" />
+                <text
+                  x={posX}
+                  y={height - 6}
+                  textAnchor={yr === 2016 ? 'start' : yr === 2025 ? 'end' : 'middle'}
+                  fill="#94a3b8"
+                  fontSize="10"
+                  fontFamily="var(--mono)"
+                >
+                  {yr}
+                </text>
+              </g>
+            );
+          })}
+
+          {/* Arsiran di bawah kurva atas (Warm) */}
+          {fullArea && (
+            <g clipPath="url(#archive-clip-warm)">
+              <polygon points={fullArea} fill="url(#archive-grad-warm)" />
+              <polygon points={fullArea} fill="url(#archive-hatch-orange)" />
+            </g>
+          )}
+
+          {/* Arsiran di bawah kurva bawah (Cool) */}
+          {fullArea && (
+            <g clipPath="url(#archive-clip-cool)">
+              <polygon points={fullArea} fill="url(#archive-grad-cool)" />
+              <polygon points={fullArea} fill="url(#archive-hatch-blue)" />
+            </g>
+          )}
+
+          {/* Garis nol dan garis ambang */}
+          <line x1="0" x2={width} y1={y(0)} y2={y(0)} stroke="#64748b" strokeWidth="1.2" />
+
+          <line x1="0" x2={width} y1={y(0.5)} y2={y(0.5)} stroke="#f97316" strokeWidth="1.1" strokeDasharray="4 3" />
+          <text x={width - 8} y={y(0.5) - 5} textAnchor="end" fill="#ea580c" fontSize="9.5" fontWeight="600" fontFamily="var(--mono)">+0,5 El Niño</text>
+
+          <line x1="0" x2={width} y1={y(-0.5)} y2={y(-0.5)} stroke="#0284c7" strokeWidth="1.1" strokeDasharray="4 3" />
+          <text x={width - 8} y={y(-0.5) + 13} textAnchor="end" fill="#0284c7" fontSize="9.5" fontWeight="600" fontFamily="var(--mono)">−0,5 La Niña</text>
+
+          {/* Anotasi Peristiwa Historis */}
+          <text x={x(3)} y={y(2.5) + 24} textAnchor="start" fill="#c2410c" fontSize="9.5" fontWeight="600" fontFamily="var(--mono)">El Niño 2015–2016</text>
+          <text x={x(35)} y={y(1.05) - 14} textAnchor="middle" fill="#c2410c" fontSize="10" fontWeight="600" fontFamily="var(--mono)">El Niño 2018–2019</text>
+          <text x={x(70)} y={y(0) - 16} textAnchor="middle" fill="#0369a1" fontSize="10" fontWeight="600" fontFamily="var(--mono)">La Niña 2020–2023</text>
+          <text x={x(95)} y={y(1.99) - 14} textAnchor="middle" fill="#c2410c" fontSize="10" fontWeight="600" fontFamily="var(--mono)">El Niño 2023–2024</text>
+
+          {/* Garis kurva utama */}
+          {oniArchive.length > 0 && (
+            <>
+              <polyline points={points} fill="none" stroke="#1e293b" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+              <circle cx={x(oniArchive.length - 1)} cy={y(oniArchive[oniArchive.length - 1].value)} r="4.5" fill="#3b82f6" stroke="#fff" strokeWidth="2" />
+            </>
+          )}
+
+          {/* Area hover transparan */}
+          {oniArchive.map((d, i) => {
+            const posX = x(i);
+            const posY = y(d.value);
+            return (
+              <circle
+                key={d.date}
+                cx={posX}
+                cy={posY}
+                r="6"
+                fill="transparent"
+                style={{ cursor: 'pointer' }}
+                onMouseEnter={() => setHover({ ...d, x: posX, y: posY })}
+                onMouseLeave={() => setHover(null)}
+              />
+            );
+          })}
+        </svg>
+
+        {hover && (
+          <div className="forecast-tooltip" style={tooltipStyle}>
+            <strong>Bulan: {hover.date}</strong>
+            <span>ONI: <b>{signed(hover.value)} °C</b></span>
+            <span style={{ color: hover.value >= 0.5 ? '#f97316' : hover.value <= -0.5 ? '#0284c7' : '#10b981', marginTop: '2px', fontWeight: 600 }}>
+              Fase: {hover.value >= 0.5 ? 'El Niño' : hover.value <= -0.5 ? 'La Niña' : 'Netral'}
+            </span>
+          </div>
+        )}
+      </div>
+
+      <div className="archive-callout">
+        <span className="callout-mark">↗</span>
+        <div>
+          <strong>Terakhir: {latest.date}</strong>
+          <p>ONI {signed(latest.oni)} °C · Fase Netral</p>
+        </div>
+        <span className="callout-note">Seri bulanan lengkap dihitung dari dataset historis 2016–2025.</span>
+      </div>
+    </section>
+  );
 }
 
 function ForecastPanel() {
@@ -337,6 +538,23 @@ function App() {
   const [active, setActive] = useState('overview');
   const [aboutOpen, setAboutOpen] = useState(false);
   const activeDate = useMemo(() => latest.date, []);
+
+  useEffect(() => {
+    const sectionIds = ['overview', 'archive', 'forecast', 'evaluation', 'method'];
+    const handleScroll = () => {
+      const scrollPos = window.scrollY + 220;
+      for (let i = sectionIds.length - 1; i >= 0; i--) {
+        const el = document.getElementById(sectionIds[i]);
+        if (el && el.offsetTop <= scrollPos) {
+          setActive(sectionIds[i]);
+          break;
+        }
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return <div className="app-shell"><Sidebar active={active} setActive={setActive} /><main className="main"><Topbar onAbout={() => setAboutOpen(true)} /><div className="content"><section className="hero" id="overview"><div><div className="live-line"><span className="pulse"></span> SNAPSHOT DATASET · {activeDate.toUpperCase()}</div><h1>Pantau iklim &<br /><em>dinamika laut</em> Indonesia.</h1><p className="hero-copy">Sinyal ENSO terkini, anomali laut regional, dan bukti performa model — dalam satu ruang pantau yang jujur.</p></div><div className="hero-stamp"><span>PEMBARUAN TERAKHIR</span><strong>{activeDate}</strong><small>114 baris data bulanan</small></div></section><section className="latest-grid"><PhaseCard /><div className="stat-stack"><StatCard label="ONI" value={signed(latest.oni)} unit="°C" meta="Indeks Niño 3.4 · anomali" accent="primary" icon="wave" /><StatCard label="SOI" value={signed(latest.soi, 3)} unit="" meta="Southern Oscillation Index" icon="chart" /><StatCard label="DMI" value={signed(latest.dmi, 3)} unit="°C" meta="Dipole Mode Index" accent="coral" icon="wave" /></div></section><SstPanel /><ArchiveChart /><ForecastPanel /><EvaluationPanel /><MethodPanel /><section className="limitations" id="limitations"><div><p className="eyebrow">CATATAN PENTING</p><h2>Gunakan sebagai<br /><em>bukti, bukan janji.</em></h2></div><div className="limitation-grid"><div><span>↳</span><p>Data historis hingga <strong>Juni 2025</strong>, bukan kondisi hari ini.</p></div><div><span>↳</span><p>Model belum disajikan sebagai <strong>inferensi live</strong>.</p></div><div><span>↳</span><p>Peringatan iklim resmi tetap wewenang <strong>BMKG</strong>.</p></div></div></section><footer><span>© 2025 LAUTAN.ID</span><span>PROYEK SISTEM CERDAS · SEMESTER 5</span><span>Data bersumber dari NOAA · Dataset lokal</span></footer></div></main>{aboutOpen && <Limitations onClose={() => setAboutOpen(false)} />}</div>;
 }
 
