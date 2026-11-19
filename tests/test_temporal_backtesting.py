@@ -325,6 +325,12 @@ class TemporalBacktestingTests(unittest.TestCase):
                             "macro_recall": score,
                             "macro_f1": score,
                             "weighted_f1": score,
+                            "log_loss": 0.8 if model == "LightGBM" else 0.2,
+                            "multiclass_brier_score": (
+                                0.7 if model == "LightGBM" else 0.25
+                            ),
+                            "top_label_ece_10_bins": 0.1,
+                            "mean_top_label_confidence": 0.7,
                             "oni_rmse": 1.0,
                             "actual_count_0": 1,
                             "actual_count_1": 1,
@@ -365,6 +371,18 @@ class TemporalBacktestingTests(unittest.TestCase):
                             "macro_recall": score,
                             "macro_f1": score,
                             "weighted_f1": score,
+                            "log_loss": (
+                                0.8 if model == "LightGBM" else 0.2
+                            )
+                            if split == "validation" and fold == 1
+                            else (
+                                0.1 if model == "LightGBM" else 0.9
+                            ),
+                            "multiclass_brier_score": (
+                                0.7 if model == "LightGBM" else 0.25
+                            ),
+                            "top_label_ece_10_bins": 0.1,
+                            "mean_top_label_confidence": 0.7,
                             "oni_rmse": 1.0,
                             "actual_count_0": 1,
                             "actual_count_1": 1,
@@ -376,10 +394,14 @@ class TemporalBacktestingTests(unittest.TestCase):
         selection, _, comparison = _select_models(pd.DataFrame(rows))
 
         selected = selection["selected_models"]["1"]
-        self.assertEqual(selected["model"], "LightGBM")
+        self.assertEqual(selected["model"], "XGBoost")
         self.assertEqual(selected["selection_validation_fold"], 1)
         self.assertEqual(selected["validation_actual_class_coverage"], 3)
         self.assertEqual(selected["selection_status"], "provisional_candidate")
+        self.assertAlmostEqual(selected["validation_log_loss"], 0.2)
+        self.assertAlmostEqual(
+            selected["validation_multiclass_brier_score"], 0.25
+        )
         self.assertIn("validation_macro_precision_mean", comparison.columns)
         self.assertIn("validation_macro_recall_std", comparison.columns)
 

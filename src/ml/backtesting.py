@@ -20,7 +20,11 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.utils.class_weight import compute_class_weight, compute_sample_weight
 
 from src.ml.ensemble import predict_lstm, train_lstm
-from src.ml.evaluation import classification_evaluation, regression_evaluation
+from src.ml.evaluation import (
+    classification_evaluation,
+    probability_evaluation,
+    regression_evaluation,
+)
 from src.ml.lgbm_classifier import create_phase_classifier as create_lgbm_classifier
 from src.ml.temporal import (
     BACKTEST_MIN_TRAIN_MONTHS,
@@ -735,10 +739,16 @@ def run_backtesting(
                     for split in ("validation",):
                         origins = origin_map[split]
                         actual = labels_by_split[split]
+                        probabilities = classifier.predict_proba(
+                            feature_frames[split]
+                        )
                         predicted = classifier.predict(feature_frames[split]).astype(np.int64)
                         class_metrics, class_report, confusion = classification_evaluation(
                             actual,
                             predicted,
+                        )
+                        class_metrics.update(
+                            probability_evaluation(actual, probabilities)
                         )
                         period = frame.iloc[origins]["time"]
                         context = {
@@ -800,6 +810,7 @@ def run_backtesting(
         family = choice["model"]
         strategy = choice["imbalance_strategy"]
         test_class_metrics: dict[str, object] | None = None
+        test_probabilities: np.ndarray | None = None
         if family is not None:
             selected_fold = int(choice["selection_validation_fold"])
             selected_key = (horizon, str(family), str(strategy), selected_fold)
@@ -830,8 +841,14 @@ def run_backtesting(
             predicted = selected_candidate["classifier"].predict(
                 selected_candidate["features"]["test"]
             ).astype(np.int64)
+            test_probabilities = selected_candidate["classifier"].predict_proba(
+                selected_candidate["features"]["test"]
+            )
             test_class_metrics, test_class_report, test_confusion = (
                 classification_evaluation(actual, predicted)
+            )
+            test_class_metrics.update(
+                probability_evaluation(actual, test_probabilities)
             )
             test_times = frame.iloc[origins]["time"]
             test_context = {
@@ -855,28 +872,37 @@ def run_backtesting(
             confusion_matrices[
                 (str(family), str(strategy), horizon, selected_fold, "test")
             ] = test_confusion
-            for origin, target_time, true_phase, predicted_phase, oni, oni_hat in zip(
-                origins,
-                frame.iloc[origins]["time"] + pd.DateOffset(months=horizon),
-                actual,
-                predicted,
-                actual_oni,
-                predicted_oni,
-            ):
-                prediction_rows.append(
-                    {
-                        "fold": selected_fold,
-                        "model": family,
-                        "imbalance_strategy": strategy,
-                        "horizon_months": horizon,
-                        "origin_time": frame["time"].iloc[int(origin)],
-                        "target_time": target_time,
-                        "actual_phase": int(true_phase),
-                        "predicted_phase": int(predicted_phase),
-                        "actual_oni": float(oni),
-                        "predicted_oni": float(oni_hat),
-                    }
-                )
+            if family is not None:
+                assert test_probabilities is not None
+                for origin, target_time, true_phase, predicted_phase, oni, oni_hat, phase_probabilities in zip(
+                    origins,
+                    frame.iloc[origins]["time"] + pd.DateOffset(months=horizon),
+                    actual,
+                    predicted,
+                    actual_oni,
+                    predicted_oni,
+                    test_probabilities,
+                    strict=True,
+                ):
+                    prediction_rows.append(
+                        {
+                            "fold": selected_fold,
+                            "model": family,
+                            "imbalance_strategy": strategy,
+                            "horizon_months": horizon,
+                            "origin_time": frame["time"].iloc[int(origin)],
+                            "target_time": target_time,
+                            "actual_phase": int(true_phase),
+                            "predicted_phase": int(predicted_phase),
+                            "phase_confidence": float(np.max(phase_probabilities)),
+                            "probability_la_nina": float(phase_probabilities[0]),
+                            "probability_neutral": float(phase_probabilities[1]),
+                            "probability_el_nino": float(phase_probabilities[2]),
+                            "probabilities_calibrated": False,
+                            "actual_oni": float(oni),
+                            "predicted_oni": float(oni_hat),
+                        }
+                    )
 
         regression_candidate = next(
             candidate
@@ -965,6 +991,10 @@ def run_backtesting(
             "macro_recall",
             "macro_f1",
             "weighted_f1",
+            "log_loss",
+            "multiclass_brier_score",
+            "top_label_ece_10_bins",
+            "mean_top_label_confidence",
             "oni_rmse",
         )
     }
@@ -1055,6 +1085,10 @@ def _select_models(
             "macro_recall",
             "macro_f1",
             "weighted_f1",
+            "log_loss",
+            "multiclass_brier_score",
+            "top_label_ece_10_bins",
+            "mean_top_label_confidence",
             "oni_rmse",
         )
     }
@@ -1104,6 +1138,9 @@ def _select_models(
                 "validation_balanced_accuracy": None,
                 "validation_macro_precision": None,
                 "validation_macro_recall": None,
+                "validation_log_loss": None,
+                "validation_multiclass_brier_score": None,
+                "validation_top_label_ece_10_bins": None,
                 "validation_actual_class_coverage": int(
                     representative["actual_class_coverage"]
                 ),
@@ -1116,13 +1153,15 @@ def _select_models(
             continue
         candidates = eligible.sort_values(
             [
+                "log_loss",
+                "multiclass_brier_score",
                 "macro_f1",
                 "balanced_accuracy",
                 "macro_precision",
                 "macro_recall",
                 "oni_rmse",
             ],
-            ascending=[False, False, False, False, True],
+            ascending=[True, True, False, False, False, False, True],
         )
         best = candidates.iloc[0]
         selected_models[str(int(horizon))] = {
@@ -1134,6 +1173,13 @@ def _select_models(
             "validation_balanced_accuracy": float(best["balanced_accuracy"]),
             "validation_macro_precision": float(best["macro_precision"]),
             "validation_macro_recall": float(best["macro_recall"]),
+            "validation_log_loss": float(best["log_loss"]),
+            "validation_multiclass_brier_score": float(
+                best["multiclass_brier_score"]
+            ),
+            "validation_top_label_ece_10_bins": float(
+                best["top_label_ece_10_bins"]
+            ),
             "validation_actual_class_coverage": int(
                 best["actual_class_coverage"]
             ),
@@ -1148,9 +1194,10 @@ def _select_models(
         "selection_policy": [
             f"Use only the first pre-test validation period (fold {selection_fold})",
             "Require actual validation coverage of all three fixed classes before ranking",
-            "Validation macro F1 (descending)",
-            "Validation balanced accuracy (descending)",
-            "Validation macro precision and recall (descending)",
+            "Validation multiclass log loss (ascending; primary probability score)",
+            "Validation multiclass Brier score (ascending)",
+            "Validation macro F1 and balanced accuracy (descending; tie-breakers)",
+            "Top-label ECE is diagnostic only and is not used for ranking",
             "Validation ONI RMSE (ascending; common LSTM across classifiers)",
         ],
         "selection_note": (
@@ -1159,10 +1206,12 @@ def _select_models(
             "No global candidate is selected for a horizon when the initial "
             "validation period lacks any ENSO phase. Validation is also used for "
             "tree-classifier early stopping, so remaining rankings are provisional. "
-            "LSTM epoch selection uses a train-internal chronological segment."
+            "LSTM epoch selection uses a train-internal chronological segment. "
+            "Probability scores use raw classifier outputs and are not calibrated."
         ),
         "selection_validation_fold": selection_fold,
         "test_metrics_used_for_selection": False,
+        "probabilities_calibrated": False,
         "selected_models": selected_models,
     }
     return selection, model_comparison, horizon_comparison

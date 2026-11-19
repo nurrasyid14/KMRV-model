@@ -22,7 +22,7 @@ services:
       timeout: 5s
       retries: 5
 
-  # 2. PyTorch Model Inference Service (Deep Learning & NetCDF Processing)
+  # 2. Final ENSO model inference service
   model-service:
     build:
       context: .
@@ -32,14 +32,12 @@ services:
     ports:
       - "8001:8001"
     volumes:
-      - ./model/enso_ensemble_1m:/app/models/enso_ensemble_1m:ro
-      - ./model/enso_ensemble_3m:/app/models/enso_ensemble_3m:ro
-      - ./model/enso_ensemble_6m:/app/models/enso_ensemble_6m:ro
+      - ./model/final_retrained:/app/models/final_retrained:ro
       - ./dataset/features_master_unscaled.csv:/app/dataset/features_master_unscaled.csv:ro
     environment:
       - TZ=Asia/Jakarta
       - PYTHONUNBUFFERED=1
-      - MODEL_ARTIFACTS_DIR=/app/models
+      - MODEL_ARTIFACTS_DIR=/app/models/final_retrained
       - FEATURES_FILE=/app/dataset/features_master_unscaled.csv
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8001/health', timeout=2).read()"]

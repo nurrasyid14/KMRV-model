@@ -1,0 +1,215 @@
+{
+  "audit_version": 1,
+  "model_version": "final-20261119T050910Z",
+  "forecast_origin": "2025-06-01",
+  "historical_data_range": {
+    "start": "2016-01-01",
+    "end": "2025-06-01",
+    "row_count": 114
+  },
+  "validation_test_reuse": {
+    "historical_train_validation_test_observations_reused": true,
+    "historical_evaluation_reports_modified": false,
+    "final_retraining_scored_as_independent_test": false,
+    "test_metrics_used_for_selection": false
+  },
+  "feature_timestamp_checks": {
+    "monthly_index_ordered_unique_contiguous": true,
+    "target_columns_excluded_from_features": true,
+    "source_as_of_timestamps_available": false,
+    "status": "not_independently_verified",
+    "warning": "Contemporaneous source values must be finalized and available by issuance; source-specific release timestamps are not recorded."
+  },
+  "target_alignment_checks": {
+    "validated_against_shifted_observed_oni": true,
+    "target_month_strictly_after_each_origin": true,
+    "eligible_target_cutoff": "origin + horizon <= forecast origin"
+  },
+  "sliding_window_checks": {
+    "window_months": 12,
+    "window_ends_at_forecast_origin": true,
+    "future_features_used": false
+  },
+  "scaler_and_imputer_checks": {
+    "feature_scalers_fit_on_eligible_rows_only": true,
+    "target_scalers_fit_on_eligible_targets_only": true,
+    "imputation_used": false
+  },
+  "lstm_stacking_checks": {
+    "classifier_features_use_chronological_oof_lstm_forecasts": true,
+    "in_sample_lstm_predictions_used_for_classifier": false
+  },
+  "phase_output_relationship": {
+    "phase_probabilities_come_from_selected_classifier": true,
+    "predicted_oni_comes_from_lstm_regressor": true,
+    "outputs_are_independently_predicted_and_may_disagree": true
+  },
+  "future_feature_availability": {
+    "future_climate_features_fabricated": false,
+    "future_oni_used_as_input": false,
+    "required_input": "Observed feature window ending at the forecast origin; source release timing remains unverified."
+  },
+  "model_selection_provenance": {
+    "selection_file": "C:\\Users\\Dell\\OneDrive - Politeknik Elektronika Negeri Surabaya\\Documents\\Sains data\\sem 5\\elnino prediction\\reports\\model_comparison\\model_selection.json",
+    "test_metrics_used_for_selection": false,
+    "selection_is_provisional": true,
+    "promotion_status": "experimental_not_production_ready",
+    "candidates": {
+      "1": {
+        "model": "XGBoost",
+        "imbalance_strategy": "balanced",
+        "selection_validation_fold": 1,
+        "selection_status": "provisional_candidate",
+        "selection_uses_test_metrics": false,
+        "validation_summary": {
+          "selection_validation_fold": 1,
+          "selection_status": "provisional_candidate",
+          "validation_macro_f1": 0.7336182336182336,
+          "validation_balanced_accuracy": 0.7301587301587302,
+          "validation_macro_precision": 0.7444444444444445,
+          "validation_macro_recall": 0.7301587301587302,
+          "validation_actual_class_coverage": 3,
+          "validation_oni_rmse": 0.7168912835848744,
+          "selection_uses_test_metrics": false,
+          "selection_is_provisional": true
+        },
+        "lstm_refit_epochs": 6
+      },
+      "3": {
+        "model": "LightGBM",
+        "imbalance_strategy": "unweighted",
+        "selection_validation_fold": 1,
+        "selection_status": "provisional_candidate",
+        "selection_uses_test_metrics": false,
+        "validation_summary": {
+          "selection_validation_fold": 1,
+          "selection_status": "provisional_candidate",
+          "validation_macro_f1": 0.48484848484848486,
+          "validation_balanced_accuracy": 0.45714285714285713,
+          "validation_macro_precision": 0.5555555555555555,
+          "validation_macro_recall": 0.45714285714285713,
+          "validation_actual_class_coverage": 3,
+          "validation_oni_rmse": 0.9960540378932324,
+          "selection_uses_test_metrics": false,
+          "selection_is_provisional": true
+        },
+        "lstm_refit_epochs": 5
+      },
+      "6": {
+        "model": "XGBoost",
+        "imbalance_strategy": "balanced",
+        "selection_validation_fold": 1,
+        "selection_status": "provisional_candidate",
+        "selection_uses_test_metrics": false,
+        "validation_summary": {
+          "selection_validation_fold": 1,
+          "selection_status": "provisional_candidate",
+          "validation_macro_f1": 0.3063973063973064,
+          "validation_balanced_accuracy": 0.4047619047619048,
+          "validation_macro_precision": 0.24675324675324672,
+          "validation_macro_recall": 0.4047619047619048,
+          "validation_actual_class_coverage": 3,
+          "validation_oni_rmse": 1.0278540436511745,
+          "selection_uses_test_metrics": false,
+          "selection_is_provisional": true
+        },
+        "lstm_refit_epochs": 1
+      }
+    }
+  },
+  "forecast_support": {
+    "requested_months": 18,
+    "supported_direct_horizons": [
+      1,
+      3,
+      6
+    ],
+    "generated_leads_within_request": [
+      1,
+      3,
+      6
+    ],
+    "unsupported_leads": [
+      2,
+      4,
+      5,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ],
+    "interpolation_or_recursion_used": false,
+    "probabilities_calibrated": false
+  },
+  "per_horizon": {
+    "1": {
+      "eligible_origins": 102,
+      "eligible_origin_start": "2016-12-01",
+      "eligible_origin_end": "2025-05-01",
+      "eligible_target_end": "2025-06-01",
+      "feature_scaler_fit_end": "2025-05-01",
+      "target_scaler_fit_end": "2025-06-01",
+      "oof_forecast_count": 77,
+      "oof_origin_start": "2019-01-01",
+      "oof_origin_end": "2025-05-01",
+      "oof_target_end": "2025-06-01",
+      "oof_targets_at_or_before_forecast_origin": true
+    },
+    "3": {
+      "eligible_origins": 100,
+      "eligible_origin_start": "2016-12-01",
+      "eligible_origin_end": "2025-03-01",
+      "eligible_target_end": "2025-06-01",
+      "feature_scaler_fit_end": "2025-03-01",
+      "target_scaler_fit_end": "2025-06-01",
+      "oof_forecast_count": 69,
+      "oof_origin_start": "2019-07-01",
+      "oof_origin_end": "2025-03-01",
+      "oof_target_end": "2025-06-01",
+      "oof_targets_at_or_before_forecast_origin": true
+    },
+    "6": {
+      "eligible_origins": 97,
+      "eligible_origin_start": "2016-12-01",
+      "eligible_origin_end": "2024-12-01",
+      "eligible_target_end": "2025-06-01",
+      "feature_scaler_fit_end": "2024-12-01",
+      "target_scaler_fit_end": "2025-06-01",
+      "oof_forecast_count": 66,
+      "oof_origin_start": "2019-07-01",
+      "oof_origin_end": "2024-12-01",
+      "oof_target_end": "2025-06-01",
+      "oof_targets_at_or_before_forecast_origin": true
+    }
+  },
+  "leakage_warnings": [
+    "Source feature availability at forecast issuance is not timestamped and remains unverified.",
+    "Candidate ranking is provisional: only one validation and one test period exist, and validation is also used for tree early stopping.",
+    "Current models support direct 1-, 3-, and 6-month forecasts only; the remaining requested months are unsupported.",
+    "Classifier phase probabilities are not calibrated.",
+    "Phase classification and continuous ONI regression are separate outputs and can disagree."
+  ],
+  "overall_status": "not_fully_verified",
+  "forecast_generation_status": "partial_support; only direct model leads were forecast",
+  "visualizations": [
+    "reports\\final_retrained\\historical_and_forecast_oni.png",
+    "reports\\final_retrained\\historical_and_forecast_phase.png",
+    "reports\\final_retrained\\forecast_phase_probabilities.png",
+    "reports\\final_retrained\\forecast_horizon_1m.png",
+    "reports\\final_retrained\\forecast_horizon_3m.png",
+    "reports\\final_retrained\\forecast_horizon_6m.png"
+  ],
+  "forecast_output": {
+    "csv": "reports\\final_retrained\\forecast.csv",
+    "json": "reports\\final_retrained\\forecast.json",
+    "support": "reports\\final_retrained\\forecast_support.json"
+  }
+}

@@ -46,7 +46,8 @@ export default function LatestForecast({ horizon }) {
         <div>
           <h3 className="lp-rail-title">Inferensi model terbaru</h3>
           <p className="chart-subtitle">
-            Causal LSTM + XGBoost · horizon {horizon} bulan
+            Causal LSTM + {forecast?.classifier_family || 'XGBoost'} · horizon{' '}
+            {horizon} bulan
           </p>
         </div>
         {loading && <span role="status">Menghitung prediksi…</span>}
@@ -76,7 +77,9 @@ export default function LatestForecast({ horizon }) {
               <strong className="lp-card-value">
                 {forecast.predicted_phase.label}
               </strong>
-              <span className="lp-card-note">Keluaran klasifikasi XGBoost</span>
+              <span className="lp-card-note">
+                Keluaran klasifikasi {forecast.classifier_family || 'XGBoost'}
+              </span>
             </article>
             <article className="lp-inner-card">
               <span className="lp-card-label">Probabilitas fase</span>
@@ -93,6 +96,8 @@ export default function LatestForecast({ horizon }) {
           <p className="lp-live-forecast-note">
             Fitur masukan tersedia sampai {monthLabel(`${forecast.input_through}-01`)}.
             Ini inferensi langsung dari artefak model, bukan data observasi real-time.
+            {forecast.promotion_status === 'experimental_not_production_ready' &&
+              ' Model masih kandidat eksperimental; probabilitas fase belum dikalibrasi.'}
           </p>
         </>
       )}

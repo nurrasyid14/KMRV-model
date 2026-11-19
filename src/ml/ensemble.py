@@ -40,6 +40,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 LSTM_MODULE = importlib.import_module("src.ml.2lstm")
 CausalLSTM = LSTM_MODULE.CausalLSTM
+from src.ml.evaluation import probability_evaluation
 from src.ml.xgb_classifier import create_phase_classifier, train_phase_classifier
 
 DEFAULT_DATA_DIR = PROJECT_ROOT / "dataset"
@@ -209,13 +210,19 @@ def train_xgboost(
     )
 
 
-def classification_metrics(labels: np.ndarray, predictions: np.ndarray) -> dict[str, float | list[int]]:
-    return {
+def classification_metrics(
+    labels: np.ndarray,
+    predictions: np.ndarray,
+    probabilities: np.ndarray,
+) -> dict[str, object]:
+    metrics: dict[str, object] = {
         "accuracy": float(accuracy_score(labels, predictions)),
         "balanced_accuracy": float(balanced_accuracy_score(labels, predictions)),
         "macro_f1": float(f1_score(labels, predictions, average="macro", zero_division=0)),
         "confusion_matrix": confusion_matrix(labels, predictions, labels=PHASE_CLASSES).tolist(),
     }
+    metrics.update(probability_evaluation(labels, probabilities))
+    return metrics
 
 
 def main() -> None:
@@ -295,6 +302,9 @@ def main() -> None:
         validation_labels,
     )
 
+    validation_phase_probabilities = classifier.predict_proba(
+        validation_classifier_features
+    )
     validation_phase = classifier.predict(validation_classifier_features).astype(np.int64)
     production_features = pd.concat(
         [train_classifier_features, validation_classifier_features], ignore_index=True
@@ -306,6 +316,9 @@ def main() -> None:
         early_stopping_rounds=None,
     )
     production_classifier.fit(production_features, production_labels)
+    test_phase_probabilities = production_classifier.predict_proba(
+        test_classifier_features
+    )
     test_phase = production_classifier.predict(test_classifier_features).astype(np.int64)
     validation_actual_oni = validation[oni_target].to_numpy()[args.window - 1:]
     test_actual_oni = test[oni_target].to_numpy()[args.window - 1:]
@@ -314,14 +327,23 @@ def main() -> None:
         "window_months": args.window,
         "model": "causal_lstm_xgboost",
         "class_mapping": PHASE_NAMES,
+        "probabilities_calibrated": False,
         "validation": {
-            **classification_metrics(validation_labels, validation_phase),
+            **classification_metrics(
+                validation_labels,
+                validation_phase,
+                validation_phase_probabilities,
+            ),
             "lstm_oni_rmse": float(
                 np.sqrt(mean_squared_error(validation_actual_oni, validation_lstm_forecast))
             ),
         },
         "test": {
-            **classification_metrics(test_labels, test_phase),
+            **classification_metrics(
+                test_labels,
+                test_phase,
+                test_phase_probabilities,
+            ),
             "lstm_oni_rmse": float(
                 np.sqrt(mean_squared_error(test_actual_oni, test_lstm_forecast))
             ),
@@ -361,6 +383,11 @@ def main() -> None:
             f"lstm_oni_lead_{args.horizon}m": test_lstm_forecast,
             f"actual_phase_lead_{args.horizon}m": test_labels,
             f"predicted_phase_lead_{args.horizon}m": test_phase,
+            "phase_confidence": test_phase_probabilities.max(axis=1),
+            "probability_la_nina": test_phase_probabilities[:, 0],
+            "probability_neutral": test_phase_probabilities[:, 1],
+            "probability_el_nino": test_phase_probabilities[:, 2],
+            "probabilities_calibrated": False,
         }
     )
     predictions.to_csv(output_dir / f"test_predictions_horizon_{args.horizon}m.csv", index=False)

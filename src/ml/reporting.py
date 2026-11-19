@@ -362,20 +362,27 @@ def _write_final_report(
         pd.DataFrame() if regression_metrics is None else regression_metrics
     )
     fold_sweep = pd.DataFrame() if fold_sweep is None else fold_sweep
+    test_summary_columns = [
+        "horizon_months",
+        "model",
+        "imbalance_strategy",
+        "test_accuracy_mean",
+        "test_balanced_accuracy_mean",
+        "test_log_loss_mean",
+        "test_multiclass_brier_score_mean",
+        "test_top_label_ece_10_bins_mean",
+        "test_macro_f1_mean",
+        "test_macro_f1_std",
+        "test_weighted_f1_mean",
+        "test_oni_rmse_mean",
+        "test_oni_rmse_std",
+    ]
+    test_summary_columns = [
+        column for column in test_summary_columns if column in comparison.columns
+    ]
     test_summary = comparison.loc[
         comparison["test_macro_f1_mean"].notna(),
-        [
-            "horizon_months",
-            "model",
-            "imbalance_strategy",
-            "test_accuracy_mean",
-            "test_balanced_accuracy_mean",
-            "test_macro_f1_mean",
-            "test_macro_f1_std",
-            "test_weighted_f1_mean",
-            "test_oni_rmse_mean",
-            "test_oni_rmse_std",
-        ]
+        test_summary_columns,
     ].copy()
     numeric_columns = test_summary.select_dtypes(include="number").columns
     test_summary[numeric_columns] = test_summary[numeric_columns].round(3)
@@ -401,6 +408,23 @@ def _write_final_report(
                     None
                     if choice["validation_macro_f1"] is None
                     else round(choice["validation_macro_f1"], 3)
+                ),
+                "validation_log_loss": (
+                    None
+                    if choice.get("validation_log_loss") is None
+                    else round(choice["validation_log_loss"], 3)
+                ),
+                "validation_brier_score": (
+                    None
+                    if choice.get("validation_multiclass_brier_score") is None
+                    else round(
+                        choice["validation_multiclass_brier_score"], 3
+                    )
+                ),
+                "validation_top_label_ece": (
+                    None
+                    if choice.get("validation_top_label_ece_10_bins") is None
+                    else round(choice["validation_top_label_ece_10_bins"], 3)
                 ),
                 "validation_balanced_accuracy": (
                     None
@@ -541,13 +565,13 @@ The chronological feasibility grid checks candidate validation/test lengths agai
 
 {_markdown_table(selection_table)}
 
-Selection requires actual coverage of all three classes for the horizon and uses validation metrics only; the fixed final test period is never used for selection. The configured 24-month validation interval has full coverage at all horizons, but horizon 6 has only 18 validation origins and four Neutral examples. Validation also controls tree-classifier early stopping, so the resulting candidate ranking is provisional rather than an independent estimate. LSTM epoch selection uses a separate internal chronological segment within outer training.
+Selection requires actual coverage of all three classes for the horizon and uses validation metrics only; the fixed final test period is never used for selection. Candidate ranking prioritizes multiclass log loss and Brier score; macro-F1 and balanced accuracy are tie-breakers. Top-label ECE is diagnostic only. These metrics evaluate the raw classifier probabilities; they do not calibrate them. The configured 24-month validation interval has full coverage at all horizons, but horizon 6 has only 18 validation origins and four Neutral examples. Validation also controls tree-classifier early stopping, so the resulting candidate ranking is provisional rather than an independent estimate. LSTM epoch selection uses a separate internal chronological segment within outer training.
 
 ## Selected-model final holdout evaluation
 
 {_markdown_table(test_summary)}
 
-The test period is scored only after validation-based selection. Test metrics are reported only for the selected classifier configuration per horizon; they are final holdout results, not selection evidence. The ONI model is shared by classifier variants and is evaluated separately from phase classification.
+The test period is scored only after validation-based selection. Test metrics are reported only for the selected classifier configuration per horizon; they are final holdout results, not selection evidence. The ONI model is shared by classifier variants and is evaluated separately from phase classification. Log loss and Brier score are proper scoring rules; ECE is a small-sample diagnostic and should not be treated as a stable calibration estimate.
 
 ## ONI regression diagnostics
 

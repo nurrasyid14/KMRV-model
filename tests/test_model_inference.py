@@ -23,6 +23,12 @@ class ModelInferenceTests(unittest.TestCase):
             ROOT / "model",
             ROOT / "dataset" / "features_master_unscaled.csv",
         )
+        final_artifacts = ROOT / "model" / "final_retrained"
+        if (final_artifacts / "model_manifest.json").is_file():
+            cls.final_engine = InferenceEngine(
+                final_artifacts,
+                ROOT / "dataset" / "features_master_unscaled.csv",
+            )
 
     def test_latest_forecast_uses_loaded_horizon_artifacts(self):
         latest_input = pd.read_csv(ROOT / "dataset" / "features_master_unscaled.csv")[
@@ -48,15 +54,47 @@ class ModelInferenceTests(unittest.TestCase):
                 )
                 self.assertAlmostEqual(sum(probabilities.values()), 1.0, places=5)
 
+    @unittest.skipUnless(
+        (ROOT / "model" / "final_retrained" / "model_manifest.json").is_file(),
+        "generate final artifacts before testing final inference",
+    )
+    def test_final_artifacts_load_mixed_classifiers_and_expose_candidate_status(self):
+        expected_families = {1: "XGBoost", 3: "LightGBM", 6: "XGBoost"}
+
+        for horizon, family in expected_families.items():
+            with self.subTest(horizon=horizon):
+                forecast = self.final_engine.predict_latest(horizon)
+
+                self.assertEqual(forecast["classifier_family"], family)
+                self.assertEqual(
+                    forecast["model"],
+                    f"causal_lstm_{family.lower()}",
+                )
+                self.assertEqual(
+                    forecast["promotion_status"],
+                    "experimental_not_production_ready",
+                )
+                self.assertEqual(forecast["model_forecast_origin"], "2025-06")
+                self.assertFalse(forecast["probabilities_calibrated"])
+                self.assertAlmostEqual(
+                    forecast["phase_confidence"],
+                    max(forecast["phase_probabilities"].values()),
+                    places=5,
+                )
+
     def test_unsupported_horizon_is_rejected(self):
         with self.assertRaises(ValueError):
             self.engine.predict_latest(2)
 
+    @unittest.skipUnless(
+        (ROOT / "model" / "final_retrained" / "model_manifest.json").is_file(),
+        "generate final artifacts before testing final API integration",
+    )
     def test_frontend_api_proxies_model_inference(self):
         with patch.dict(
             os.environ,
             {
-                "MODEL_ARTIFACTS_DIR": str(ROOT / "model"),
+                "MODEL_ARTIFACTS_DIR": str(ROOT / "model" / "final_retrained"),
                 "FEATURES_FILE": str(
                     ROOT / "dataset" / "features_master_unscaled.csv"
                 ),
@@ -93,7 +131,12 @@ class ModelInferenceTests(unittest.TestCase):
                 self.assertEqual(response.json()["horizon_months"], 3)
                 self.assertEqual(
                     response.json()["model"],
-                    "causal_lstm_xgboost",
+                    "causal_lstm_lightgbm",
+                )
+                self.assertEqual(response.json()["classifier_family"], "LightGBM")
+                self.assertEqual(
+                    response.json()["promotion_status"],
+                    "experimental_not_production_ready",
                 )
                 self.assertEqual(request.call_args.kwargs["timeout"], 30)
                 self.assertEqual(invalid_response.status_code, 422)

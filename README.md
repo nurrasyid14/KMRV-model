@@ -288,6 +288,14 @@ setelah pemilihan. ONI regression dievaluasi terpisah dari klasifikasi, dengan
 prediksi/residual per split di `reports/backtesting/regression_predictions.csv`
 dan metrik di `regression_metrics.csv`.
 
+Evaluasi fase juga mencatat probabilitas per kelas, multiclass log loss,
+multiclass Brier score, rata-rata confidence kelas teratas, dan top-label ECE.
+Untuk backtesting berikutnya, pemilihan kandidat mengutamakan log loss lalu
+Brier score; macro-F1 dan balanced accuracy menjadi tie-breaker, sedangkan ECE
+hanya diagnostik. Skor tersebut mengevaluasi probabilitas mentah—tidak
+mengkalibrasinya. Karena itu confidence belum boleh dibaca sebagai probabilitas
+terkalibrasi; evaluasi ECE pada periode pendek juga sangat tidak stabil.
+
 Strategi default menggunakan satu fold terminal: 72 bulan train, 24 bulan
 validasi (Jan 2022–Des 2023 untuk dataset saat ini), dan 18 bulan test terakhir.
 Validasi dipurge menurut horizon; test tidak digunakan untuk pemilihan model.
@@ -318,6 +326,47 @@ mempertahankan fixed labels `[0, 1, 2]`, confusion matrix 3×3, serta diagnostik
 kelas aktual dan prediksi; skor pada test yang kehilangan kelas tidak
 membuktikan kemampuan mengenali fase yang tidak ada. Satu fold juga tidak
 menyediakan estimasi variabilitas antarperiode yang memadai.
+
+## Retraining akhir dan prakiraan langsung
+
+Tahap ini terpisah dari backtesting dan memakai konfigurasi kandidat yang
+dibekukan dari `reports/model_comparison/model_selection.json`; konfigurasi
+tidak dipilih ulang menggunakan test. Jalankan setelah laporan evaluasi dan
+audit historis tersedia:
+
+```powershell
+python main.py --final-retrain --forecast-months 18
+```
+
+`--forecast-months 18` tanpa `--final-retrain` juga menjalankan tahap akhir;
+tanpa nilai eksplisit, mode retraining meminta 18 bulan. Model disimpan
+terpisah di `model/final_retrained/`, sedangkan CSV, JSON, matriks dukungan,
+plot, dan laporan disimpan di `reports/final_retrained/`,
+`reports/final_retraining_leakage_audit.json`, dan
+`reports/final_retraining_report.md`.
+
+Arsitektur saat ini hanya mendukung lead langsung 1, 3, dan 6 bulan. Untuk
+permintaan 18 bulan, hanya tiga lead tersebut yang memiliki nilai prediksi;
+lead lainnya ditandai tidak didukung, tanpa interpolasi atau input iklim
+sintetis. Probabilitas fase belum dikalibrasi. Waktu publikasi sumber fitur
+bulanan tidak tercatat, sehingga audit mencatat keterbatasan ketersediaan
+fitur dan model tetap berstatus kandidat eksperimental, bukan model produksi.
+
+### Menjalankan model final melalui Docker Compose
+
+Setelah bundle `model/final_retrained/` tersedia dan `.env` terisi, bangun
+ulang image model (LightGBM termasuk dalam dependensi image) dan jalankan
+layanan terkait:
+
+```powershell
+docker compose up -d --build model-service fastapi-backend frontend
+```
+
+Compose memasang bundle model secara read-only. Periksa
+`http://localhost:8001/health` untuk versi model dan tanggal origin data.
+Bundle yang saat ini tersedia ber-origin `2025-06`; keluaran tersebut bukan
+prakiraan terkini. Perbarui data fitur dan jalankan retraining akhir sebelum
+menggunakannya sebagai prakiraan baru.
 
 ## Interpretasi
 

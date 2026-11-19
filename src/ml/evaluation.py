@@ -8,6 +8,7 @@ from sklearn.metrics import (
     classification_report,
     confusion_matrix,
     f1_score,
+    log_loss,
     mean_absolute_error,
     mean_squared_error,
     precision_recall_fscore_support,
@@ -15,6 +16,54 @@ from sklearn.metrics import (
 )
 
 from src.ml.temporal import PHASE_CLASSES, PHASE_NAMES
+
+
+def probability_evaluation(
+    actual: np.ndarray,
+    probabilities: np.ndarray,
+) -> dict[str, float | int]:
+    actual = np.asarray(actual, dtype=np.int64)
+    probabilities = np.asarray(probabilities, dtype=np.float64)
+    if actual.ndim != 1 or actual.size == 0:
+        raise ValueError("Probability metrics require non-empty one-dimensional labels")
+    expected_shape = (actual.size, len(PHASE_CLASSES))
+    if probabilities.shape != expected_shape:
+        raise ValueError(
+            f"Expected probability shape {expected_shape}, got {probabilities.shape}"
+        )
+    if not np.isin(actual, PHASE_CLASSES).all():
+        raise ValueError("Actual labels contain an unknown ENSO phase")
+    if (
+        not np.isfinite(probabilities).all()
+        or np.any(probabilities < 0.0)
+        or np.any(probabilities > 1.0)
+        or not np.allclose(probabilities.sum(axis=1), 1.0, rtol=0.0, atol=1e-5)
+    ):
+        raise ValueError("Class probabilities must be finite and sum to one per row")
+
+    one_hot = np.eye(len(PHASE_CLASSES), dtype=np.float64)[actual]
+    top_class_indices = probabilities.argmax(axis=1)
+    confidence = probabilities.max(axis=1)
+    correct = PHASE_CLASSES[top_class_indices] == actual
+    bin_edges = np.linspace(0.0, 1.0, 11)
+    ece = 0.0
+    for bin_index, (lower, upper) in enumerate(zip(bin_edges[:-1], bin_edges[1:])):
+        in_bin = (confidence >= lower) & (
+            confidence <= upper if bin_index == len(bin_edges) - 2 else confidence < upper
+        )
+        if in_bin.any():
+            ece += float(in_bin.mean()) * abs(
+                float(confidence[in_bin].mean()) - float(correct[in_bin].mean())
+            )
+
+    return {
+        "log_loss": float(log_loss(actual, probabilities, labels=PHASE_CLASSES)),
+        "multiclass_brier_score": float(
+            np.mean(np.sum((probabilities - one_hot) ** 2, axis=1))
+        ),
+        "top_label_ece_10_bins": float(ece),
+        "mean_top_label_confidence": float(np.mean(confidence)),
+    }
 
 
 def classification_evaluation(
