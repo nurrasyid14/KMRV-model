@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ConfusionMatrix from '../components/ConfusionMatrix';
+import LatestForecast from '../components/LatestForecast';
 import OniHistoryChart from '../components/OniHistoryChart';
 import SeaTempMap from '../components/SeaTempMap';
 import TestPredictionChart from '../components/TestPredictionChart';
@@ -49,7 +50,7 @@ export default function Dashboard() {
       <section className="lp-hero" id="awal" aria-labelledby="heroTitle">
         <div className="lp-wrap lp-hero-grid">
           <div className="lp-hero-copy">
-            <span className="lp-hero-pill">Model KMRV · Causal LSTM + LightGBM</span>
+            <span className="lp-hero-pill">Model KMRV · Causal LSTM + XGBoost</span>
             <h1 id="heroTitle" className="lp-brand">Lautan.id</h1>
             <p className="lp-tagline">Pantau Iklim & Dinamika Laut Indonesia</p>
             <p className="lp-hero-text">
@@ -209,13 +210,12 @@ export default function Dashboard() {
           <header className="lp-head">
             <h2 id="prediksiTitle" className="lp-title">Prediksi Nilai ONI</h2>
             <p className="lp-sub">
-              Peramalan nilai kontinu ONI dengan model <strong>Causal LSTM</strong> (target proyeksi {selectedHorizon} bulan ke depan).
-              Garis hitam adalah nilai observasi asli NOAA, garis putus-putus biru adalah proyeksi model.
+              Prediksi ONI {selectedHorizon} bulan ke depan dari inferensi model dan evaluasi historis pada data uji.
             </p>
           </header>
 
           <div className="lp-guide-card">
-            <strong>Cara Kerja Prediksi:</strong> Model AI menggabungkan dua tahap: (1) <strong>Causal LSTM</strong> memproyeksikan deret angka ONI {selectedHorizon} bulan ke depan dari batas observasi, lalu (2) <strong>LightGBM</strong> mengklasifikasikan kategori fasenya.
+            <strong>Cara Kerja Prediksi:</strong> <strong>Causal LSTM</strong> memproyeksikan nilai ONI, lalu <strong>XGBoost</strong> mengklasifikasikan fasenya. Prediksi terbaru diambil dari API model; grafik di bawah tetap menunjukkan evaluasi pada data uji historis.
           </div>
 
           <div className="lp-chart-card">
@@ -241,6 +241,8 @@ export default function Dashboard() {
                 Akurasi validasi {num(activeMetric.validation.accuracy)} — model mengalami degradasi keterampilan pada lead waktu panjang. Gunakan horizon 1 bulan untuk hasil yang dapat diandalkan.
               </div>
             )}
+
+            <LatestForecast horizon={selectedHorizon} />
 
             <TestPredictionChart horizon={selectedHorizon} />
 

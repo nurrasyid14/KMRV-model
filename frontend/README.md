@@ -8,28 +8,63 @@ Dashboard pemantauan dan inferensi iklim maritim berbasis deep learning untuk pr
 
 ## Menjalankan Dashboard
 
+Untuk menjalankan frontend, API, dan model bersama-sama dari root proyek:
+
 ```bash
-cd frontend
-npm install
+docker compose up --build model-service fastapi-backend frontend
+```
+
+Compose tetap membutuhkan variabel PostgreSQL di root `.env` untuk validasi
+konfigurasi; siapkan file tersebut dari `.env.example` bila belum ada.
+Dashboard tersedia di `http://localhost/`. Endpoint prediksi adalah
+`GET /api/v1/forecast/latest?horizon=1` (horizon yang tersedia: `1`, `3`, `6`).
+API memuat artefak model saat startup dan melakukan inferensi dari baris fitur
+terakhir di `dataset/features_master_unscaled.csv`. Perbarui data fitur untuk
+memakai input baru; endpoint ini tidak mengambil observasi iklim real-time.
+
+Untuk pengembangan lokal, jalankan tiap bagian di terminal terpisah dari root
+proyek:
+
+```powershell
+python -m pip install --index-url https://download.pytorch.org/whl/cpu --no-deps "torch==2.5.1+cpu"
+python -m pip install -r model/requirements.txt
+$env:MODEL_ARTIFACTS_DIR = (Resolve-Path .\model).Path
+$env:FEATURES_FILE = (Resolve-Path .\dataset\features_master_unscaled.csv).Path
+python -m uvicorn model.service:app --host 0.0.0.0 --port 8001
+```
+
+```powershell
+$env:MODEL_SERVICE_URL = "http://localhost:8001"
+python -m uvicorn main:app --app-dir backend --host 0.0.0.0 --port 8000
+```
+
+```powershell
+Set-Location .\frontend
+npm ci
 npm run dev
 ```
 
-Akses aplikasi di `http://localhost:5174/` (atau port default Vite `5173`).
+Akses aplikasi di `http://localhost:5174/`.
 
-Untuk melakukan production build:
+Untuk production build frontend:
 ```bash
+cd frontend
 npm run build
 ```
 
 ---
 
-## Cara Menyambungkan ke Backend (FastAPI + PostgreSQL + Zarr)
+## Kontrak Integrasi Prediksi
 
-Seluruh konsumsi data di frontend telah dipusatkan dalam satu modul terisolasi:
-📂 `frontend/src/data/climateData.js`
+Komponen [`LatestForecast`](./src/components/LatestForecast.jsx) meminta
+`/api/v1/forecast/latest` dari backend; backend meneruskan permintaan ke model
+service. Riwayat dan metrik evaluasi tetap berasal dari snapshot yang dibuat
+oleh `scripts/export_dashboard_data.py` di `src/data/realData.js`.
+
+## Endpoint Backend Lainnya
 
 ### 1. Endpoint RESTful Backend yang Dibutuhkan
-Ketika backend Python (FastAPI) siap, ganti fungsi impor mock di `climateData.js` dengan panggilan `fetch()` ke endpoint berikut:
+Endpoint di bawah ini masih berupa rancangan dan belum diimplementasikan:
 
 | Method | Endpoint | Fungsi | Format Output |
 |---|---|---|---|
@@ -49,11 +84,11 @@ Untuk visualisasi layer raster OISST beresolusi penuh dari backend Zarr store:
 
 ## Daftar Komponen yang Menggunakan Data Contoh (Simulasi)
 
-Sesuai prinsip kejujuran data (Rule of Honesty), modul inferensi dan dampak iklim yang masih dalam tahap training/pengembangan diberi label jelas **"Data contoh"** atau **"Simulasi"** pada UI:
+Fitur iklim yang masih dalam tahap pengembangan diberi label jelas **"Data contoh"** atau **"Simulasi"**. Kartu prediksi ONI menggunakan inferensi model, tetapi tetap menunjukkan tanggal input karena dataset saat ini bukan feed real-time:
 
 | Komponen | File | Status Data | Keterangan |
 |---|---|---|---|
-| **Peluang Fase 3 Bulan (KPI)** | `src/pages/Ringkasan.jsx` | ⚠️ Simulasi Model | Probabilitas fase dihitung dari mock ensemble; ganti dengan inferensi live model KMRV. |
+| **Prediksi ONI dan fase (1/3/6 bulan)** | `src/components/LatestForecast.jsx` | ✅ Inferensi model | Diproses oleh Causal LSTM + XGBoost dari fitur terakhir yang tersedia. |
 | **Status MHW Selat Makassar** | `src/pages/Ringkasan.jsx` | ⚠️ Data Contoh | Deteksi MHW Selat Makassar menggunakan mock event untuk demonstrasi UI. |
 | **Pita Ketidakpastian (80% CI)** | `src/pages/Ringkasan.jsx` | ⚠️ Simulasi Model | Nilai confidence band dihitung dari standar deviasi mock. |
 | **Plume Ensemble Trajectory** | `src/pages/PrakiraanENSO.jsx` | ⚠️ Data Contoh | Kurva 20 lintasan ensemble disimulasikan dari distribusi Gaussian. |
