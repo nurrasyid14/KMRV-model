@@ -2,78 +2,78 @@
 export const realData = {
   "meta": {
     "datasetStart": "2016-01",
-    "datasetEnd": "2025-06",
-    "rows": 114,
+    "datasetEnd": "2026-03",
+    "rows": 123,
     "source": "dataset/features_master_unscaled.csv",
-    "bestValidationHorizon": 1,
+    "bestValidationHorizon": 12,
     "phaseRule": "El Nino > +0,5 C; La Nina < -0,5 C; Netral [-0,5, +0,5]",
     "climatology": "Anomali SST = SST - rata-rata bulan yang sama (2016-2025)"
   },
   "latestSnapshot": {
-    "period": "2025-06",
-    "date": "2025-06",
-    "oni": -0.02,
-    "oni_anom": -0.02,
-    "soi": 0.5,
-    "dmi": -0.014,
+    "period": "2026-03",
+    "date": "2026-03",
+    "oni": 0.11,
+    "oni_anom": 0.11,
+    "soi": 2.0,
+    "dmi": 0.285,
     "phase": "Netral",
     "phaseRule": "oni_anom in [-0.5, +0.5]"
   },
   "latest": {
-    "period": "2025-06",
-    "date": "2025-06",
-    "oni": -0.02,
-    "oni_anom": -0.02,
-    "soi": 0.5,
-    "dmi": -0.014,
+    "period": "2026-03",
+    "date": "2026-03",
+    "oni": 0.11,
+    "oni_anom": 0.11,
+    "soi": 2.0,
+    "dmi": 0.285,
     "sst": {
-      "nino34": 27.688,
-      "karimata": 30.098,
-      "makassar": 29.702,
-      "jawa": 28.223,
-      "maluku": 29.774
+      "nino34": 27.206,
+      "karimata": 28.396,
+      "makassar": 29.221,
+      "jawa": 28.719,
+      "maluku": 29.211
     },
     "sstAnom": {
-      "nino34": -0.119,
-      "karimata": 0.126,
-      "makassar": 0.181,
-      "jawa": 0.262,
-      "maluku": 0.071
+      "nino34": -0.202,
+      "karimata": -0.31,
+      "makassar": -0.155,
+      "jawa": -0.516,
+      "maluku": -0.226
     },
     "split": "test",
     "phase": "Netral",
-    "previousDate": "2025-05",
-    "deltaOni": 0.02
+    "previousDate": "2026-02",
+    "deltaOni": 0.32
   },
   "domainAnomalies": [
     {
       "id": "nino34",
       "label": "Pasifik Ni\u00f1o 3.4",
-      "value": -0.119,
+      "value": -0.202,
       "unit": "\u00b0C"
     },
     {
       "id": "karimata",
       "label": "Selat Karimata",
-      "value": 0.126,
+      "value": -0.31,
       "unit": "\u00b0C"
     },
     {
       "id": "makassar",
       "label": "Selat Makassar",
-      "value": 0.181,
+      "value": -0.155,
       "unit": "\u00b0C"
     },
     {
       "id": "jawa",
       "label": "Selatan Jawa",
-      "value": 0.262,
+      "value": -0.516,
       "unit": "\u00b0C"
     },
     {
       "id": "maluku",
       "label": "Maluku-Papua",
-      "value": 0.071,
+      "value": -0.226,
       "unit": "\u00b0C"
     }
   ],
@@ -93,11 +93,11 @@ export const realData = {
         "maluku": 28.977
       },
       "sstAnom": {
-        "nino34": 2.374,
-        "karimata": 0.8,
-        "makassar": 0.322,
-        "jawa": 0.974,
-        "maluku": -0.5
+        "nino34": 2.439,
+        "karimata": 0.856,
+        "makassar": 0.323,
+        "jawa": 1.011,
+        "maluku": -0.508
       },
       "split": "train"
     },
@@ -116,11 +116,11 @@ export const realData = {
         "maluku": 28.809
       },
       "sstAnom": {
-        "nino34": 2.09,
-        "karimata": 0.777,
-        "makassar": 0.095,
-        "jawa": 0.882,
-        "maluku": -0.415
+        "nino34": 2.124,
+        "karimata": 0.822,
+        "makassar": 0.081,
+        "jawa": 0.945,
+        "maluku": -0.441
       },
       "split": "train"
     },
@@ -139,11 +139,11 @@ export const realData = {
         "maluku": 29.058
       },
       "sstAnom": {
-        "nino34": 1.39,
-        "karimata": 0.421,
-        "makassar": 0.331,
-        "jawa": 1.147,
-        "maluku": -0.401
+        "nino34": 1.41,
+        "karimata": 0.452,
+        "makassar": 0.347,
+        "jawa": 1.198,
+        "maluku": -0.379
       },
       "split": "train"
     },
@@ -231,11 +231,11 @@ export const realData = {
         "maluku": 29.38
       },
       "sstAnom": {
-        "nino34": -0.557,
-        "karimata": 0.599,
-        "makassar": 0.351,
-        "jawa": 1.801,
-        "maluku": 0.022
+        "nino34": -0.542,
+        "karimata": 0.591,
+        "makassar": 0.347,
+        "jawa": 1.797,
+        "maluku": -0.0
       },
       "split": "train"
     },
@@ -254,11 +254,11 @@ export const realData = {
         "maluku": 29.268
       },
       "sstAnom": {
-        "nino34": -0.45,
-        "karimata": 0.627,
-        "makassar": 0.215,
-        "jawa": 1.692,
-        "maluku": -0.01
+        "nino34": -0.426,
+        "karimata": 0.617,
+        "makassar": 0.221,
+        "jawa": 1.665,
+        "maluku": -0.018
       },
       "split": "train"
     },
@@ -277,11 +277,11 @@ export const realData = {
         "maluku": 29.587
       },
       "sstAnom": {
-        "nino34": -0.35,
-        "karimata": 0.726,
-        "makassar": 0.274,
-        "jawa": 1.431,
-        "maluku": 0.178
+        "nino34": -0.32,
+        "karimata": 0.711,
+        "makassar": 0.264,
+        "jawa": 1.399,
+        "maluku": 0.168
       },
       "split": "train"
     },
@@ -300,11 +300,11 @@ export const realData = {
         "maluku": 29.911
       },
       "sstAnom": {
-        "nino34": -0.598,
-        "karimata": 0.191,
-        "makassar": -0.029,
-        "jawa": 0.96,
-        "maluku": 0.118
+        "nino34": -0.564,
+        "karimata": 0.188,
+        "makassar": -0.057,
+        "jawa": 0.905,
+        "maluku": 0.102
       },
       "split": "train"
     },
@@ -323,11 +323,11 @@ export const realData = {
         "maluku": 29.879
       },
       "sstAnom": {
-        "nino34": -0.5,
-        "karimata": -0.293,
-        "makassar": -0.316,
+        "nino34": -0.446,
+        "karimata": -0.272,
+        "makassar": -0.301,
         "jawa": 0.508,
-        "maluku": -0.139
+        "maluku": -0.123
       },
       "split": "train"
     },
@@ -346,11 +346,11 @@ export const realData = {
         "maluku": 29.773
       },
       "sstAnom": {
-        "nino34": -0.195,
-        "karimata": 0.049,
-        "makassar": -0.229,
-        "jawa": 0.153,
-        "maluku": -0.097
+        "nino34": -0.148,
+        "karimata": 0.058,
+        "makassar": -0.227,
+        "jawa": 0.148,
+        "maluku": -0.091
       },
       "split": "train"
     },
@@ -369,11 +369,11 @@ export const realData = {
         "maluku": 29.378
       },
       "sstAnom": {
-        "nino34": -0.43,
-        "karimata": 0.313,
-        "makassar": -0.277,
-        "jawa": -0.313,
-        "maluku": -0.099
+        "nino34": -0.365,
+        "karimata": 0.37,
+        "makassar": -0.276,
+        "jawa": -0.276,
+        "maluku": -0.108
       },
       "split": "train"
     },
@@ -392,11 +392,11 @@ export const realData = {
         "maluku": 29.043
       },
       "sstAnom": {
-        "nino34": -0.097,
-        "karimata": -0.009,
-        "makassar": -0.315,
-        "jawa": -0.079,
-        "maluku": -0.18
+        "nino34": -0.063,
+        "karimata": 0.035,
+        "makassar": -0.329,
+        "jawa": -0.016,
+        "maluku": -0.207
       },
       "split": "train"
     },
@@ -415,11 +415,11 @@ export const realData = {
         "maluku": 29.241
       },
       "sstAnom": {
-        "nino34": -0.057,
-        "karimata": -0.048,
-        "makassar": -0.195,
-        "jawa": -0.206,
-        "maluku": -0.218
+        "nino34": -0.037,
+        "karimata": -0.017,
+        "makassar": -0.179,
+        "jawa": -0.155,
+        "maluku": -0.195
       },
       "split": "train"
     },
@@ -507,11 +507,11 @@ export const realData = {
         "maluku": 29.342
       },
       "sstAnom": {
-        "nino34": 0.19,
-        "karimata": -0.245,
-        "makassar": -0.187,
-        "jawa": -0.674,
-        "maluku": -0.016
+        "nino34": 0.205,
+        "karimata": -0.252,
+        "makassar": -0.192,
+        "jawa": -0.678,
+        "maluku": -0.038
       },
       "split": "train"
     },
@@ -530,11 +530,11 @@ export const realData = {
         "maluku": 29.16
       },
       "sstAnom": {
-        "nino34": 0.002,
-        "karimata": -0.306,
-        "makassar": -0.19,
-        "jawa": -0.598,
-        "maluku": -0.117
+        "nino34": 0.026,
+        "karimata": -0.316,
+        "makassar": -0.184,
+        "jawa": -0.624,
+        "maluku": -0.126
       },
       "split": "train"
     },
@@ -553,11 +553,11 @@ export const realData = {
         "maluku": 29.326
       },
       "sstAnom": {
-        "nino34": -0.224,
-        "karimata": -0.107,
-        "makassar": 0.009,
-        "jawa": -0.413,
-        "maluku": -0.083
+        "nino34": -0.195,
+        "karimata": -0.122,
+        "makassar": -0.002,
+        "jawa": -0.444,
+        "maluku": -0.093
       },
       "split": "train"
     },
@@ -576,11 +576,11 @@ export const realData = {
         "maluku": 29.807
       },
       "sstAnom": {
-        "nino34": -0.26,
-        "karimata": -0.075,
-        "makassar": -0.245,
-        "jawa": -0.592,
-        "maluku": 0.013
+        "nino34": -0.227,
+        "karimata": -0.079,
+        "makassar": -0.274,
+        "jawa": -0.646,
+        "maluku": -0.003
       },
       "split": "train"
     },
@@ -599,11 +599,11 @@ export const realData = {
         "maluku": 29.97
       },
       "sstAnom": {
-        "nino34": -0.779,
-        "karimata": -0.297,
-        "makassar": -0.216,
+        "nino34": -0.724,
+        "karimata": -0.276,
+        "makassar": -0.201,
         "jawa": -0.03,
-        "maluku": -0.047
+        "maluku": -0.032
       },
       "split": "train"
     },
@@ -622,11 +622,11 @@ export const realData = {
         "maluku": 29.836
       },
       "sstAnom": {
-        "nino34": -0.8,
-        "karimata": -0.632,
-        "makassar": -0.265,
-        "jawa": -0.504,
-        "maluku": -0.034
+        "nino34": -0.753,
+        "karimata": -0.624,
+        "makassar": -0.264,
+        "jawa": -0.51,
+        "maluku": -0.028
       },
       "split": "train"
     },
@@ -645,11 +645,11 @@ export const realData = {
         "maluku": 29.472
       },
       "sstAnom": {
-        "nino34": -0.869,
-        "karimata": -0.473,
-        "makassar": -0.385,
-        "jawa": -0.408,
-        "maluku": -0.005
+        "nino34": -0.804,
+        "karimata": -0.417,
+        "makassar": -0.384,
+        "jawa": -0.371,
+        "maluku": -0.013
       },
       "split": "train"
     },
@@ -668,11 +668,11 @@ export const realData = {
         "maluku": 29.234
       },
       "sstAnom": {
-        "nino34": -0.886,
-        "karimata": -0.442,
-        "makassar": -0.003,
-        "jawa": -0.493,
-        "maluku": 0.01
+        "nino34": -0.852,
+        "karimata": -0.397,
+        "makassar": -0.017,
+        "jawa": -0.43,
+        "maluku": -0.016
       },
       "split": "train"
     },
@@ -691,11 +691,11 @@ export const realData = {
         "maluku": 29.348
       },
       "sstAnom": {
-        "nino34": -1.002,
-        "karimata": -0.033,
-        "makassar": -0.121,
-        "jawa": 0.017,
-        "maluku": -0.112
+        "nino34": -0.982,
+        "karimata": -0.002,
+        "makassar": -0.106,
+        "jawa": 0.069,
+        "maluku": -0.089
       },
       "split": "train"
     },
@@ -783,11 +783,11 @@ export const realData = {
         "maluku": 29.185
       },
       "sstAnom": {
-        "nino34": 0.151,
-        "karimata": -0.704,
-        "makassar": -0.356,
-        "jawa": -1.344,
-        "maluku": -0.173
+        "nino34": 0.166,
+        "karimata": -0.711,
+        "makassar": -0.361,
+        "jawa": -1.348,
+        "maluku": -0.195
       },
       "split": "train"
     },
@@ -806,11 +806,11 @@ export const realData = {
         "maluku": 29.109
       },
       "sstAnom": {
-        "nino34": 0.367,
-        "karimata": -0.428,
-        "makassar": -0.342,
-        "jawa": -0.923,
-        "maluku": -0.169
+        "nino34": 0.391,
+        "karimata": -0.438,
+        "makassar": -0.336,
+        "jawa": -0.949,
+        "maluku": -0.178
       },
       "split": "train"
     },
@@ -829,11 +829,11 @@ export const realData = {
         "maluku": 29.015
       },
       "sstAnom": {
-        "nino34": 0.449,
-        "karimata": -0.49,
-        "makassar": -0.547,
-        "jawa": -0.938,
-        "maluku": -0.394
+        "nino34": 0.478,
+        "karimata": -0.504,
+        "makassar": -0.557,
+        "jawa": -0.97,
+        "maluku": -0.404
       },
       "split": "train"
     },
@@ -852,11 +852,11 @@ export const realData = {
         "maluku": 29.422
       },
       "sstAnom": {
-        "nino34": 1.02,
-        "karimata": -0.299,
-        "makassar": -0.231,
-        "jawa": -0.612,
-        "maluku": -0.372
+        "nino34": 1.054,
+        "karimata": -0.303,
+        "makassar": -0.26,
+        "jawa": -0.666,
+        "maluku": -0.388
       },
       "split": "train"
     },
@@ -875,11 +875,11 @@ export const realData = {
         "maluku": 29.562
       },
       "sstAnom": {
-        "nino34": 1.053,
-        "karimata": -0.078,
-        "makassar": -0.368,
+        "nino34": 1.108,
+        "karimata": -0.058,
+        "makassar": -0.353,
         "jawa": -0.452,
-        "maluku": -0.456
+        "maluku": -0.441
       },
       "split": "train"
     },
@@ -898,11 +898,11 @@ export const realData = {
         "maluku": 29.514
       },
       "sstAnom": {
-        "nino34": 1.081,
-        "karimata": 0.168,
-        "makassar": -0.323,
-        "jawa": -0.38,
-        "maluku": -0.356
+        "nino34": 1.128,
+        "karimata": 0.177,
+        "makassar": -0.321,
+        "jawa": -0.386,
+        "maluku": -0.35
       },
       "split": "train"
     },
@@ -921,11 +921,11 @@ export const realData = {
         "maluku": 29.003
       },
       "sstAnom": {
-        "nino34": 0.537,
-        "karimata": 0.419,
-        "makassar": -0.079,
-        "jawa": -0.194,
-        "maluku": -0.474
+        "nino34": 0.602,
+        "karimata": 0.476,
+        "makassar": -0.078,
+        "jawa": -0.157,
+        "maluku": -0.483
       },
       "split": "train"
     },
@@ -944,11 +944,11 @@ export const realData = {
         "maluku": 28.517
       },
       "sstAnom": {
-        "nino34": 0.529,
-        "karimata": 0.334,
-        "makassar": -0.303,
-        "jawa": -0.277,
-        "maluku": -0.707
+        "nino34": 0.563,
+        "karimata": 0.379,
+        "makassar": -0.317,
+        "jawa": -0.215,
+        "maluku": -0.733
       },
       "split": "train"
     },
@@ -967,11 +967,11 @@ export const realData = {
         "maluku": 28.795
       },
       "sstAnom": {
-        "nino34": 0.757,
-        "karimata": 0.43,
-        "makassar": -0.519,
-        "jawa": -0.222,
-        "maluku": -0.664
+        "nino34": 0.778,
+        "karimata": 0.461,
+        "makassar": -0.504,
+        "jawa": -0.17,
+        "maluku": -0.642
       },
       "split": "train"
     },
@@ -1059,11 +1059,11 @@ export const realData = {
         "maluku": 28.686
       },
       "sstAnom": {
-        "nino34": 0.347,
-        "karimata": -0.444,
-        "makassar": -0.551,
-        "jawa": -1.364,
-        "maluku": -0.672
+        "nino34": 0.362,
+        "karimata": -0.452,
+        "makassar": -0.556,
+        "jawa": -1.368,
+        "maluku": -0.694
       },
       "split": "train"
     },
@@ -1082,11 +1082,11 @@ export const realData = {
         "maluku": 28.587
       },
       "sstAnom": {
-        "nino34": 0.228,
-        "karimata": -0.726,
-        "makassar": -0.733,
-        "jawa": -1.186,
-        "maluku": -0.69
+        "nino34": 0.251,
+        "karimata": -0.736,
+        "makassar": -0.727,
+        "jawa": -1.212,
+        "maluku": -0.699
       },
       "split": "train"
     },
@@ -1105,11 +1105,11 @@ export const realData = {
         "maluku": 28.684
       },
       "sstAnom": {
-        "nino34": 0.093,
-        "karimata": -0.741,
-        "makassar": -0.615,
-        "jawa": -0.978,
-        "maluku": -0.724
+        "nino34": 0.122,
+        "karimata": -0.756,
+        "makassar": -0.626,
+        "jawa": -1.009,
+        "maluku": -0.734
       },
       "split": "train"
     },
@@ -1128,11 +1128,11 @@ export const realData = {
         "maluku": 29.426
       },
       "sstAnom": {
-        "nino34": 0.665,
-        "karimata": -0.218,
-        "makassar": -0.08,
-        "jawa": -0.611,
-        "maluku": -0.367
+        "nino34": 0.699,
+        "karimata": -0.222,
+        "makassar": -0.109,
+        "jawa": -0.665,
+        "maluku": -0.383
       },
       "split": "train"
     },
@@ -1151,11 +1151,11 @@ export const realData = {
         "maluku": 29.667
       },
       "sstAnom": {
-        "nino34": 0.635,
-        "karimata": 0.193,
-        "makassar": -0.065,
+        "nino34": 0.69,
+        "karimata": 0.214,
+        "makassar": -0.051,
         "jawa": -0.632,
-        "maluku": -0.351
+        "maluku": -0.336
       },
       "split": "train"
     },
@@ -1174,11 +1174,11 @@ export const realData = {
         "maluku": 29.757
       },
       "sstAnom": {
-        "nino34": 0.591,
-        "karimata": -0.161,
-        "makassar": 0.174,
-        "jawa": 0.694,
-        "maluku": -0.114
+        "nino34": 0.638,
+        "karimata": -0.152,
+        "makassar": 0.175,
+        "jawa": 0.688,
+        "maluku": -0.108
       },
       "split": "train"
     },
@@ -1197,11 +1197,11 @@ export const realData = {
         "maluku": 29.365
       },
       "sstAnom": {
-        "nino34": 0.381,
-        "karimata": -0.338,
+        "nino34": 0.446,
+        "karimata": -0.281,
         "makassar": 0.025,
-        "jawa": 0.413,
-        "maluku": -0.112
+        "jawa": 0.45,
+        "maluku": -0.12
       },
       "split": "train"
     },
@@ -1220,11 +1220,11 @@ export const realData = {
         "maluku": 29.216
       },
       "sstAnom": {
-        "nino34": 0.162,
-        "karimata": 0.188,
-        "makassar": -0.001,
-        "jawa": 0.723,
-        "maluku": -0.008
+        "nino34": 0.196,
+        "karimata": 0.232,
+        "makassar": -0.015,
+        "jawa": 0.786,
+        "maluku": -0.034
       },
       "split": "train"
     },
@@ -1243,11 +1243,11 @@ export const realData = {
         "maluku": 29.499
       },
       "sstAnom": {
-        "nino34": 0.238,
-        "karimata": 0.306,
-        "makassar": 0.006,
-        "jawa": 0.27,
-        "maluku": 0.039
+        "nino34": 0.258,
+        "karimata": 0.337,
+        "makassar": 0.021,
+        "jawa": 0.321,
+        "maluku": 0.062
       },
       "split": "train"
     },
@@ -1335,11 +1335,11 @@ export const realData = {
         "maluku": 29.742
       },
       "sstAnom": {
-        "nino34": -0.236,
-        "karimata": 0.057,
-        "makassar": 0.124,
-        "jawa": 0.159,
-        "maluku": 0.384
+        "nino34": -0.221,
+        "karimata": 0.049,
+        "makassar": 0.119,
+        "jawa": 0.156,
+        "maluku": 0.362
       },
       "split": "train"
     },
@@ -1358,11 +1358,11 @@ export const realData = {
         "maluku": 29.613
       },
       "sstAnom": {
-        "nino34": -0.47,
-        "karimata": 0.436,
-        "makassar": 0.284,
-        "jawa": 0.254,
-        "maluku": 0.335
+        "nino34": -0.446,
+        "karimata": 0.426,
+        "makassar": 0.29,
+        "jawa": 0.228,
+        "maluku": 0.327
       },
       "split": "train"
     },
@@ -1381,11 +1381,11 @@ export const realData = {
         "maluku": 29.723
       },
       "sstAnom": {
-        "nino34": -0.552,
-        "karimata": 0.044,
-        "makassar": 0.085,
-        "jawa": 0.121,
-        "maluku": 0.315
+        "nino34": -0.522,
+        "karimata": 0.029,
+        "makassar": 0.074,
+        "jawa": 0.09,
+        "maluku": 0.304
       },
       "split": "train"
     },
@@ -1404,11 +1404,11 @@ export const realData = {
         "maluku": 30.136
       },
       "sstAnom": {
-        "nino34": -1.025,
-        "karimata": -0.222,
-        "makassar": 0.123,
-        "jawa": -0.23,
-        "maluku": 0.342
+        "nino34": -0.991,
+        "karimata": -0.226,
+        "makassar": 0.094,
+        "jawa": -0.284,
+        "maluku": 0.326
       },
       "split": "train"
     },
@@ -1427,11 +1427,11 @@ export const realData = {
         "maluku": 30.258
       },
       "sstAnom": {
-        "nino34": -1.081,
-        "karimata": -0.404,
-        "makassar": -0.083,
-        "jawa": 0.088,
-        "maluku": 0.241
+        "nino34": -1.027,
+        "karimata": -0.384,
+        "makassar": -0.068,
+        "jawa": 0.089,
+        "maluku": 0.256
       },
       "split": "train"
     },
@@ -1450,11 +1450,11 @@ export const realData = {
         "maluku": 30.11
       },
       "sstAnom": {
-        "nino34": -0.843,
-        "karimata": -0.329,
-        "makassar": -0.16,
-        "jawa": 0.117,
-        "maluku": 0.239
+        "nino34": -0.796,
+        "karimata": -0.32,
+        "makassar": -0.158,
+        "jawa": 0.111,
+        "maluku": 0.245
       },
       "split": "train"
     },
@@ -1473,11 +1473,11 @@ export const realData = {
         "maluku": 29.972
       },
       "sstAnom": {
-        "nino34": -1.06,
-        "karimata": -0.848,
+        "nino34": -0.995,
+        "karimata": -0.791,
         "makassar": -0.391,
-        "jawa": -0.435,
-        "maluku": 0.495
+        "jawa": -0.398,
+        "maluku": 0.487
       },
       "split": "train"
     },
@@ -1496,11 +1496,11 @@ export const realData = {
         "maluku": 29.818
       },
       "sstAnom": {
-        "nino34": -1.07,
-        "karimata": -0.881,
-        "makassar": 0.065,
-        "jawa": -0.415,
-        "maluku": 0.594
+        "nino34": -1.036,
+        "karimata": -0.836,
+        "makassar": 0.051,
+        "jawa": -0.353,
+        "maluku": 0.568
       },
       "split": "train"
     },
@@ -1519,11 +1519,11 @@ export const realData = {
         "maluku": 29.79
       },
       "sstAnom": {
-        "nino34": -0.803,
-        "karimata": -0.313,
-        "makassar": 0.089,
-        "jawa": -0.358,
-        "maluku": 0.331
+        "nino34": -0.783,
+        "karimata": -0.282,
+        "makassar": 0.105,
+        "jawa": -0.307,
+        "maluku": 0.353
       },
       "split": "train"
     },
@@ -1611,11 +1611,11 @@ export const realData = {
         "maluku": 29.392
       },
       "sstAnom": {
-        "nino34": -0.273,
-        "karimata": 0.036,
-        "makassar": -0.004,
-        "jawa": 0.609,
-        "maluku": 0.034
+        "nino34": -0.258,
+        "karimata": 0.029,
+        "makassar": -0.009,
+        "jawa": 0.605,
+        "maluku": 0.012
       },
       "split": "train"
     },
@@ -1634,11 +1634,11 @@ export const realData = {
         "maluku": 29.554
       },
       "sstAnom": {
-        "nino34": -0.21,
-        "karimata": 0.069,
-        "makassar": 0.157,
-        "jawa": 0.278,
-        "maluku": 0.277
+        "nino34": -0.186,
+        "karimata": 0.059,
+        "makassar": 0.162,
+        "jawa": 0.252,
+        "maluku": 0.268
       },
       "split": "train"
     },
@@ -1657,11 +1657,11 @@ export const realData = {
         "maluku": 29.721
       },
       "sstAnom": {
-        "nino34": -0.16,
-        "karimata": 0.191,
-        "makassar": 0.249,
-        "jawa": 0.199,
-        "maluku": 0.312
+        "nino34": -0.131,
+        "karimata": 0.176,
+        "makassar": 0.238,
+        "jawa": 0.167,
+        "maluku": 0.302
       },
       "split": "train"
     },
@@ -1680,11 +1680,11 @@ export const realData = {
         "maluku": 30.054
       },
       "sstAnom": {
-        "nino34": -0.659,
-        "karimata": 0.096,
-        "makassar": 0.115,
-        "jawa": 0.054,
-        "maluku": 0.26
+        "nino34": -0.625,
+        "karimata": 0.092,
+        "makassar": 0.087,
+        "jawa": -0.0,
+        "maluku": 0.244
       },
       "split": "train"
     },
@@ -1703,11 +1703,11 @@ export const realData = {
         "maluku": 30.301
       },
       "sstAnom": {
-        "nino34": -0.699,
-        "karimata": -0.054,
-        "makassar": 0.217,
-        "jawa": -0.006,
-        "maluku": 0.284
+        "nino34": -0.645,
+        "karimata": -0.033,
+        "makassar": 0.232,
+        "jawa": -0.005,
+        "maluku": 0.299
       },
       "split": "train"
     },
@@ -1726,11 +1726,11 @@ export const realData = {
         "maluku": 29.872
       },
       "sstAnom": {
-        "nino34": -0.899,
-        "karimata": 0.122,
-        "makassar": 0.108,
-        "jawa": 0.185,
-        "maluku": 0.002
+        "nino34": -0.852,
+        "karimata": 0.131,
+        "makassar": 0.109,
+        "jawa": 0.179,
+        "maluku": 0.008
       },
       "split": "train"
     },
@@ -1749,11 +1749,11 @@ export const realData = {
         "maluku": 29.419
       },
       "sstAnom": {
-        "nino34": -0.984,
-        "karimata": -0.022,
+        "nino34": -0.919,
+        "karimata": 0.034,
         "makassar": -0.051,
-        "jawa": 0.134,
-        "maluku": -0.059
+        "jawa": 0.171,
+        "maluku": -0.067
       },
       "split": "val"
     },
@@ -1772,11 +1772,11 @@ export const realData = {
         "maluku": 29.305
       },
       "sstAnom": {
-        "nino34": -0.907,
-        "karimata": 0.135,
-        "makassar": -0.038,
-        "jawa": -0.128,
-        "maluku": 0.081
+        "nino34": -0.873,
+        "karimata": 0.18,
+        "makassar": -0.052,
+        "jawa": -0.065,
+        "maluku": 0.055
       },
       "split": "val"
     },
@@ -1795,11 +1795,11 @@ export const realData = {
         "maluku": 29.687
       },
       "sstAnom": {
-        "nino34": -1.129,
-        "karimata": 0.336,
-        "makassar": 0.217,
-        "jawa": -0.085,
-        "maluku": 0.227
+        "nino34": -1.108,
+        "karimata": 0.367,
+        "makassar": 0.232,
+        "jawa": -0.033,
+        "maluku": 0.25
       },
       "split": "val"
     },
@@ -1887,11 +1887,11 @@ export const realData = {
         "maluku": 29.553
       },
       "sstAnom": {
-        "nino34": -0.713,
-        "karimata": 0.285,
-        "makassar": 0.336,
-        "jawa": 0.673,
-        "maluku": 0.195
+        "nino34": -0.698,
+        "karimata": 0.278,
+        "makassar": 0.331,
+        "jawa": 0.669,
+        "maluku": 0.173
       },
       "split": "val"
     },
@@ -1910,11 +1910,11 @@ export const realData = {
         "maluku": 29.555
       },
       "sstAnom": {
-        "nino34": -0.894,
-        "karimata": 0.287,
-        "makassar": 0.348,
-        "jawa": 0.61,
-        "maluku": 0.277
+        "nino34": -0.87,
+        "karimata": 0.277,
+        "makassar": 0.353,
+        "jawa": 0.584,
+        "maluku": 0.269
       },
       "split": "val"
     },
@@ -1933,11 +1933,11 @@ export const realData = {
         "maluku": 29.855
       },
       "sstAnom": {
-        "nino34": -0.818,
-        "karimata": 0.154,
-        "makassar": 0.419,
-        "jawa": 0.675,
-        "maluku": 0.446
+        "nino34": -0.789,
+        "karimata": 0.139,
+        "makassar": 0.408,
+        "jawa": 0.644,
+        "maluku": 0.436
       },
       "split": "val"
     },
@@ -1956,11 +1956,11 @@ export const realData = {
         "maluku": 29.939
       },
       "sstAnom": {
-        "nino34": -0.706,
-        "karimata": -0.172,
-        "makassar": -0.031,
-        "jawa": 0.289,
-        "maluku": 0.146
+        "nino34": -0.672,
+        "karimata": -0.176,
+        "makassar": -0.06,
+        "jawa": 0.234,
+        "maluku": 0.13
       },
       "split": "val"
     },
@@ -1979,11 +1979,11 @@ export const realData = {
         "maluku": 30.238
       },
       "sstAnom": {
-        "nino34": -0.773,
-        "karimata": -0.472,
-        "makassar": 0.01,
+        "nino34": -0.719,
+        "karimata": -0.451,
+        "makassar": 0.025,
         "jawa": -0.415,
-        "maluku": 0.221
+        "maluku": 0.236
       },
       "split": "val"
     },
@@ -2002,11 +2002,11 @@ export const realData = {
         "maluku": 29.967
       },
       "sstAnom": {
-        "nino34": -0.678,
-        "karimata": -0.246,
-        "makassar": 0.182,
-        "jawa": -0.274,
-        "maluku": 0.097
+        "nino34": -0.632,
+        "karimata": -0.238,
+        "makassar": 0.184,
+        "jawa": -0.279,
+        "maluku": 0.103
       },
       "split": "val"
     },
@@ -2025,11 +2025,11 @@ export const realData = {
         "maluku": 29.58
       },
       "sstAnom": {
-        "nino34": -0.828,
-        "karimata": -0.391,
+        "nino34": -0.763,
+        "karimata": -0.334,
         "makassar": 0.089,
-        "jawa": -0.287,
-        "maluku": 0.103
+        "jawa": -0.25,
+        "maluku": 0.094
       },
       "split": "val"
     },
@@ -2048,11 +2048,11 @@ export const realData = {
         "maluku": 29.382
       },
       "sstAnom": {
-        "nino34": -0.647,
-        "karimata": -0.305,
-        "makassar": -0.17,
-        "jawa": -0.746,
-        "maluku": 0.158
+        "nino34": -0.613,
+        "karimata": -0.26,
+        "makassar": -0.184,
+        "jawa": -0.684,
+        "maluku": 0.132
       },
       "split": "val"
     },
@@ -2071,11 +2071,11 @@ export const realData = {
         "maluku": 29.715
       },
       "sstAnom": {
-        "nino34": -0.26,
-        "karimata": -0.867,
-        "makassar": 0.046,
-        "jawa": -0.436,
-        "maluku": 0.256
+        "nino34": -0.24,
+        "karimata": -0.836,
+        "makassar": 0.062,
+        "jawa": -0.384,
+        "maluku": 0.279
       },
       "split": "val"
     },
@@ -2163,11 +2163,11 @@ export const realData = {
         "maluku": 29.392
       },
       "sstAnom": {
-        "nino34": 0.995,
-        "karimata": -0.022,
-        "makassar": 0.082,
-        "jawa": -0.36,
-        "maluku": 0.034
+        "nino34": 1.01,
+        "karimata": -0.03,
+        "makassar": 0.077,
+        "jawa": -0.364,
+        "maluku": 0.012
       },
       "split": "val"
     },
@@ -2186,11 +2186,11 @@ export const realData = {
         "maluku": 29.203
       },
       "sstAnom": {
-        "nino34": 1.409,
-        "karimata": -0.068,
-        "makassar": 0.092,
-        "jawa": -0.254,
-        "maluku": -0.074
+        "nino34": 1.433,
+        "karimata": -0.078,
+        "makassar": 0.098,
+        "jawa": -0.28,
+        "maluku": -0.083
       },
       "split": "val"
     },
@@ -2209,11 +2209,11 @@ export const realData = {
         "maluku": 29.162
       },
       "sstAnom": {
-        "nino34": 1.696,
-        "karimata": -0.076,
-        "makassar": -0.056,
-        "jawa": -0.49,
-        "maluku": -0.247
+        "nino34": 1.725,
+        "karimata": -0.091,
+        "makassar": -0.067,
+        "jawa": -0.521,
+        "maluku": -0.257
       },
       "split": "val"
     },
@@ -2232,11 +2232,11 @@ export const realData = {
         "maluku": 29.455
       },
       "sstAnom": {
-        "nino34": 1.746,
-        "karimata": 0.226,
-        "makassar": 0.222,
-        "jawa": 0.028,
-        "maluku": -0.338
+        "nino34": 1.78,
+        "karimata": 0.223,
+        "makassar": 0.193,
+        "jawa": -0.026,
+        "maluku": -0.354
       },
       "split": "val"
     },
@@ -2255,11 +2255,11 @@ export const realData = {
         "maluku": 29.898
       },
       "sstAnom": {
-        "nino34": 2.082,
-        "karimata": 0.821,
-        "makassar": 0.502,
+        "nino34": 2.136,
+        "karimata": 0.841,
+        "makassar": 0.517,
         "jawa": -0.005,
-        "maluku": -0.12
+        "maluku": -0.105
       },
       "split": "val"
     },
@@ -2278,11 +2278,11 @@ export const realData = {
         "maluku": 29.88
       },
       "sstAnom": {
-        "nino34": 2.198,
-        "karimata": 0.679,
-        "makassar": 0.283,
-        "jawa": -0.258,
-        "maluku": 0.01
+        "nino34": 2.245,
+        "karimata": 0.687,
+        "makassar": 0.285,
+        "jawa": -0.263,
+        "maluku": 0.016
       },
       "split": "val"
     },
@@ -2301,11 +2301,11 @@ export const realData = {
         "maluku": 29.543
       },
       "sstAnom": {
-        "nino34": 1.781,
-        "karimata": 0.678,
-        "makassar": 0.629,
-        "jawa": 0.189,
-        "maluku": 0.065
+        "nino34": 1.846,
+        "karimata": 0.735,
+        "makassar": 0.63,
+        "jawa": 0.225,
+        "maluku": 0.057
       },
       "split": "test"
     },
@@ -2324,11 +2324,11 @@ export const realData = {
         "maluku": 29.12
       },
       "sstAnom": {
-        "nino34": 1.364,
-        "karimata": 0.423,
-        "makassar": 0.296,
-        "jawa": 0.631,
-        "maluku": -0.104
+        "nino34": 1.398,
+        "karimata": 0.467,
+        "makassar": 0.282,
+        "jawa": 0.694,
+        "maluku": -0.13
       },
       "split": "test"
     },
@@ -2347,11 +2347,11 @@ export const realData = {
         "maluku": 29.407
       },
       "sstAnom": {
-        "nino34": 0.984,
-        "karimata": 0.158,
-        "makassar": -0.142,
-        "jawa": -0.154,
-        "maluku": -0.053
+        "nino34": 1.004,
+        "karimata": 0.189,
+        "makassar": -0.126,
+        "jawa": -0.102,
+        "maluku": -0.03
       },
       "split": "test"
     },
@@ -2439,11 +2439,11 @@ export const realData = {
         "maluku": 29.552
       },
       "sstAnom": {
-        "nino34": 0.096,
-        "karimata": 0.437,
-        "makassar": 0.206,
-        "jawa": 0.502,
-        "maluku": 0.194
+        "nino34": 0.111,
+        "karimata": 0.429,
+        "makassar": 0.201,
+        "jawa": 0.498,
+        "maluku": 0.172
       },
       "split": "test"
     },
@@ -2462,11 +2462,11 @@ export const realData = {
         "maluku": 29.449
       },
       "sstAnom": {
-        "nino34": 0.017,
-        "karimata": 0.109,
-        "makassar": 0.167,
-        "jawa": 0.127,
-        "maluku": 0.171
+        "nino34": 0.041,
+        "karimata": 0.099,
+        "makassar": 0.173,
+        "jawa": 0.1,
+        "maluku": 0.163
       },
       "split": "test"
     },
@@ -2485,11 +2485,11 @@ export const realData = {
         "maluku": 29.604
       },
       "sstAnom": {
-        "nino34": -0.134,
-        "karimata": 0.298,
-        "makassar": 0.183,
-        "jawa": 0.392,
-        "maluku": 0.196
+        "nino34": -0.105,
+        "karimata": 0.283,
+        "makassar": 0.173,
+        "jawa": 0.361,
+        "maluku": 0.186
       },
       "split": "test"
     },
@@ -2508,11 +2508,11 @@ export const realData = {
         "maluku": 29.992
       },
       "sstAnom": {
-        "nino34": -0.184,
-        "karimata": 0.473,
-        "makassar": 0.156,
-        "jawa": 0.715,
-        "maluku": 0.198
+        "nino34": -0.15,
+        "karimata": 0.47,
+        "makassar": 0.127,
+        "jawa": 0.661,
+        "maluku": 0.183
       },
       "split": "test"
     },
@@ -2531,11 +2531,11 @@ export const realData = {
         "maluku": 30.385
       },
       "sstAnom": {
-        "nino34": 0.063,
-        "karimata": 0.584,
-        "makassar": 0.319,
+        "nino34": 0.117,
+        "karimata": 0.604,
+        "makassar": 0.334,
         "jawa": 0.944,
-        "maluku": 0.367
+        "maluku": 0.383
       },
       "split": "test"
     },
@@ -2554,11 +2554,11 @@ export const realData = {
         "maluku": 30.124
       },
       "sstAnom": {
-        "nino34": -0.455,
-        "karimata": 0.349,
-        "makassar": 0.231,
-        "jawa": 0.267,
-        "maluku": 0.253
+        "nino34": -0.408,
+        "karimata": 0.358,
+        "makassar": 0.232,
+        "jawa": 0.262,
+        "maluku": 0.259
       },
       "split": "test"
     },
@@ -2577,11 +2577,11 @@ export const realData = {
         "maluku": 30.063
       },
       "sstAnom": {
-        "nino34": -0.903,
-        "karimata": -0.138,
-        "makassar": 0.117,
-        "jawa": -0.072,
-        "maluku": 0.586
+        "nino34": -0.838,
+        "karimata": -0.082,
+        "makassar": 0.118,
+        "jawa": -0.035,
+        "maluku": 0.578
       },
       "split": "test"
     },
@@ -2600,11 +2600,11 @@ export const realData = {
         "maluku": 29.795
       },
       "sstAnom": {
-        "nino34": -0.54,
-        "karimata": -0.219,
-        "makassar": 0.373,
-        "jawa": -0.097,
-        "maluku": 0.571
+        "nino34": -0.506,
+        "karimata": -0.174,
+        "makassar": 0.359,
+        "jawa": -0.034,
+        "maluku": 0.545
       },
       "split": "test"
     },
@@ -2623,11 +2623,11 @@ export const realData = {
         "maluku": 30.054
       },
       "sstAnom": {
-        "nino34": -0.118,
-        "karimata": -0.388,
-        "makassar": 0.288,
-        "jawa": 0.027,
-        "maluku": 0.595
+        "nino34": -0.098,
+        "karimata": -0.357,
+        "makassar": 0.303,
+        "jawa": 0.079,
+        "maluku": 0.617
       },
       "split": "test"
     },
@@ -2699,6 +2699,213 @@ export const realData = {
         "maluku": 0.071
       },
       "split": "test"
+    },
+    {
+      "period": "2025-07",
+      "date": "2025-07",
+      "oni": -0.11,
+      "oni_anom": -0.11,
+      "soi": 1.0,
+      "dmi": -0.072,
+      "sst": {
+        "nino34": 27.191,
+        "karimata": 29.544,
+        "makassar": 29.209,
+        "jawa": 27.019,
+        "maluku": 29.578
+      },
+      "sstAnom": {
+        "nino34": -0.135,
+        "karimata": 0.071,
+        "makassar": 0.042,
+        "jawa": 0.032,
+        "maluku": 0.198
+      },
+      "split": "test"
+    },
+    {
+      "period": "2025-08",
+      "date": "2025-08",
+      "oni": -0.26,
+      "oni_anom": -0.26,
+      "soi": 0.7,
+      "dmi": -0.42,
+      "sst": {
+        "nino34": 26.54,
+        "karimata": 29.21,
+        "makassar": 28.953,
+        "jawa": 26.626,
+        "maluku": 29.363
+      },
+      "sstAnom": {
+        "nino34": -0.213,
+        "karimata": 0.09,
+        "makassar": -0.048,
+        "jawa": 0.235,
+        "maluku": 0.077
+      },
+      "split": "test"
+    },
+    {
+      "period": "2025-09",
+      "date": "2025-09",
+      "oni": -0.43,
+      "oni_anom": -0.43,
+      "soi": 0.1,
+      "dmi": -0.467,
+      "sst": {
+        "nino34": 26.313,
+        "karimata": 29.271,
+        "makassar": 29.294,
+        "jawa": 26.88,
+        "maluku": 29.51
+      },
+      "sstAnom": {
+        "nino34": -0.263,
+        "karimata": 0.133,
+        "makassar": 0.095,
+        "jawa": 0.284,
+        "maluku": 0.092
+      },
+      "split": "test"
+    },
+    {
+      "period": "2025-10",
+      "date": "2025-10",
+      "oni": -0.57,
+      "oni_anom": -0.57,
+      "soi": 1.9,
+      "dmi": -0.448,
+      "sst": {
+        "nino34": 26.25,
+        "karimata": 29.651,
+        "makassar": 29.842,
+        "jawa": 27.911,
+        "maluku": 29.952
+      },
+      "sstAnom": {
+        "nino34": -0.304,
+        "karimata": 0.033,
+        "makassar": 0.258,
+        "jawa": 0.488,
+        "maluku": 0.142
+      },
+      "split": "test"
+    },
+    {
+      "period": "2025-11",
+      "date": "2025-11",
+      "oni": -0.61,
+      "oni_anom": -0.61,
+      "soi": 1.8,
+      "dmi": -0.256,
+      "sst": {
+        "nino34": 26.057,
+        "karimata": 29.568,
+        "makassar": 29.64,
+        "jawa": 28.354,
+        "maluku": 29.866
+      },
+      "sstAnom": {
+        "nino34": -0.49,
+        "karimata": -0.183,
+        "makassar": -0.133,
+        "jawa": -0.002,
+        "maluku": -0.136
+      },
+      "split": "test"
+    },
+    {
+      "period": "2025-12",
+      "date": "2025-12",
+      "oni": -0.6,
+      "oni_anom": -0.6,
+      "soi": 0.0,
+      "dmi": -0.017,
+      "sst": {
+        "nino34": 25.958,
+        "karimata": 28.994,
+        "makassar": 29.527,
+        "jawa": 28.662,
+        "maluku": 29.812
+      },
+      "sstAnom": {
+        "nino34": -0.421,
+        "karimata": -0.077,
+        "makassar": -0.016,
+        "jawa": 0.049,
+        "maluku": -0.053
+      },
+      "split": "test"
+    },
+    {
+      "period": "2026-01",
+      "date": "2026-01",
+      "oni": -0.39,
+      "oni_anom": -0.39,
+      "soi": 1.8,
+      "dmi": 0.123,
+      "sst": {
+        "nino34": 25.935,
+        "karimata": 27.895,
+        "makassar": 29.251,
+        "jawa": 28.5,
+        "maluku": 29.568
+      },
+      "sstAnom": {
+        "nino34": -0.65,
+        "karimata": -0.566,
+        "makassar": -0.003,
+        "jawa": -0.369,
+        "maluku": 0.083
+      },
+      "split": "test"
+    },
+    {
+      "period": "2026-02",
+      "date": "2026-02",
+      "oni": -0.21,
+      "oni_anom": -0.21,
+      "soi": 2.4,
+      "dmi": 0.529,
+      "sst": {
+        "nino34": 26.493,
+        "karimata": 27.648,
+        "makassar": 29.261,
+        "jawa": 28.243,
+        "maluku": 29.511
+      },
+      "sstAnom": {
+        "nino34": -0.339,
+        "karimata": -0.449,
+        "makassar": 0.14,
+        "jawa": -0.627,
+        "maluku": 0.261
+      },
+      "split": "test"
+    },
+    {
+      "period": "2026-03",
+      "date": "2026-03",
+      "oni": 0.11,
+      "oni_anom": 0.11,
+      "soi": 2.0,
+      "dmi": 0.285,
+      "sst": {
+        "nino34": 27.206,
+        "karimata": 28.396,
+        "makassar": 29.221,
+        "jawa": 28.719,
+        "maluku": 29.211
+      },
+      "sstAnom": {
+        "nino34": -0.202,
+        "karimata": -0.31,
+        "makassar": -0.155,
+        "jawa": -0.516,
+        "maluku": -0.226
+      },
+      "split": "test"
     }
   ],
   "regions": [
@@ -2706,43 +2913,43 @@ export const realData = {
       "id": "nino34",
       "name": "Pasifik Ni\u00f1o 3.4",
       "key": "nino34",
-      "sst": 27.688,
-      "anomaly": -0.119
+      "sst": 27.206,
+      "anomaly": -0.202
     },
     {
       "id": "makassar",
       "name": "Selat Makassar",
       "key": "makassar",
-      "sst": 29.702,
-      "anomaly": 0.181
+      "sst": 29.221,
+      "anomaly": -0.155
     },
     {
       "id": "karimata",
       "name": "Selat Karimata",
       "key": "karimata",
-      "sst": 30.098,
-      "anomaly": 0.126
+      "sst": 28.396,
+      "anomaly": -0.31
     },
     {
       "id": "jawa",
       "name": "Selatan Jawa",
       "key": "jawa",
-      "sst": 28.223,
-      "anomaly": 0.262
+      "sst": 28.719,
+      "anomaly": -0.516
     },
     {
       "id": "maluku",
       "name": "Maluku-Papua",
       "key": "maluku",
-      "sst": 29.774,
-      "anomaly": 0.071
+      "sst": 29.211,
+      "anomaly": -0.226
     }
   ],
   "facts": {
     "counts": {
       "elNino": 32,
-      "netral": 51,
-      "laNina": 31
+      "netral": 57,
+      "laNina": 34
     },
     "warmestOni": {
       "value": 2.5,
@@ -2753,24 +2960,25 @@ export const realData = {
       "date": "2020-11"
     },
     "warmestRegion": {
-      "name": "Selatan Jawa",
-      "anomaly": 0.262
+      "name": "Selat Makassar",
+      "anomaly": -0.155
     }
   },
   "metrics": {
     "1": {
       "horizon_months": 1,
       "window_months": 12,
-      "model": "causal_lstm_lightgbm",
+      "model": "causal_lstm_xgboost",
       "class_mapping": {
         "0": "La Nina",
         "1": "Neutral",
         "2": "El Nino"
       },
+      "probabilities_calibrated": false,
       "validation": {
-        "accuracy": 0.7692307692307693,
-        "balanced_accuracy": 0.7916666666666666,
-        "macro_f1": 0.6682539682539682,
+        "accuracy": 0.5384615384615384,
+        "balanced_accuracy": 0.7083333333333334,
+        "macro_f1": 0.5707070707070706,
         "confusion_matrix": [
           [
             1,
@@ -2778,31 +2986,35 @@ export const realData = {
             0
           ],
           [
-            2,
-            2,
+            1,
+            3,
             0
           ],
           [
             0,
-            1,
-            7
+            5,
+            3
           ]
         ],
-        "lstm_oni_rmse": 1.1751062499040221
+        "log_loss": 1.0191903300776732,
+        "multiclass_brier_score": 0.6260329032319992,
+        "top_label_ece_10_bins": 0.10446044573417074,
+        "mean_top_label_confidence": 0.553589559518374,
+        "lstm_oni_rmse": 0.9934602493762092
       },
       "test": {
-        "accuracy": 0.7142857142857143,
-        "balanced_accuracy": 0.7142857142857143,
-        "macro_f1": 0.4166666666666667,
+        "accuracy": 0.9375,
+        "balanced_accuracy": 0.9615384615384616,
+        "macro_f1": 0.9085714285714286,
         "confusion_matrix": [
           [
-            0,
+            3,
             0,
             0
           ],
           [
-            2,
-            5,
+            1,
+            12,
             0
           ],
           [
@@ -2811,18 +3023,23 @@ export const realData = {
             0
           ]
         ],
-        "lstm_oni_rmse": 0.179630472021112
+        "log_loss": 0.5760054278598128,
+        "multiclass_brier_score": 0.2962194490456652,
+        "top_label_ece_10_bins": 0.34042187221348286,
+        "mean_top_label_confidence": 0.5970781277865171,
+        "lstm_oni_rmse": 0.19779171862933267
       }
     },
     "3": {
       "horizon_months": 3,
       "window_months": 12,
-      "model": "causal_lstm_lightgbm",
+      "model": "causal_lstm_xgboost",
       "class_mapping": {
         "0": "La Nina",
         "1": "Neutral",
         "2": "El Nino"
       },
+      "probabilities_calibrated": false,
       "validation": {
         "accuracy": 0.23076923076923078,
         "balanced_accuracy": 0.5,
@@ -2844,45 +3061,54 @@ export const realData = {
             0
           ]
         ],
-        "lstm_oni_rmse": 1.257454002958581
+        "log_loss": 1.205522392088397,
+        "multiclass_brier_score": 0.7346493915357813,
+        "top_label_ece_10_bins": 0.19118712727840131,
+        "mean_top_label_confidence": 0.4219563580476321,
+        "lstm_oni_rmse": 1.2452632000297612
       },
       "test": {
-        "accuracy": 1.0,
-        "balanced_accuracy": 1.0,
-        "macro_f1": 1.0,
+        "accuracy": 0.6875,
+        "balanced_accuracy": 0.3333333333333333,
+        "macro_f1": 0.2716049382716049,
         "confusion_matrix": [
           [
             0,
-            0,
+            3,
             0
           ],
           [
             0,
-            7,
+            11,
             0
           ],
           [
             0,
-            0,
+            2,
             0
           ]
         ],
-        "lstm_oni_rmse": 0.17404725937457927
+        "log_loss": 0.9856263143432117,
+        "multiclass_brier_score": 0.59066059609985,
+        "top_label_ece_10_bins": 0.29208432510495186,
+        "mean_top_label_confidence": 0.39541567489504814,
+        "lstm_oni_rmse": 0.4170920427616391
       }
     },
     "6": {
       "horizon_months": 6,
       "window_months": 12,
-      "model": "causal_lstm_lightgbm",
+      "model": "causal_lstm_xgboost",
       "class_mapping": {
         "0": "La Nina",
         "1": "Neutral",
         "2": "El Nino"
       },
+      "probabilities_calibrated": false,
       "validation": {
-        "accuracy": 0.0,
-        "balanced_accuracy": 0.0,
-        "macro_f1": 0.0,
+        "accuracy": 0.15384615384615385,
+        "balanced_accuracy": 0.5,
+        "macro_f1": 0.14814814814814814,
         "confusion_matrix": [
           [
             0,
@@ -2890,32 +3116,101 @@ export const realData = {
             0
           ],
           [
-            2,
             0,
+            2,
             0
           ],
           [
-            11,
-            0,
+            6,
+            5,
             0
           ]
         ],
-        "lstm_oni_rmse": 1.2576584167230795
+        "log_loss": 1.2694076345214,
+        "multiclass_brier_score": 0.7729483504946756,
+        "top_label_ece_10_bins": 0.22303137183189398,
+        "mean_top_label_confidence": 0.3768775256780478,
+        "lstm_oni_rmse": 1.2550546627396315
       },
       "test": {
-        "accuracy": 0.0,
-        "balanced_accuracy": 0.0,
-        "macro_f1": 0.0,
+        "accuracy": 0.5,
+        "balanced_accuracy": 0.5027777777777778,
+        "macro_f1": 0.47222222222222215,
+        "confusion_matrix": [
+          [
+            1,
+            0,
+            2
+          ],
+          [
+            4,
+            3,
+            1
+          ],
+          [
+            0,
+            1,
+            4
+          ]
+        ],
+        "log_loss": 1.0615500556846258,
+        "multiclass_brier_score": 0.6410245542894273,
+        "top_label_ece_10_bins": 0.13028939627110958,
+        "mean_top_label_confidence": 0.3697106037288904,
+        "lstm_oni_rmse": 0.98169082302393
+      }
+    },
+    "9": {
+      "horizon_months": 9,
+      "window_months": 12,
+      "model": "causal_lstm_xgboost",
+      "class_mapping": {
+        "0": "La Nina",
+        "1": "Neutral",
+        "2": "El Nino"
+      },
+      "probabilities_calibrated": false,
+      "validation": {
+        "accuracy": 0.38461538461538464,
+        "balanced_accuracy": 0.5,
+        "macro_f1": 0.3333333333333333,
         "confusion_matrix": [
           [
             0,
             0,
-            3
+            0
           ],
           [
             0,
+            5,
+            0
+          ],
+          [
+            8,
             0,
-            4
+            0
+          ]
+        ],
+        "log_loss": 0.9952365094641374,
+        "multiclass_brier_score": 0.5772513822049975,
+        "top_label_ece_10_bins": 0.3620856816952046,
+        "mean_top_label_confidence": 0.5695782991556021,
+        "lstm_oni_rmse": 1.400385549287221
+      },
+      "test": {
+        "accuracy": 0.14285714285714285,
+        "balanced_accuracy": 0.16666666666666666,
+        "macro_f1": 0.125,
+        "confusion_matrix": [
+          [
+            1,
+            2,
+            0
+          ],
+          [
+            4,
+            0,
+            0
           ],
           [
             0,
@@ -2923,25 +3218,104 @@ export const realData = {
             0
           ]
         ],
-        "lstm_oni_rmse": 0.21745361805342941
+        "log_loss": 1.9156078735381858,
+        "multiclass_brier_score": 1.1296716403816123,
+        "top_label_ece_10_bins": 0.6022406475884573,
+        "mean_top_label_confidence": 0.7450977904456002,
+        "lstm_oni_rmse": 0.4379685224654492
+      }
+    },
+    "12": {
+      "horizon_months": 12,
+      "window_months": 12,
+      "model": "causal_lstm_xgboost",
+      "class_mapping": {
+        "0": "La Nina",
+        "1": "Neutral",
+        "2": "El Nino"
+      },
+      "probabilities_calibrated": false,
+      "validation": {
+        "accuracy": 0.46153846153846156,
+        "balanced_accuracy": 0.4125,
+        "macro_f1": 0.36752136752136755,
+        "confusion_matrix": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            5,
+            0
+          ],
+          [
+            4,
+            0,
+            1
+          ]
+        ],
+        "log_loss": 1.1273753378329994,
+        "multiclass_brier_score": 0.7124704353907219,
+        "top_label_ece_10_bins": 0.2828377324801225,
+        "mean_top_label_confidence": 0.5541542837252984,
+        "lstm_oni_rmse": 1.1311544749902303
+      },
+      "test": {
+        "accuracy": 0.25,
+        "balanced_accuracy": 0.5,
+        "macro_f1": 0.2,
+        "confusion_matrix": [
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "log_loss": 1.4427175603110296,
+        "multiclass_brier_score": 0.9141380091712421,
+        "top_label_ece_10_bins": 0.5759392380714417,
+        "mean_top_label_confidence": 0.6797365546226501,
+        "lstm_oni_rmse": 0.24171423797726405
       }
     }
   },
   "derived": {
     "1": {
-      "kmrvMae": 0.172,
-      "persistenceMae": 0.108,
-      "samples": 7
+      "kmrvMae": 0.162,
+      "persistenceMae": 0.148,
+      "samples": 16
     },
     "3": {
-      "kmrvMae": 0.152,
-      "persistenceMae": 0.098,
-      "samples": 7
+      "kmrvMae": 0.322,
+      "persistenceMae": 0.185,
+      "samples": 16
     },
     "6": {
-      "kmrvMae": 0.197,
-      "persistenceMae": 0.1,
+      "kmrvMae": 0.772,
+      "persistenceMae": 0.244,
+      "samples": 16
+    },
+    "9": {
+      "kmrvMae": 0.308,
+      "persistenceMae": 0.15,
       "samples": 7
+    },
+    "12": {
+      "kmrvMae": 0.196,
+      "persistenceMae": 0.237,
+      "samples": 4
     }
   },
   "testPredictions": {
@@ -2949,49 +3323,112 @@ export const realData = {
       {
         "date": "2024-12-01",
         "actual_oni": -0.46,
-        "lstm_oni": -0.344,
+        "lstm_oni": -0.581,
         "actual_phase": 1,
-        "predicted_phase": 0
+        "predicted_phase": 1
       },
       {
         "date": "2025-01-01",
         "actual_oni": -0.22,
-        "lstm_oni": -0.372,
+        "lstm_oni": -0.489,
         "actual_phase": 1,
-        "predicted_phase": 0
+        "predicted_phase": 1
       },
       {
         "date": "2025-02-01",
         "actual_oni": -0.08,
-        "lstm_oni": -0.266,
+        "lstm_oni": -0.243,
         "actual_phase": 1,
         "predicted_phase": 1
       },
       {
         "date": "2025-03-01",
         "actual_oni": 0.02,
-        "lstm_oni": -0.259,
+        "lstm_oni": -0.177,
         "actual_phase": 1,
         "predicted_phase": 1
       },
       {
         "date": "2025-04-01",
         "actual_oni": -0.04,
-        "lstm_oni": -0.158,
+        "lstm_oni": 0.003,
         "actual_phase": 1,
         "predicted_phase": 1
       },
       {
         "date": "2025-05-01",
         "actual_oni": -0.02,
-        "lstm_oni": -0.214,
+        "lstm_oni": -0.046,
         "actual_phase": 1,
         "predicted_phase": 1
       },
       {
         "date": "2025-06-01",
         "actual_oni": -0.11,
-        "lstm_oni": -0.27,
+        "lstm_oni": -0.142,
+        "actual_phase": 1,
+        "predicted_phase": 1
+      },
+      {
+        "date": "2025-07-01",
+        "actual_oni": -0.26,
+        "lstm_oni": -0.272,
+        "actual_phase": 1,
+        "predicted_phase": 1
+      },
+      {
+        "date": "2025-08-01",
+        "actual_oni": -0.43,
+        "lstm_oni": -0.466,
+        "actual_phase": 1,
+        "predicted_phase": 1
+      },
+      {
+        "date": "2025-09-01",
+        "actual_oni": -0.57,
+        "lstm_oni": -0.69,
+        "actual_phase": 0,
+        "predicted_phase": 0
+      },
+      {
+        "date": "2025-10-01",
+        "actual_oni": -0.61,
+        "lstm_oni": -0.796,
+        "actual_phase": 0,
+        "predicted_phase": 0
+      },
+      {
+        "date": "2025-11-01",
+        "actual_oni": -0.6,
+        "lstm_oni": -0.756,
+        "actual_phase": 0,
+        "predicted_phase": 0
+      },
+      {
+        "date": "2025-12-01",
+        "actual_oni": -0.39,
+        "lstm_oni": -0.629,
+        "actual_phase": 1,
+        "predicted_phase": 0
+      },
+      {
+        "date": "2026-01-01",
+        "actual_oni": -0.21,
+        "lstm_oni": -0.5,
+        "actual_phase": 1,
+        "predicted_phase": 1
+      },
+      {
+        "date": "2026-02-01",
+        "actual_oni": 0.11,
+        "lstm_oni": -0.206,
+        "actual_phase": 1,
+        "predicted_phase": 1
+      },
+      {
+        "date": "2026-03-01",
+        "actual_oni": 0.46,
+        "lstm_oni": 0.067,
         "actual_phase": 1,
         "predicted_phase": 1
       }
@@ -3000,50 +3437,113 @@ export const realData = {
       {
         "date": "2024-12-01",
         "actual_oni": -0.08,
-        "lstm_oni": -0.383,
+        "lstm_oni": -0.384,
         "actual_phase": 1,
         "predicted_phase": 1
       },
       {
         "date": "2025-01-01",
         "actual_oni": 0.02,
-        "lstm_oni": -0.208,
+        "lstm_oni": -0.187,
         "actual_phase": 1,
         "predicted_phase": 1
       },
       {
         "date": "2025-02-01",
         "actual_oni": -0.04,
-        "lstm_oni": 0.057,
+        "lstm_oni": 0.085,
         "actual_phase": 1,
         "predicted_phase": 1
       },
       {
         "date": "2025-03-01",
         "actual_oni": -0.02,
-        "lstm_oni": 0.07,
+        "lstm_oni": 0.078,
         "actual_phase": 1,
         "predicted_phase": 1
       },
       {
         "date": "2025-04-01",
         "actual_oni": -0.11,
-        "lstm_oni": 0.086,
+        "lstm_oni": 0.082,
         "actual_phase": 1,
         "predicted_phase": 1
       },
       {
         "date": "2025-05-01",
         "actual_oni": -0.26,
-        "lstm_oni": -0.158,
+        "lstm_oni": -0.186,
         "actual_phase": 1,
         "predicted_phase": 1
       },
       {
         "date": "2025-06-01",
         "actual_oni": -0.43,
-        "lstm_oni": -0.383,
+        "lstm_oni": -0.411,
         "actual_phase": 1,
+        "predicted_phase": 1
+      },
+      {
+        "date": "2025-07-01",
+        "actual_oni": -0.57,
+        "lstm_oni": -0.589,
+        "actual_phase": 0,
+        "predicted_phase": 1
+      },
+      {
+        "date": "2025-08-01",
+        "actual_oni": -0.61,
+        "lstm_oni": -0.77,
+        "actual_phase": 0,
+        "predicted_phase": 1
+      },
+      {
+        "date": "2025-09-01",
+        "actual_oni": -0.6,
+        "lstm_oni": -0.858,
+        "actual_phase": 0,
+        "predicted_phase": 1
+      },
+      {
+        "date": "2025-10-01",
+        "actual_oni": -0.39,
+        "lstm_oni": -0.823,
+        "actual_phase": 1,
+        "predicted_phase": 1
+      },
+      {
+        "date": "2025-11-01",
+        "actual_oni": -0.21,
+        "lstm_oni": -0.664,
+        "actual_phase": 1,
+        "predicted_phase": 1
+      },
+      {
+        "date": "2025-12-01",
+        "actual_oni": 0.11,
+        "lstm_oni": -0.451,
+        "actual_phase": 1,
+        "predicted_phase": 1
+      },
+      {
+        "date": "2026-01-01",
+        "actual_oni": 0.46,
+        "lstm_oni": -0.091,
+        "actual_phase": 1,
+        "predicted_phase": 1
+      },
+      {
+        "date": "2026-02-01",
+        "actual_oni": 0.95,
+        "lstm_oni": 0.225,
+        "actual_phase": 2,
+        "predicted_phase": 1
+      },
+      {
+        "date": "2026-03-01",
+        "actual_oni": 1.39,
+        "lstm_oni": 0.415,
+        "actual_phase": 2,
         "predicted_phase": 1
       }
     ],
@@ -3051,51 +3551,195 @@ export const realData = {
       {
         "date": "2024-12-01",
         "actual_oni": -0.02,
-        "lstm_oni": -0.248,
+        "lstm_oni": -0.198,
         "actual_phase": 1,
-        "predicted_phase": 2
+        "predicted_phase": 1
       },
       {
         "date": "2025-01-01",
         "actual_oni": -0.11,
-        "lstm_oni": -0.134,
+        "lstm_oni": -0.083,
         "actual_phase": 1,
-        "predicted_phase": 2
+        "predicted_phase": 1
       },
       {
         "date": "2025-02-01",
         "actual_oni": -0.26,
-        "lstm_oni": -0.053,
+        "lstm_oni": -0.023,
         "actual_phase": 1,
-        "predicted_phase": 2
+        "predicted_phase": 1
       },
       {
         "date": "2025-03-01",
         "actual_oni": -0.43,
-        "lstm_oni": -0.256,
+        "lstm_oni": -0.258,
         "actual_phase": 1,
         "predicted_phase": 2
       },
       {
         "date": "2025-04-01",
         "actual_oni": -0.57,
-        "lstm_oni": -0.404,
+        "lstm_oni": -0.434,
         "actual_phase": 0,
         "predicted_phase": 2
       },
       {
         "date": "2025-05-01",
         "actual_oni": -0.61,
-        "lstm_oni": -0.838,
+        "lstm_oni": -0.874,
         "actual_phase": 0,
         "predicted_phase": 2
       },
       {
         "date": "2025-06-01",
         "actual_oni": -0.6,
-        "lstm_oni": -0.955,
+        "lstm_oni": -0.986,
         "actual_phase": 0,
+        "predicted_phase": 0
+      },
+      {
+        "date": "2025-07-01",
+        "actual_oni": -0.39,
+        "lstm_oni": -0.982,
+        "actual_phase": 1,
+        "predicted_phase": 0
+      },
+      {
+        "date": "2025-08-01",
+        "actual_oni": -0.21,
+        "lstm_oni": -0.893,
+        "actual_phase": 1,
+        "predicted_phase": 0
+      },
+      {
+        "date": "2025-09-01",
+        "actual_oni": 0.11,
+        "lstm_oni": -0.713,
+        "actual_phase": 1,
+        "predicted_phase": 0
+      },
+      {
+        "date": "2025-10-01",
+        "actual_oni": 0.46,
+        "lstm_oni": -0.54,
+        "actual_phase": 1,
+        "predicted_phase": 0
+      },
+      {
+        "date": "2025-11-01",
+        "actual_oni": 0.95,
+        "lstm_oni": -0.257,
+        "actual_phase": 2,
+        "predicted_phase": 1
+      },
+      {
+        "date": "2025-12-01",
+        "actual_oni": 1.39,
+        "lstm_oni": -0.127,
+        "actual_phase": 2,
         "predicted_phase": 2
+      },
+      {
+        "date": "2026-01-01",
+        "actual_oni": 1.8,
+        "lstm_oni": 0.188,
+        "actual_phase": 2,
+        "predicted_phase": 2
+      },
+      {
+        "date": "2026-02-01",
+        "actual_oni": 2.16,
+        "lstm_oni": 0.423,
+        "actual_phase": 2,
+        "predicted_phase": 2
+      },
+      {
+        "date": "2026-03-01",
+        "actual_oni": 2.46,
+        "lstm_oni": 0.673,
+        "actual_phase": 2,
+        "predicted_phase": 2
+      }
+    ],
+    "9": [
+      {
+        "date": "2024-12-01",
+        "actual_oni": -0.43,
+        "lstm_oni": -0.525,
+        "actual_phase": 1,
+        "predicted_phase": 0
+      },
+      {
+        "date": "2025-01-01",
+        "actual_oni": -0.57,
+        "lstm_oni": -0.5,
+        "actual_phase": 0,
+        "predicted_phase": 1
+      },
+      {
+        "date": "2025-02-01",
+        "actual_oni": -0.61,
+        "lstm_oni": -0.502,
+        "actual_phase": 0,
+        "predicted_phase": 1
+      },
+      {
+        "date": "2025-03-01",
+        "actual_oni": -0.6,
+        "lstm_oni": -0.668,
+        "actual_phase": 0,
+        "predicted_phase": 0
+      },
+      {
+        "date": "2025-04-01",
+        "actual_oni": -0.39,
+        "lstm_oni": -0.661,
+        "actual_phase": 1,
+        "predicted_phase": 0
+      },
+      {
+        "date": "2025-05-01",
+        "actual_oni": -0.21,
+        "lstm_oni": -0.838,
+        "actual_phase": 1,
+        "predicted_phase": 0
+      },
+      {
+        "date": "2025-06-01",
+        "actual_oni": 0.11,
+        "lstm_oni": -0.809,
+        "actual_phase": 1,
+        "predicted_phase": 0
+      }
+    ],
+    "12": [
+      {
+        "date": "2024-12-01",
+        "actual_oni": -0.6,
+        "lstm_oni": -0.297,
+        "actual_phase": 0,
+        "predicted_phase": 0
+      },
+      {
+        "date": "2025-01-01",
+        "actual_oni": -0.39,
+        "lstm_oni": -0.302,
+        "actual_phase": 1,
+        "predicted_phase": 0
+      },
+      {
+        "date": "2025-02-01",
+        "actual_oni": -0.21,
+        "lstm_oni": -0.238,
+        "actual_phase": 1,
+        "predicted_phase": 0
+      },
+      {
+        "date": "2025-03-01",
+        "actual_oni": 0.11,
+        "lstm_oni": -0.255,
+        "actual_phase": 1,
+        "predicted_phase": 0
       }
     ]
   },
@@ -3721,31 +4365,96 @@ export const realData = {
         {
           "month": 7,
           "date": "2025-07",
-          "value": null
+          "value": -0.11
         },
         {
           "month": 8,
           "date": "2025-08",
-          "value": null
+          "value": -0.26
         },
         {
           "month": 9,
           "date": "2025-09",
-          "value": null
+          "value": -0.43
         },
         {
           "month": 10,
           "date": "2025-10",
-          "value": null
+          "value": -0.57
         },
         {
           "month": 11,
           "date": "2025-11",
-          "value": null
+          "value": -0.61
         },
         {
           "month": 12,
           "date": "2025-12",
+          "value": -0.6
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "months": [
+        {
+          "month": 1,
+          "date": "2026-01",
+          "value": -0.39
+        },
+        {
+          "month": 2,
+          "date": "2026-02",
+          "value": -0.21
+        },
+        {
+          "month": 3,
+          "date": "2026-03",
+          "value": 0.11
+        },
+        {
+          "month": 4,
+          "date": "2026-04",
+          "value": null
+        },
+        {
+          "month": 5,
+          "date": "2026-05",
+          "value": null
+        },
+        {
+          "month": 6,
+          "date": "2026-06",
+          "value": null
+        },
+        {
+          "month": 7,
+          "date": "2026-07",
+          "value": null
+        },
+        {
+          "month": 8,
+          "date": "2026-08",
+          "value": null
+        },
+        {
+          "month": 9,
+          "date": "2026-09",
+          "value": null
+        },
+        {
+          "month": 10,
+          "date": "2026-10",
+          "value": null
+        },
+        {
+          "month": 11,
+          "date": "2026-11",
+          "value": null
+        },
+        {
+          "month": 12,
+          "date": "2026-12",
           "value": null
         }
       ]
@@ -3817,148 +4526,333 @@ export const realData = {
     },
     {
       "year": 2025,
-      "netral": 6,
+      "netral": 9,
+      "elNino": 0,
+      "laNina": 3,
+      "total": 12
+    },
+    {
+      "year": 2026,
+      "netral": 3,
       "elNino": 0,
       "laNina": 0,
-      "total": 6
+      "total": 3
     }
   ],
   "forecastSeries": {
     "1": [
       {
-        "date": "03/25",
-        "actual": -0.08,
+        "date": "12/25",
+        "actual": -0.6,
         "prediction": null,
         "isPrediction": false
       },
       {
-        "date": "04/25",
-        "actual": 0.02,
+        "date": "01/26",
+        "actual": -0.39,
         "prediction": null,
         "isPrediction": false
       },
       {
-        "date": "05/25",
-        "actual": -0.04,
+        "date": "02/26",
+        "actual": -0.21,
         "prediction": null,
         "isPrediction": false
       },
       {
-        "date": "06/25",
-        "actual": -0.02,
-        "prediction": -0.02,
+        "date": "03/26",
+        "actual": 0.11,
+        "prediction": 0.11,
         "isPrediction": false
       },
       {
-        "date": "07/25",
-        "actual": -0.11,
-        "prediction": -0.27,
+        "date": "04/26",
+        "actual": 0.46,
+        "prediction": 0.067,
         "isPrediction": true
       }
     ],
     "3": [
       {
-        "date": "03/25",
-        "actual": -0.08,
+        "date": "12/25",
+        "actual": -0.6,
         "prediction": null,
         "isPrediction": false
       },
       {
-        "date": "04/25",
-        "actual": 0.02,
+        "date": "01/26",
+        "actual": -0.39,
         "prediction": null,
         "isPrediction": false
       },
       {
-        "date": "05/25",
-        "actual": -0.04,
+        "date": "02/26",
+        "actual": -0.21,
         "prediction": null,
         "isPrediction": false
       },
       {
-        "date": "06/25",
-        "actual": -0.02,
-        "prediction": -0.02,
+        "date": "03/26",
+        "actual": 0.11,
+        "prediction": 0.11,
         "isPrediction": false
       },
       {
-        "date": "07/25",
-        "actual": -0.11,
-        "prediction": 0.086,
+        "date": "04/26",
+        "actual": 0.46,
+        "prediction": 0.067,
         "isPrediction": true
       },
       {
-        "date": "08/25",
-        "actual": -0.26,
-        "prediction": -0.158,
+        "date": "05/26",
+        "actual": 0.95,
+        "prediction": 0.241,
         "isPrediction": true
       },
       {
-        "date": "09/25",
-        "actual": -0.43,
-        "prediction": -0.383,
+        "date": "06/26",
+        "actual": 1.39,
+        "prediction": 0.415,
         "isPrediction": true
       }
     ],
     "6": [
       {
-        "date": "03/25",
-        "actual": -0.08,
+        "date": "12/25",
+        "actual": -0.6,
         "prediction": null,
         "isPrediction": false
       },
       {
-        "date": "04/25",
-        "actual": 0.02,
+        "date": "01/26",
+        "actual": -0.39,
         "prediction": null,
         "isPrediction": false
       },
       {
-        "date": "05/25",
-        "actual": -0.04,
+        "date": "02/26",
+        "actual": -0.21,
         "prediction": null,
         "isPrediction": false
       },
       {
-        "date": "06/25",
-        "actual": -0.02,
-        "prediction": -0.02,
+        "date": "03/26",
+        "actual": 0.11,
+        "prediction": 0.11,
         "isPrediction": false
       },
       {
-        "date": "07/25",
-        "actual": -0.11,
-        "prediction": -0.134,
+        "date": "04/26",
+        "actual": 0.46,
+        "prediction": 0.067,
         "isPrediction": true
       },
       {
-        "date": "08/25",
-        "actual": -0.26,
-        "prediction": -0.053,
+        "date": "05/26",
+        "actual": 0.95,
+        "prediction": 0.241,
         "isPrediction": true
       },
       {
-        "date": "09/25",
-        "actual": -0.43,
-        "prediction": -0.256,
+        "date": "06/26",
+        "actual": 1.39,
+        "prediction": 0.415,
         "isPrediction": true
       },
       {
-        "date": "10/25",
-        "actual": -0.57,
-        "prediction": -0.404,
+        "date": "07/26",
+        "actual": 1.8,
+        "prediction": 0.501,
         "isPrediction": true
       },
       {
-        "date": "11/25",
-        "actual": -0.61,
-        "prediction": -0.838,
+        "date": "08/26",
+        "actual": 2.16,
+        "prediction": 0.587,
         "isPrediction": true
       },
+      {
+        "date": "09/26",
+        "actual": 2.46,
+        "prediction": 0.673,
+        "isPrediction": true
+      }
+    ],
+    "9": [
       {
         "date": "12/25",
         "actual": -0.6,
-        "prediction": -0.955,
+        "prediction": null,
+        "isPrediction": false
+      },
+      {
+        "date": "01/26",
+        "actual": -0.39,
+        "prediction": null,
+        "isPrediction": false
+      },
+      {
+        "date": "02/26",
+        "actual": -0.21,
+        "prediction": null,
+        "isPrediction": false
+      },
+      {
+        "date": "03/26",
+        "actual": 0.11,
+        "prediction": 0.11,
+        "isPrediction": false
+      },
+      {
+        "date": "04/26",
+        "actual": 0.46,
+        "prediction": 0.067,
+        "isPrediction": true
+      },
+      {
+        "date": "05/26",
+        "actual": 0.95,
+        "prediction": 0.241,
+        "isPrediction": true
+      },
+      {
+        "date": "06/26",
+        "actual": 1.39,
+        "prediction": 0.415,
+        "isPrediction": true
+      },
+      {
+        "date": "07/26",
+        "actual": 1.8,
+        "prediction": 0.501,
+        "isPrediction": true
+      },
+      {
+        "date": "08/26",
+        "actual": 2.16,
+        "prediction": 0.587,
+        "isPrediction": true
+      },
+      {
+        "date": "09/26",
+        "actual": 2.46,
+        "prediction": 0.673,
+        "isPrediction": true
+      },
+      {
+        "date": "10/26",
+        "actual": null,
+        "prediction": 0.179,
+        "isPrediction": true
+      },
+      {
+        "date": "11/26",
+        "actual": null,
+        "prediction": -0.315,
+        "isPrediction": true
+      },
+      {
+        "date": "12/26",
+        "actual": null,
+        "prediction": -0.809,
+        "isPrediction": true
+      }
+    ],
+    "12": [
+      {
+        "date": "12/25",
+        "actual": -0.6,
+        "prediction": null,
+        "isPrediction": false
+      },
+      {
+        "date": "01/26",
+        "actual": -0.39,
+        "prediction": null,
+        "isPrediction": false
+      },
+      {
+        "date": "02/26",
+        "actual": -0.21,
+        "prediction": null,
+        "isPrediction": false
+      },
+      {
+        "date": "03/26",
+        "actual": 0.11,
+        "prediction": 0.11,
+        "isPrediction": false
+      },
+      {
+        "date": "04/26",
+        "actual": 0.46,
+        "prediction": 0.067,
+        "isPrediction": true
+      },
+      {
+        "date": "05/26",
+        "actual": 0.95,
+        "prediction": 0.241,
+        "isPrediction": true
+      },
+      {
+        "date": "06/26",
+        "actual": 1.39,
+        "prediction": 0.415,
+        "isPrediction": true
+      },
+      {
+        "date": "07/26",
+        "actual": 1.8,
+        "prediction": 0.501,
+        "isPrediction": true
+      },
+      {
+        "date": "08/26",
+        "actual": 2.16,
+        "prediction": 0.587,
+        "isPrediction": true
+      },
+      {
+        "date": "09/26",
+        "actual": 2.46,
+        "prediction": 0.673,
+        "isPrediction": true
+      },
+      {
+        "date": "10/26",
+        "actual": null,
+        "prediction": 0.179,
+        "isPrediction": true
+      },
+      {
+        "date": "11/26",
+        "actual": null,
+        "prediction": -0.315,
+        "isPrediction": true
+      },
+      {
+        "date": "12/26",
+        "actual": null,
+        "prediction": -0.809,
+        "isPrediction": true
+      },
+      {
+        "date": "01/27",
+        "actual": null,
+        "prediction": -0.624,
+        "isPrediction": true
+      },
+      {
+        "date": "02/27",
+        "actual": null,
+        "prediction": -0.44,
+        "isPrediction": true
+      },
+      {
+        "date": "03/27",
+        "actual": null,
+        "prediction": -0.255,
         "isPrediction": true
       }
     ]
@@ -3969,32 +4863,32 @@ export const realData = {
       "verdict": "Andal",
       "tone": "good",
       "accuracy": {
-        "val": 76.9,
-        "test": 71.4
+        "val": 53.8,
+        "test": 93.8
       },
       "balanced": {
-        "val": 79.2,
-        "test": 71.4
+        "val": 70.8,
+        "test": 96.2
       },
       "f1": {
-        "val": 66.8,
-        "test": 41.7
+        "val": 57.1,
+        "test": 90.9
       },
       "rmse": {
-        "val": 1.175,
-        "test": 0.18
+        "val": 0.993,
+        "test": 0.198
       },
-      "maeModel": 0.172,
-      "maeBaseline": 0.108,
+      "maeModel": 0.162,
+      "maeBaseline": 0.148,
       "matrix": [
         [
-          0,
+          3,
           0,
           0
         ],
         [
-          2,
-          5,
+          1,
+          12,
           0
         ],
         [
@@ -4003,7 +4897,7 @@ export const realData = {
           0
         ]
       ],
-      "matrixNote": "5 benar dari 7. Dua bulan Netral diprediksi sebagai La Ni\u00f1a."
+      "matrixNote": "15 benar dari 16. Prediksi stabil pada variasi fase."
     },
     "3": {
       "label": "3 bulan",
@@ -4011,61 +4905,114 @@ export const realData = {
       "tone": "warn",
       "accuracy": {
         "val": 23.1,
-        "test": 100.0
+        "test": 68.8
       },
-      "balanced": null,
-      "f1": null,
+      "balanced": {
+        "val": 50.0,
+        "test": 33.3
+      },
+      "f1": {
+        "val": 18.8,
+        "test": 27.2
+      },
       "rmse": {
-        "val": 1.257,
-        "test": 0.174
+        "val": 1.245,
+        "test": 0.417
       },
-      "maeModel": 0.152,
-      "maeBaseline": 0.098,
+      "maeModel": 0.322,
+      "maeBaseline": 0.185,
       "matrix": [
         [
           0,
-          0,
+          3,
           0
         ],
         [
           0,
-          7,
+          11,
           0
         ],
         [
           0,
-          0,
+          2,
           0
         ]
       ],
-      "matrixNote": "Accuracy 100% semu \u2014 seluruh bulan uji Netral."
+      "matrixNote": "Akurasi 68.8% semu \u2014 model memprediksi mayoritas sampel uji sebagai Netral."
     },
     "6": {
       "label": "6 bulan",
       "verdict": "Gagal",
       "tone": "bad",
       "accuracy": {
-        "val": 0.0,
-        "test": 0.0
+        "val": 15.4,
+        "test": 50.0
       },
-      "balanced": null,
-      "f1": null,
+      "balanced": {
+        "val": 50.0,
+        "test": 50.3
+      },
+      "f1": {
+        "val": 14.8,
+        "test": 47.2
+      },
       "rmse": {
-        "val": 1.258,
-        "test": 0.217
+        "val": 1.255,
+        "test": 0.982
       },
-      "maeModel": 0.197,
-      "maeBaseline": 0.1,
+      "maeModel": 0.772,
+      "maeBaseline": 0.244,
       "matrix": [
         [
+          1,
           0,
-          0,
-          3
+          2
+        ],
+        [
+          4,
+          3,
+          1
         ],
         [
           0,
-          0,
+          1,
           4
+        ]
+      ],
+      "matrixNote": "8 benar dari 16. Kinerja rendah akibat barrier musim semi ENSO."
+    },
+    "9": {
+      "label": "9 bulan",
+      "verdict": "Tidak Andal",
+      "tone": "bad",
+      "accuracy": {
+        "val": 38.5,
+        "test": 14.3
+      },
+      "balanced": {
+        "val": 50.0,
+        "test": 16.7
+      },
+      "f1": {
+        "val": 33.3,
+        "test": 12.5
+      },
+      "rmse": {
+        "val": 1.4,
+        "test": 0.438
+      },
+      "maeModel": 0.308,
+      "maeBaseline": 0.15,
+      "matrix": [
+        [
+          1,
+          2,
+          0
+        ],
+        [
+          4,
+          0,
+          0
         ],
         [
           0,
@@ -4073,7 +5020,48 @@ export const realData = {
           0
         ]
       ],
-      "matrixNote": "Akurasi 0,0%. Model selalu memilih satu kelas pada evaluasi kronologis."
+      "matrixNote": "1 benar dari 7. Kinerja rendah akibat akumulasi galat multi-step."
+    },
+    "12": {
+      "label": "12 bulan",
+      "verdict": "Eksperimental / Noise",
+      "tone": "bad",
+      "accuracy": {
+        "val": 46.2,
+        "test": 25.0
+      },
+      "balanced": {
+        "val": 41.2,
+        "test": 50.0
+      },
+      "f1": {
+        "val": 36.8,
+        "test": 20.0
+      },
+      "rmse": {
+        "val": 1.131,
+        "test": 0.242
+      },
+      "maeModel": 0.196,
+      "maeBaseline": 0.237,
+      "matrix": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          3,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "matrixNote": "1 benar dari 4. Batas prediktabilitas model empiris terlampaui."
     }
   }
 };

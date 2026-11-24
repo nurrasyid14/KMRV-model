@@ -5,20 +5,20 @@
   "forecast_horizon_months": 1,
   "training_period": {
     "start": "2016-12-01",
-    "end": "2020-11-01"
+    "end": "2021-11-01"
   },
   "validation_period": {
-    "start": "2021-01-01",
-    "end": "2022-05-01"
+    "start": "2022-01-01",
+    "end": "2023-11-01"
   },
   "test_period": {
-    "start": "2022-07-01",
-    "end": "2023-12-01"
+    "start": "2024-01-01",
+    "end": "2025-06-01"
   },
   "classifier_training_period": {
     "start": "2019-01-01",
-    "end": "2020-11-01",
-    "samples": 23
+    "end": "2021-11-01",
+    "samples": 35
   },
   "feature_configuration": {
     "window_months": 12,
@@ -101,7 +101,12 @@
       "epochs": 300,
       "batch_size": 16,
       "learning_rate": 0.003,
-      "dropout": 0.1
+      "dropout": 0.1,
+      "refit_epochs": 6,
+      "epoch_selection_period": {
+        "start": "2021-01-01",
+        "end": "2021-11-01"
+      }
     },
     "classifier": {
       "objective": "multi:softmax",
@@ -149,59 +154,73 @@
     "class_weights_from_classifier_training_only": {}
   },
   "validation_metrics": {
-    "accuracy": 0.9411764705882353,
-    "balanced_accuracy": 0.875,
-    "macro_precision": 0.6428571428571429,
-    "macro_recall": 0.5833333333333334,
-    "macro_f1": 0.6067019400352733,
-    "weighted_f1": 0.9380641145347027,
+    "accuracy": 0.7391304347826086,
+    "balanced_accuracy": 0.6825396825396827,
+    "macro_precision": 0.7222222222222223,
+    "macro_recall": 0.6825396825396827,
+    "macro_f1": 0.688888888888889,
+    "weighted_f1": 0.7579710144927536,
     "actual_class_counts": {
-      "0": 13,
+      "0": 12,
       "1": 4,
-      "2": 0
-    },
-    "predicted_class_counts": {
-      "0": 14,
-      "1": 3,
-      "2": 0
-    },
-    "missing_actual_classes": [
-      "El Nino"
-    ],
-    "missing_predicted_classes": [
-      "El Nino"
-    ],
-    "oni_mse": 0.04289530035799099,
-    "oni_rmse": 0.20711180641863705,
-    "oni_mae": 0.17439904500456416,
-    "oni_r2": -0.26647274360052675
-  },
-  "test_metrics": {
-    "accuracy": 0.8333333333333334,
-    "balanced_accuracy": 0.7916666666666666,
-    "macro_precision": 0.8055555555555555,
-    "macro_recall": 0.7916666666666666,
-    "macro_f1": 0.7873015873015872,
-    "weighted_f1": 0.8275132275132275,
-    "actual_class_counts": {
-      "0": 6,
-      "1": 4,
-      "2": 8
-    },
-    "predicted_class_counts": {
-      "0": 8,
-      "1": 3,
       "2": 7
+    },
+    "predicted_class_counts": {
+      "0": 12,
+      "1": 6,
+      "2": 5
     },
     "missing_actual_classes": [],
     "missing_predicted_classes": [],
-    "oni_mse": 0.6568309103176134,
-    "oni_rmse": 0.8104510536223724,
-    "oni_mae": 0.6733228629496363,
-    "oni_r2": 0.4133370559594094
+    "log_loss": 0.6483363862127391,
+    "multiclass_brier_score": 0.37743054521753466,
+    "top_label_ece_10_bins": 0.11221938288730127,
+    "mean_top_label_confidence": 0.7743419123732526,
+    "oni_mse": 0.521038129565898,
+    "oni_rmse": 0.7218297095339717,
+    "oni_mae": 0.5783248578562684,
+    "oni_r2": 0.48752456955437184
   },
   "selected_using": "validation metrics only; test metrics were not used for selection",
   "selection_validation_fold": 1,
   "selection_is_provisional": true,
-  "training_timestamp_utc": "2026-11-18T12:57:19.613973+00:00"
+  "training_timestamp_utc": "2026-11-24T13:52:46.315124+00:00",
+  "final_holdout_evaluation": {
+    "classification": {
+      "accuracy": 0.5555555555555556,
+      "balanced_accuracy": 0.7333333333333334,
+      "macro_precision": 0.5833333333333334,
+      "macro_recall": 0.48888888888888893,
+      "macro_f1": 0.4978354978354978,
+      "weighted_f1": 0.6731601731601731,
+      "actual_class_counts": {
+        "0": 0,
+        "1": 15,
+        "2": 3
+      },
+      "predicted_class_counts": {
+        "0": 7,
+        "1": 7,
+        "2": 4
+      },
+      "missing_actual_classes": [
+        "La Nina"
+      ],
+      "missing_predicted_classes": [],
+      "log_loss": 0.8364989478671327,
+      "multiclass_brier_score": 0.5546553941113885,
+      "top_label_ece_10_bins": 0.22982356283399794,
+      "mean_top_label_confidence": 0.7744511365890503
+    },
+    "oni_regression": {
+      "oni_mse": 0.08274633905302725,
+      "oni_rmse": 0.2876566339457987,
+      "oni_mae": 0.19699544681339629,
+      "oni_r2": 0.6952561031250866
+    },
+    "test_period": {
+      "start": "2024-01-01",
+      "end": "2025-06-01"
+    }
+  }
 }

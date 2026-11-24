@@ -1,10 +1,9 @@
 {
   "recent_model": "model/recent_model.pt",
   "best_model": "model/best_model.pt",
-  "best_validation_horizon_months": 1,
+  "best_validation_horizon_months": 12,
   "horizon_artifacts": {
-    "1": "model/enso_ensemble_1m",
-    "3": "model/enso_ensemble_3m",
-    "6": "model/enso_ensemble_6m"
+    "9": "model/enso_ensemble_9m",
+    "12": "model/enso_ensemble_12m"
   }
 }

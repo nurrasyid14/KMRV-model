@@ -2,36 +2,26 @@
   "metrics": [
     {
       "split": "test",
-      "forecast_horizon_months": 1,
-      "accuracy": 1.0,
-      "macro_f1": 1.0,
-      "macro_precision": 1.0,
-      "macro_recall": 1.0,
-      "oni_mse": 0.021457567082677646
+      "forecast_horizon_months": 9,
+      "accuracy": 0.14285714285714285,
+      "macro_f1": 0.125,
+      "macro_precision": 0.1,
+      "macro_recall": 0.16666666666666666,
+      "oni_mse": 0.19181643158180298
     },
     {
       "split": "test",
-      "forecast_horizon_months": 3,
-      "accuracy": 1.0,
-      "macro_f1": 1.0,
-      "macro_precision": 1.0,
-      "macro_recall": 1.0,
-      "oni_mse": 0.027746942240032785
-    },
-    {
-      "split": "test",
-      "forecast_horizon_months": 6,
-      "accuracy": 0.7142857142857143,
-      "macro_f1": 0.5,
-      "macro_precision": 0.6666666666666666,
-      "macro_recall": 0.4444444444444444,
-      "oni_mse": 0.050259208137569844
+      "forecast_horizon_months": 12,
+      "accuracy": 0.25,
+      "macro_f1": 0.2,
+      "macro_precision": 0.125,
+      "macro_recall": 0.5,
+      "oni_mse": 0.058425770876052996
     }
   ],
   "forecast_horizons_months": [
-    1,
-    3,
-    6
+    9,
+    12
   ],
   "tri_monthly_seasons": [
     "AMJ",
@@ -47,5 +37,5 @@
     "OND",
     "SON"
   ],
-  "output_directory": "C:/Users/Dell/OneDrive - Politeknik Elektronika Negeri Surabaya/Documents/Sains data/sem 5/elnino prediction/reports"
+  "output_directory": "C:/Coding SDT/VS Code/Python/Semester 5/Proyek Sistem Cerdas/KMRV-model/reports"
 }

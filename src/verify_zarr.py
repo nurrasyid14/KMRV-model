@@ -44,7 +44,7 @@ def stored_groups(store: Path) -> list[str]:
     return sorted([g for g in groups if g])
 
 
-def verify(store: Path) -> int:
+def verify(store: Path, start: pd.Timestamp | None = None, end: pd.Timestamp | None = None) -> int:
     if not store.is_dir():
         print(f"ERROR: Zarr store tidak ditemukan: {store}", file=sys.stderr)
         return 2
@@ -56,6 +56,24 @@ def verify(store: Path) -> int:
     if not groups:
         print(f"ERROR: tidak ditemukan group dataset di {store}", file=sys.stderr)
         return 1
+
+    actual_start = start or START
+    actual_end = end
+
+    # Jika end tidak ditentukan, deteksi dari group pertama yang valid
+    if actual_end is None:
+        for g in groups:
+            try:
+                with xr.open_zarr(str(store), group=g, consolidated=False) as ds:
+                    if "time" in ds.coords and len(ds["time"]) > 0:
+                        actual_end = pd.Timestamp(ds["time"].values.max())
+                        break
+            except Exception:
+                continue
+    if actual_end is None:
+        actual_end = END
+
+    expected_months = pd.date_range(actual_start, actual_end, freq="MS")
 
     rows = []
     errors: list[str] = []
@@ -76,7 +94,7 @@ def verify(store: Path) -> int:
                     rows.append((group, dims, variables, 0, "time tidak tersedia"))
                     continue
                 time = pd.DatetimeIndex(ds["time"].values)
-                missing = MONTHS.difference(time)
+                missing = expected_months.difference(time)
                 missing_text = (
                     ", ".join(value.strftime("%Y-%m") for value in missing) or "-"
                 )
@@ -86,18 +104,18 @@ def verify(store: Path) -> int:
                 if len(time) == 0:
                     errors.append(f"{group}: koordinat time kosong")
                     continue
-                if time.min() != START:
-                    errors.append(f"{group}: time minimum {time.min()} bukan {START}")
-                if time.max() > END:
-                    errors.append(f"{group}: time maksimum {time.max()} melewati {END}")
+                if time.min() != actual_start:
+                    errors.append(f"{group}: time minimum {time.min()} bukan {actual_start}")
+                if time.max() > actual_end:
+                    errors.append(f"{group}: time maksimum {time.max()} melewati {actual_end}")
                 if not (time.day == 1).all():
                     errors.append(f"{group}: ada tanggal time yang bukan awal bulan")
                 if time.has_duplicates:
                     errors.append(f"{group}: koordinat time memiliki duplikat")
                 if not time.is_monotonic_increasing:
                     errors.append(f"{group}: koordinat time tidak terurut naik")
-                if len(time) != len(MONTHS):
-                    errors.append(f"{group}: ditemukan {len(time)} bulan, seharusnya 132")
+                if len(time) != len(expected_months):
+                    errors.append(f"{group}: ditemukan {len(time)} bulan, seharusnya {len(expected_months)}")
         except Exception as exc:
             errors.append(f"{group}: gagal dibuka/diperiksa: {type(exc).__name__}: {exc}")
 
@@ -124,8 +142,10 @@ def main() -> int:
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--store", type=Path, default=DEFAULT_STORE, help="Path Zarr store")
+    parser.add_argument("--start", type=pd.Timestamp, default=None, help="Tanggal awal observasi yang diharapkan")
+    parser.add_argument("--end", type=pd.Timestamp, default=None, help="Tanggal akhir observasi yang diharapkan")
     args = parser.parse_args()
-    return verify(args.store.expanduser().resolve())
+    return verify(args.store.expanduser().resolve(), start=args.start, end=args.end)
 
 
 if __name__ == "__main__":

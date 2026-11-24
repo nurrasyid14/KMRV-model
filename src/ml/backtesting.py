@@ -639,7 +639,7 @@ def _save_selected_model(
 
 def run_backtesting(
     data_path: Path,
-    horizons: tuple[int, ...] = (1, 3, 6),
+    horizons: tuple[int, ...] = (1, 3, 6, 9, 12),
     epochs: int = 300,
     seed: int = 42,
     reports_dir: Path | None = None,

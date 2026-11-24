@@ -1,0 +1,5 @@
+time,actual_oni_lead_12m,lstm_oni_lead_12m,actual_phase_lead_12m,predicted_phase_lead_12m,phase_confidence,probability_la_nina,probability_neutral,probability_el_nino,probabilities_calibrated
+2024-12-01,-0.6,-0.29716364,0,0,0.70759463,0.70759463,0.15299498,0.13941047,False
+2025-01-01,-0.39,-0.3019934,1,0,0.6953845,0.6953845,0.15921749,0.145398,False
+2025-02-01,-0.21,-0.23808382,1,0,0.6578532,0.6578532,0.15550321,0.18664356,False
+2025-03-01,0.11,-0.2553209,1,0,0.6581139,0.6581139,0.17792141,0.16396472,False

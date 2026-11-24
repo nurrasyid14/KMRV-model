@@ -286,9 +286,10 @@ def generate_data(horizons: list[int], root: Path = ROOT) -> dict[str, Any]:
             for _, row in predictions.iterrows()
         ]
 
-    # Phase counts per year (2016-2025)
+    # Phase counts per year (dynamic based on history)
+    years = sorted({int(h["date"].split("-")[0]) for h in history})
     annual_phases = []
-    for y in range(2016, 2026):
+    for y in years:
         y_rows = [h for h in history if h["date"].startswith(str(y))]
         netral = sum(1 for h in y_rows if -0.5 <= h["oni"] <= 0.5)
         el_nino = sum(1 for h in y_rows if h["oni"] > 0.5)
@@ -301,9 +302,9 @@ def generate_data(horizons: list[int], root: Path = ROOT) -> dict[str, Any]:
             "total": len(y_rows),
         })
 
-    # Heatmap ONI (2016-2025 by 12 months)
+    # Heatmap ONI (by 12 months)
     heatmap = []
-    for y in range(2016, 2026):
+    for y in years:
         row_months = []
         for m_idx in range(1, 13):
             d_str = f"{y:04d}-{m_idx:02d}"
@@ -315,32 +316,97 @@ def generate_data(horizons: list[int], root: Path = ROOT) -> dict[str, Any]:
             })
         heatmap.append({"year": y, "months": row_months})
 
-    # Recent context (03/25 - 06/25) for forecast projections
-    recent_context = [
-        {"date": "03/25", "actual": history[-4]["oni"], "prediction": None, "isPrediction": False},
-        {"date": "04/25", "actual": history[-3]["oni"], "prediction": None, "isPrediction": False},
-        {"date": "05/25", "actual": history[-2]["oni"], "prediction": None, "isPrediction": False},
-        {"date": "06/25", "actual": history[-1]["oni"], "prediction": history[-1]["oni"], "isPrediction": False},
-    ]
+    # Load NOAA ONI observation mapping for actual values in future projection window
+    oni_csv_p = root / "dataset" / "data_oni" / "oni.csv"
+    oni_obs_map: dict[tuple[int, int], float] = {}
+    if oni_csv_p.exists():
+        oni_raw = pd.read_csv(oni_csv_p)
+        season_to_month = {
+            "DJF": 1, "JFM": 2, "FMA": 3, "MAM": 4, "AMJ": 5, "MJJ": 6,
+            "JJA": 7, "JAS": 8, "ASO": 9, "SON": 10, "OND": 11, "NDJ": 12
+        }
+        for _, r in oni_raw.iterrows():
+            if str(r.get("YR", "")).isdigit():
+                m_num = season_to_month.get(str(r.get("SEAS", "")).strip(), 0)
+                if m_num > 0:
+                    try:
+                        oni_obs_map[(int(r["YR"]), m_num)] = float(r["ANOM"])
+                    except (ValueError, TypeError):
+                        pass
 
-    forecast_targets = {
-        1: [
-            {"date": "07/25", "actual": -0.11, "prediction": round(float(test_predictions["1"][-1]["lstm_oni"]), 3), "isPrediction": True}
-        ] if "1" in test_predictions else [],
-        3: [
-            {"date": "07/25", "actual": -0.11, "prediction": 0.086, "isPrediction": True},
-            {"date": "08/25", "actual": -0.26, "prediction": -0.158, "isPrediction": True},
-            {"date": "09/25", "actual": -0.43, "prediction": round(float(test_predictions["3"][-1]["lstm_oni"]), 3), "isPrediction": True}
-        ] if "3" in test_predictions else [],
-        6: [
-            {"date": "07/25", "actual": -0.11, "prediction": -0.134, "isPrediction": True},
-            {"date": "08/25", "actual": -0.26, "prediction": -0.053, "isPrediction": True},
-            {"date": "09/25", "actual": -0.43, "prediction": -0.256, "isPrediction": True},
-            {"date": "10/25", "actual": -0.57, "prediction": -0.404, "isPrediction": True},
-            {"date": "11/25", "actual": -0.61, "prediction": -0.838, "isPrediction": True},
-            {"date": "12/25", "actual": -0.60, "prediction": round(float(test_predictions["6"][-1]["lstm_oni"]), 3), "isPrediction": True}
-        ] if "6" in test_predictions else []
-    }
+    # Recent context (last 4 months) for forecast projections
+    recent_context = []
+    if len(history) >= 4:
+        for idx, h in enumerate(history[-4:]):
+            parts = h["date"].split("-")
+            label = f"{parts[1]}/{parts[0][2:]}"
+            recent_context.append({
+                "date": label,
+                "actual": h["oni"],
+                "prediction": h["oni"] if idx == 3 else None,
+                "isPrediction": False,
+            })
+
+    latest_dt = pd.to_datetime(latest["date"] + "-01")
+    pred_h1 = round(float(test_predictions["1"][-1]["lstm_oni"]), 3) if "1" in test_predictions and len(test_predictions["1"]) > 0 else None
+    pred_h3 = round(float(test_predictions["3"][-1]["lstm_oni"]), 3) if "3" in test_predictions and len(test_predictions["3"]) > 0 else None
+    pred_h6 = round(float(test_predictions["6"][-1]["lstm_oni"]), 3) if "6" in test_predictions and len(test_predictions["6"]) > 0 else None
+    pred_h9 = round(float(test_predictions["9"][-1]["lstm_oni"]), 3) if "9" in test_predictions and len(test_predictions["9"]) > 0 else None
+    pred_h12 = round(float(test_predictions["12"][-1]["lstm_oni"]), 3) if "12" in test_predictions and len(test_predictions["12"]) > 0 else None
+
+    forecast_targets: dict[int, list[dict[str, Any]]] = {}
+    for h in horizons:
+        targets_for_h = []
+        for i in range(1, h + 1):
+            target_dt = latest_dt + pd.DateOffset(months=i)
+            label = f"{target_dt.month:02d}/{str(target_dt.year)[2:]}"
+            actual_val = oni_obs_map.get((target_dt.year, target_dt.month))
+            if actual_val is not None:
+                actual_val = round(actual_val, 2)
+
+            if i == 1 and pred_h1 is not None:
+                val = pred_h1
+            elif i == 3 and pred_h3 is not None:
+                val = pred_h3
+            elif i == 6 and pred_h6 is not None:
+                val = pred_h6
+            elif i == 9 and pred_h9 is not None:
+                val = pred_h9
+            elif i == 12 and pred_h12 is not None:
+                val = pred_h12
+            elif i == 2:
+                if pred_h1 is not None and pred_h3 is not None:
+                    val = round((pred_h1 + pred_h3) / 2.0, 3)
+                else:
+                    val = pred_h3 if pred_h3 is not None else pred_h1
+            elif i in (4, 5):
+                if pred_h3 is not None and pred_h6 is not None:
+                    frac = (i - 3) / 3.0
+                    val = round(pred_h3 + frac * (pred_h6 - pred_h3), 3)
+                else:
+                    val = pred_h6 if pred_h6 is not None else pred_h3
+            elif i in (7, 8):
+                if pred_h6 is not None and pred_h9 is not None:
+                    frac = (i - 6) / 3.0
+                    val = round(pred_h6 + frac * (pred_h9 - pred_h6), 3)
+                else:
+                    val = pred_h9 if pred_h9 is not None else pred_h6
+            elif i in (10, 11):
+                if pred_h9 is not None and pred_h12 is not None:
+                    frac = (i - 9) / 3.0
+                    val = round(pred_h9 + frac * (pred_h12 - pred_h9), 3)
+                else:
+                    val = pred_h12 if pred_h12 is not None else pred_h9
+            else:
+                val = None
+
+            targets_for_h.append({
+                "date": label,
+                "actual": actual_val,
+                "prediction": val,
+                "isPrediction": True,
+            })
+        forecast_targets[h] = targets_for_h
 
     forecast_series = {
         h: [dict(item) for item in recent_context] + forecast_targets.get(h, [])
@@ -348,71 +414,76 @@ def generate_data(horizons: list[int], root: Path = ROOT) -> dict[str, Any]:
     }
 
     evaluation: dict[str | int, Any] = {}
-    if 1 in horizons:
-        evaluation[1] = {
-            "label": "1 bulan",
-            "verdict": "Andal",
-            "tone": "good",
+    for h in horizons:
+        sh = str(h)
+        if sh not in metrics:
+            continue
+        matrix = metrics[sh]["test"]["confusion_matrix"]
+        total_correct = sum(matrix[i][i] for i in range(len(matrix)))
+        total_samples = sum(sum(row) for row in matrix)
+        test_acc = round(metrics[sh]["test"]["accuracy"] * 100, 1)
+        val_acc = round(metrics[sh]["validation"]["accuracy"] * 100, 1)
+
+        if h == 1:
+            verdict = "Andal"
+            tone = "good"
+            matrix_note = f"{total_correct} benar dari {total_samples}. Prediksi stabil pada variasi fase."
+        elif h == 3:
+            verdict = "Trivial majority class"
+            tone = "warn"
+            matrix_note = f"Akurasi {test_acc}% semu — model memprediksi mayoritas sampel uji sebagai Netral."
+        elif h == 6:
+            verdict = "Gagal"
+            tone = "bad"
+            matrix_note = f"{total_correct} benar dari {total_samples}. Kinerja rendah akibat barrier musim semi ENSO."
+        elif h == 9:
+            verdict = "Tidak Andal"
+            tone = "bad"
+            matrix_note = f"{total_correct} benar dari {total_samples}. Kinerja rendah akibat akumulasi galat multi-step."
+        else:
+            verdict = "Eksperimental / Noise"
+            tone = "bad"
+            matrix_note = f"{total_correct} benar dari {total_samples}. Batas prediktabilitas model empiris terlampaui."
+
+        val_bal = (
+            round(metrics[sh]["validation"]["balanced_accuracy"] * 100, 1)
+            if "balanced_accuracy" in metrics[sh]["validation"]
+            else None
+        )
+        test_bal = (
+            round(metrics[sh]["test"]["balanced_accuracy"] * 100, 1)
+            if "balanced_accuracy" in metrics[sh]["test"]
+            else None
+        )
+        val_f1 = (
+            round(metrics[sh]["validation"]["macro_f1"] * 100, 1)
+            if "macro_f1" in metrics[sh]["validation"]
+            else None
+        )
+        test_f1 = (
+            round(metrics[sh]["test"]["macro_f1"] * 100, 1)
+            if "macro_f1" in metrics[sh]["test"]
+            else None
+        )
+
+        evaluation[h] = {
+            "label": f"{h} bulan",
+            "verdict": verdict,
+            "tone": tone,
             "accuracy": {
-                "val": round(metrics["1"]["validation"]["accuracy"] * 100, 1),
-                "test": round(metrics["1"]["test"]["accuracy"] * 100, 1),
+                "val": val_acc,
+                "test": test_acc,
             },
-            "balanced": {
-                "val": round(metrics["1"]["validation"]["balanced_accuracy"] * 100, 1),
-                "test": round(metrics["1"]["test"]["balanced_accuracy"] * 100, 1),
-            },
-            "f1": {
-                "val": round(metrics["1"]["validation"]["macro_f1"] * 100, 1),
-                "test": round(metrics["1"]["test"]["macro_f1"] * 100, 1),
-            },
+            "balanced": {"val": val_bal, "test": test_bal} if val_bal is not None else None,
+            "f1": {"val": val_f1, "test": test_f1} if val_f1 is not None else None,
             "rmse": {
-                "val": round(metrics["1"]["validation"]["lstm_oni_rmse"], 3),
-                "test": round(metrics["1"]["test"]["lstm_oni_rmse"], 3),
+                "val": round(metrics[sh]["validation"]["lstm_oni_rmse"], 3),
+                "test": round(metrics[sh]["test"]["lstm_oni_rmse"], 3),
             },
-            "maeModel": 0.172,
-            "maeBaseline": 0.108,
-            "matrix": metrics["1"]["test"]["confusion_matrix"],
-            "matrixNote": "5 benar dari 7. Dua bulan Netral diprediksi sebagai La Niña.",
-        }
-    if 3 in horizons:
-        evaluation[3] = {
-            "label": "3 bulan",
-            "verdict": "Trivial majority class",
-            "tone": "warn",
-            "accuracy": {
-                "val": round(metrics["3"]["validation"]["accuracy"] * 100, 1),
-                "test": round(metrics["3"]["test"]["accuracy"] * 100, 1),
-            },
-            "balanced": None,
-            "f1": None,
-            "rmse": {
-                "val": round(metrics["3"]["validation"]["lstm_oni_rmse"], 3),
-                "test": round(metrics["3"]["test"]["lstm_oni_rmse"], 3),
-            },
-            "maeModel": 0.152,
-            "maeBaseline": 0.098,
-            "matrix": metrics["3"]["test"]["confusion_matrix"],
-            "matrixNote": "Accuracy 100% semu — seluruh bulan uji Netral.",
-        }
-    if 6 in horizons:
-        evaluation[6] = {
-            "label": "6 bulan",
-            "verdict": "Gagal",
-            "tone": "bad",
-            "accuracy": {
-                "val": round(metrics["6"]["validation"]["accuracy"] * 100, 1),
-                "test": round(metrics["6"]["test"]["accuracy"] * 100, 1),
-            },
-            "balanced": None,
-            "f1": None,
-            "rmse": {
-                "val": round(metrics["6"]["validation"]["lstm_oni_rmse"], 3),
-                "test": round(metrics["6"]["test"]["lstm_oni_rmse"], 3),
-            },
-            "maeModel": 0.197,
-            "maeBaseline": 0.100,
-            "matrix": metrics["6"]["test"]["confusion_matrix"],
-            "matrixNote": "Akurasi 0,0%. Model selalu memilih satu kelas pada evaluasi kronologis.",
+            "maeModel": derived[sh]["kmrvMae"] if sh in derived else None,
+            "maeBaseline": derived[sh]["persistenceMae"] if sh in derived else None,
+            "matrix": matrix,
+            "matrixNote": matrix_note,
         }
 
     latest_snapshot = {
@@ -495,8 +566,8 @@ def main() -> None:
         "--horizons",
         nargs="+",
         type=int,
-        default=[1, 3, 6],
-        help="List of forecast horizons in months (e.g. 1 3 6)",
+        default=[1, 3, 6, 9, 12],
+        help="List of forecast horizons in months (e.g. 1 3 6 9 12)",
     )
     parser.add_argument(
         "--out",

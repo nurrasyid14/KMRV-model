@@ -54,7 +54,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--train", type=Path, default=DEFAULT_DATA_DIR / "train_features.csv")
     parser.add_argument("--validation", type=Path, default=DEFAULT_DATA_DIR / "val_features.csv")
     parser.add_argument("--test", type=Path, default=DEFAULT_DATA_DIR / "test_features.csv")
-    parser.add_argument("--horizon", type=int, choices=(1, 3, 6), default=1)
+    parser.add_argument("--horizon", type=int, choices=(1, 3, 6, 9, 12), default=1)
     parser.add_argument("--window", type=int, default=12)
     parser.add_argument("--hidden-size", type=int, default=32)
     parser.add_argument("--epochs", type=int, default=300)
@@ -300,8 +300,14 @@ def main() -> None:
         missing = required - set(split.columns)
         if missing:
             raise ValueError(f"{name} split is missing target columns: {sorted(missing)}")
-        if split[list(required)].isna().any().any():
-            raise ValueError(f"{name} split contains missing target values")
+
+    # Drop trailing rows that have no future target for this specific lead (e.g. 9m, 12m)
+    train = train.dropna(subset=list(required)).copy()
+    validation = validation.dropna(subset=list(required)).copy()
+    test = test.dropna(subset=list(required)).copy()
+    for name, split in (("train", train), ("validation", validation), ("test", test)):
+        if len(split) == 0:
+            raise ValueError(f"{name} split contains 0 valid target rows for horizon {args.horizon}m")
 
     feature_columns = resolve_feature_columns(train)
     missing_features = [column for column in feature_columns if column not in validation or column not in test]

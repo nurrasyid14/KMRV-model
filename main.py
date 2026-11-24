@@ -14,8 +14,8 @@ def parse_args() -> argparse.ArgumentParser:
         "--horizons",
         nargs="+",
         type=int,
-        choices=(1, 3, 6),
-        default=(1, 3, 6),
+        choices=(1, 3, 6, 9, 12),
+        default=(1, 3, 6, 9, 12),
     )
     parser.add_argument("--epochs", type=int, default=300)
     parser.add_argument("--seed", type=int, default=42)

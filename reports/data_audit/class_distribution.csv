@@ -1,7 +1,7 @@
 dataset,period,horizon_months,class_id,class_name,sample_count,class_count,proportion,class_missing
-master,all,1,0,La Nina,114,31,0.2719298245614035,False
-master,all,1,1,Neutral,114,52,0.45614035087719296,False
-master,all,1,2,El Nino,114,31,0.2719298245614035,False
+master,all,1,0,La Nina,123,34,0.2764227642276423,False
+master,all,1,1,Neutral,123,58,0.4715447154471545,False
+master,all,1,2,El Nino,123,31,0.25203252032520324,False
 master,2016,1,0,La Nina,12,1,0.08333333333333333,False
 master,2016,1,1,Neutral,12,7,0.5833333333333334,False
 master,2016,1,2,El Nino,12,4,0.3333333333333333,False
@@ -29,21 +29,24 @@ master,2023,1,2,El Nino,12,8,0.6666666666666666,False
 master,2024,1,0,La Nina,12,0,0.0,True
 master,2024,1,1,Neutral,12,9,0.75,False
 master,2024,1,2,El Nino,12,3,0.25,False
-master,2025,1,0,La Nina,6,0,0.0,True
-master,2025,1,1,Neutral,6,6,1.0,False
-master,2025,1,2,El Nino,6,0,0.0,True
+master,2025,1,0,La Nina,12,3,0.25,False
+master,2025,1,1,Neutral,12,9,0.75,False
+master,2025,1,2,El Nino,12,0,0.0,True
+master,2026,1,0,La Nina,3,0,0.0,True
+master,2026,1,1,Neutral,3,3,1.0,False
+master,2026,1,2,El Nino,3,0,0.0,True
 provided_train,all,1,0,La Nina,72,19,0.2638888888888889,False
 provided_train,all,1,1,Neutral,72,33,0.4583333333333333,False
 provided_train,all,1,2,El Nino,72,20,0.2777777777777778,False
 provided_validation,all,1,0,La Nina,24,12,0.5,False
 provided_validation,all,1,1,Neutral,24,4,0.16666666666666666,False
 provided_validation,all,1,2,El Nino,24,8,0.3333333333333333,False
-provided_test,all,1,0,La Nina,18,0,0.0,True
-provided_test,all,1,1,Neutral,18,15,0.8333333333333334,False
-provided_test,all,1,2,El Nino,18,3,0.16666666666666666,False
-master,all,3,0,La Nina,114,31,0.2719298245614035,False
-master,all,3,1,Neutral,114,54,0.47368421052631576,False
-master,all,3,2,El Nino,114,29,0.2543859649122807,False
+provided_test,all,1,0,La Nina,27,3,0.1111111111111111,False
+provided_test,all,1,1,Neutral,27,21,0.7777777777777778,False
+provided_test,all,1,2,El Nino,27,3,0.1111111111111111,False
+master,all,3,0,La Nina,123,34,0.2764227642276423,False
+master,all,3,1,Neutral,123,58,0.4715447154471545,False
+master,all,3,2,El Nino,123,31,0.25203252032520324,False
 master,2016,3,0,La Nina,12,1,0.08333333333333333,False
 master,2016,3,1,Neutral,12,9,0.75,False
 master,2016,3,2,El Nino,12,2,0.16666666666666666,False
@@ -71,21 +74,24 @@ master,2023,3,2,El Nino,12,10,0.8333333333333334,False
 master,2024,3,0,La Nina,12,0,0.0,True
 master,2024,3,1,Neutral,12,11,0.9166666666666666,False
 master,2024,3,2,El Nino,12,1,0.08333333333333333,False
-master,2025,3,0,La Nina,6,0,0.0,True
-master,2025,3,1,Neutral,6,6,1.0,False
-master,2025,3,2,El Nino,6,0,0.0,True
+master,2025,3,0,La Nina,12,3,0.25,False
+master,2025,3,1,Neutral,12,9,0.75,False
+master,2025,3,2,El Nino,12,0,0.0,True
+master,2026,3,0,La Nina,3,0,0.0,True
+master,2026,3,1,Neutral,3,1,0.3333333333333333,False
+master,2026,3,2,El Nino,3,2,0.6666666666666666,False
 provided_train,all,3,0,La Nina,72,21,0.2916666666666667,False
 provided_train,all,3,1,Neutral,72,33,0.4583333333333333,False
 provided_train,all,3,2,El Nino,72,18,0.25,False
 provided_validation,all,3,0,La Nina,24,10,0.4166666666666667,False
 provided_validation,all,3,1,Neutral,24,4,0.16666666666666666,False
 provided_validation,all,3,2,El Nino,24,10,0.4166666666666667,False
-provided_test,all,3,0,La Nina,18,0,0.0,True
-provided_test,all,3,1,Neutral,18,17,0.9444444444444444,False
-provided_test,all,3,2,El Nino,18,1,0.05555555555555555,False
-master,all,6,0,La Nina,114,34,0.2982456140350877,False
-master,all,6,1,Neutral,114,53,0.4649122807017544,False
-master,all,6,2,El Nino,114,27,0.23684210526315788,False
+provided_test,all,3,0,La Nina,27,3,0.1111111111111111,False
+provided_test,all,3,1,Neutral,27,21,0.7777777777777778,False
+provided_test,all,3,2,El Nino,27,3,0.1111111111111111,False
+master,all,6,0,La Nina,123,34,0.2764227642276423,False
+master,all,6,1,Neutral,123,57,0.4634146341463415,False
+master,all,6,2,El Nino,123,32,0.2601626016260163,False
 master,2016,6,0,La Nina,12,1,0.08333333333333333,False
 master,2016,6,1,Neutral,12,11,0.9166666666666666,False
 master,2016,6,2,El Nino,12,0,0.0,True
@@ -113,15 +119,18 @@ master,2023,6,2,El Nino,12,10,0.8333333333333334,False
 master,2024,6,0,La Nina,12,0,0.0,True
 master,2024,6,1,Neutral,12,12,1.0,False
 master,2024,6,2,El Nino,12,0,0.0,True
-master,2025,6,0,La Nina,6,3,0.5,False
-master,2025,6,1,Neutral,6,3,0.5,False
-master,2025,6,2,El Nino,6,0,0.0,True
+master,2025,6,0,La Nina,12,3,0.25,False
+master,2025,6,1,Neutral,12,7,0.5833333333333334,False
+master,2025,6,2,El Nino,12,2,0.16666666666666666,False
+master,2026,6,0,La Nina,3,0,0.0,True
+master,2026,6,1,Neutral,3,0,0.0,True
+master,2026,6,2,El Nino,3,3,1.0,False
 provided_train,all,6,0,La Nina,72,24,0.3333333333333333,False
 provided_train,all,6,1,Neutral,72,32,0.4444444444444444,False
 provided_train,all,6,2,El Nino,72,16,0.2222222222222222,False
 provided_validation,all,6,0,La Nina,24,7,0.2916666666666667,False
 provided_validation,all,6,1,Neutral,24,6,0.25,False
 provided_validation,all,6,2,El Nino,24,11,0.4583333333333333,False
-provided_test,all,6,0,La Nina,18,3,0.16666666666666666,False
-provided_test,all,6,1,Neutral,18,15,0.8333333333333334,False
-provided_test,all,6,2,El Nino,18,0,0.0,True
+provided_test,all,6,0,La Nina,27,3,0.1111111111111111,False
+provided_test,all,6,1,Neutral,27,19,0.7037037037037037,False
+provided_test,all,6,2,El Nino,27,5,0.18518518518518517,False

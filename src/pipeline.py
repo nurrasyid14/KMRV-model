@@ -97,7 +97,7 @@ PIPELINE_CALL_GRAPH = {
 
 
 def run_enso_training(
-    horizons: tuple[int, ...] = (1, 3, 6),
+    horizons: tuple[int, ...] = (1, 3, 6, 9, 12),
     epochs: int = 300,
     seed: int = 42,
 ) -> dict[str, object]:
@@ -106,7 +106,7 @@ def run_enso_training(
 
 
 def run_enso_backtesting(
-    horizons: tuple[int, ...] = (1, 3, 6),
+    horizons: tuple[int, ...] = (1, 3, 6, 9, 12),
     epochs: int = 300,
     seed: int = 42,
 ) -> dict[str, object]:
@@ -168,7 +168,7 @@ def append_pipeline_data(
 
 
 def run_full_pipeline(
-    horizons: tuple[int, ...] = (1, 3, 6),
+    horizons: tuple[int, ...] = (1, 3, 6, 9, 12),
     epochs: int = 300,
     seed: int = 42,
     prepare_data: bool = False,

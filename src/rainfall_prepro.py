@@ -24,7 +24,7 @@ import pandas as pd
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATASET_DIR = PROJECT_ROOT / "dataset"
 START = pd.Timestamp("2015-01-01")
-END = pd.Timestamp("2025-12-31")
+END = pd.Timestamp("2026-12-31")
 MONTHS = pd.date_range(START, END, freq="MS")
 
 MY_VALUE_COLS = [
@@ -200,6 +200,7 @@ def find_malaysia_csv() -> Path:
 
 
 def main() -> int:
+    global START, END, MONTHS
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -224,7 +225,23 @@ def main() -> int:
         default=DATASET_DIR / "data_rainfall_monthly",
         help="Folder keluaran CSV perbandingan bulanan",
     )
+    parser.add_argument(
+        "--start",
+        type=pd.Timestamp,
+        default=START,
+        help="Tanggal awal observasi (default: 2015-01-01)",
+    )
+    parser.add_argument(
+        "--end",
+        type=pd.Timestamp,
+        default=END,
+        help="Tanggal akhir observasi (default: 2026-12-31)",
+    )
     args = parser.parse_args()
+
+    START = pd.Timestamp(args.start)
+    END = pd.Timestamp(args.end)
+    MONTHS = pd.date_range(START, END, freq="MS")
 
     try:
         malaysia_csv = args.malaysia_csv or find_malaysia_csv()
@@ -244,6 +261,8 @@ def main() -> int:
 
         comparison_path = output_dir / "rainfall_comparison.csv"
         comparison.to_csv(comparison_path, index=False)
+        malaysia.to_csv(output_dir / "malaysia.csv", index=False)
+        hawaii.to_csv(output_dir / "hawaii.csv", index=False)
         warn_missing_months(malaysia, "Malaysia")
         warn_missing_months(hawaii, "Hawaii")
         print(f"Perbandingan Malaysia–Hawaii: {len(comparison)} bulan -> {comparison_path}")

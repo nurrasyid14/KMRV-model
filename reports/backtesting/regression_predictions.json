@@ -6,8 +6,8 @@
     "origin_time":"2022-01-01T00:00:00.000",
     "target_time":"2022-02-01T00:00:00.000",
     "actual_oni":-0.68,
-    "predicted_oni":-0.9105229378,
-    "residual_actual_minus_predicted":0.2305229378,
+    "predicted_oni":-0.9190653563,
+    "residual_actual_minus_predicted":0.2390653563,
     "final_holdout_evaluation":null
   },
   {
@@ -17,8 +17,8 @@
     "origin_time":"2022-02-01T00:00:00.000",
     "target_time":"2022-03-01T00:00:00.000",
     "actual_oni":-0.77,
-    "predicted_oni":-0.6783868074,
-    "residual_actual_minus_predicted":-0.0916131926,
+    "predicted_oni":-0.6875654459,
+    "residual_actual_minus_predicted":-0.0824345541,
     "final_holdout_evaluation":null
   },
   {
@@ -28,8 +28,8 @@
     "origin_time":"2022-03-01T00:00:00.000",
     "target_time":"2022-04-01T00:00:00.000",
     "actual_oni":-0.86,
-    "predicted_oni":-0.5944316983,
-    "residual_actual_minus_predicted":-0.2655683017,
+    "predicted_oni":-0.5964048505,
+    "residual_actual_minus_predicted":-0.2635951495,
     "final_holdout_evaluation":null
   },
   {
@@ -39,8 +39,8 @@
     "origin_time":"2022-04-01T00:00:00.000",
     "target_time":"2022-05-01T00:00:00.000",
     "actual_oni":-0.83,
-    "predicted_oni":-0.4299052656,
-    "residual_actual_minus_predicted":-0.4000947344,
+    "predicted_oni":-0.4218332767,
+    "residual_actual_minus_predicted":-0.4081667233,
     "final_holdout_evaluation":null
   },
   {
@@ -50,8 +50,8 @@
     "origin_time":"2022-05-01T00:00:00.000",
     "target_time":"2022-06-01T00:00:00.000",
     "actual_oni":-0.73,
-    "predicted_oni":-0.4329714775,
-    "residual_actual_minus_predicted":-0.2970285225,
+    "predicted_oni":-0.4261448085,
+    "residual_actual_minus_predicted":-0.3038551915,
     "final_holdout_evaluation":null
   },
   {
@@ -61,8 +61,8 @@
     "origin_time":"2022-06-01T00:00:00.000",
     "target_time":"2022-07-01T00:00:00.000",
     "actual_oni":-0.7,
-    "predicted_oni":-0.4736580551,
-    "residual_actual_minus_predicted":-0.2263419449,
+    "predicted_oni":-0.4745730162,
+    "residual_actual_minus_predicted":-0.2254269838,
     "final_holdout_evaluation":null
   },
   {
@@ -72,8 +72,8 @@
     "origin_time":"2022-07-01T00:00:00.000",
     "target_time":"2022-08-01T00:00:00.000",
     "actual_oni":-0.78,
-    "predicted_oni":-0.5808983445,
-    "residual_actual_minus_predicted":-0.1991016555,
+    "predicted_oni":-0.5843781233,
+    "residual_actual_minus_predicted":-0.1956218767,
     "final_holdout_evaluation":null
   },
   {
@@ -83,8 +83,8 @@
     "origin_time":"2022-08-01T00:00:00.000",
     "target_time":"2022-09-01T00:00:00.000",
     "actual_oni":-0.87,
-    "predicted_oni":-0.7284123898,
-    "residual_actual_minus_predicted":-0.1415876102,
+    "predicted_oni":-0.731906414,
+    "residual_actual_minus_predicted":-0.138093586,
     "final_holdout_evaluation":null
   },
   {
@@ -94,8 +94,8 @@
     "origin_time":"2022-09-01T00:00:00.000",
     "target_time":"2022-10-01T00:00:00.000",
     "actual_oni":-0.89,
-    "predicted_oni":-0.8655744195,
-    "residual_actual_minus_predicted":-0.0244255805,
+    "predicted_oni":-0.8688375354,
+    "residual_actual_minus_predicted":-0.0211624646,
     "final_holdout_evaluation":null
   },
   {
@@ -105,8 +105,8 @@
     "origin_time":"2022-10-01T00:00:00.000",
     "target_time":"2022-11-01T00:00:00.000",
     "actual_oni":-0.82,
-    "predicted_oni":-0.9548848867,
-    "residual_actual_minus_predicted":0.1348848867,
+    "predicted_oni":-0.958386302,
+    "residual_actual_minus_predicted":0.138386302,
     "final_holdout_evaluation":null
   },
   {
@@ -116,8 +116,8 @@
     "origin_time":"2022-11-01T00:00:00.000",
     "target_time":"2022-12-01T00:00:00.000",
     "actual_oni":-0.7,
-    "predicted_oni":-1.0078794956,
-    "residual_actual_minus_predicted":0.3078794956,
+    "predicted_oni":-1.0134404898,
+    "residual_actual_minus_predicted":0.3134404898,
     "final_holdout_evaluation":null
   },
   {
@@ -127,8 +127,8 @@
     "origin_time":"2022-12-01T00:00:00.000",
     "target_time":"2023-01-01T00:00:00.000",
     "actual_oni":-0.55,
-    "predicted_oni":-0.9858488441,
-    "residual_actual_minus_predicted":0.4358488441,
+    "predicted_oni":-0.9905695915,
+    "residual_actual_minus_predicted":0.4405695915,
     "final_holdout_evaluation":null
   },
   {
@@ -138,8 +138,8 @@
     "origin_time":"2023-01-01T00:00:00.000",
     "target_time":"2023-02-01T00:00:00.000",
     "actual_oni":-0.33,
-    "predicted_oni":-0.8703546524,
-    "residual_actual_minus_predicted":0.5403546524,
+    "predicted_oni":-0.87742275,
+    "residual_actual_minus_predicted":0.54742275,
     "final_holdout_evaluation":null
   },
   {
@@ -149,8 +149,8 @@
     "origin_time":"2023-02-01T00:00:00.000",
     "target_time":"2023-03-01T00:00:00.000",
     "actual_oni":-0.11,
-    "predicted_oni":-0.7431086302,
-    "residual_actual_minus_predicted":0.6331086302,
+    "predicted_oni":-0.7526555061,
+    "residual_actual_minus_predicted":0.6426555061,
     "final_holdout_evaluation":null
   },
   {
@@ -160,8 +160,8 @@
     "origin_time":"2023-03-01T00:00:00.000",
     "target_time":"2023-04-01T00:00:00.000",
     "actual_oni":0.19,
-    "predicted_oni":-0.4338457584,
-    "residual_actual_minus_predicted":0.6238457584,
+    "predicted_oni":-0.4398349524,
+    "residual_actual_minus_predicted":0.6298349524,
     "final_holdout_evaluation":null
   },
   {
@@ -171,8 +171,8 @@
     "origin_time":"2023-04-01T00:00:00.000",
     "target_time":"2023-05-01T00:00:00.000",
     "actual_oni":0.46,
-    "predicted_oni":-0.1213392317,
-    "residual_actual_minus_predicted":0.5813392317,
+    "predicted_oni":-0.1220902801,
+    "residual_actual_minus_predicted":0.5820902801,
     "final_holdout_evaluation":null
   },
   {
@@ -182,8 +182,8 @@
     "origin_time":"2023-05-01T00:00:00.000",
     "target_time":"2023-06-01T00:00:00.000",
     "actual_oni":0.73,
-    "predicted_oni":-0.0122285159,
-    "residual_actual_minus_predicted":0.7422285159,
+    "predicted_oni":-0.0111206369,
+    "residual_actual_minus_predicted":0.7411206369,
     "final_holdout_evaluation":null
   },
   {
@@ -193,8 +193,8 @@
     "origin_time":"2023-06-01T00:00:00.000",
     "target_time":"2023-07-01T00:00:00.000",
     "actual_oni":1.0,
-    "predicted_oni":0.0033822148,
-    "residual_actual_minus_predicted":0.9966177852,
+    "predicted_oni":0.0025832034,
+    "residual_actual_minus_predicted":0.9974167966,
     "final_holdout_evaluation":null
   },
   {
@@ -204,8 +204,8 @@
     "origin_time":"2023-07-01T00:00:00.000",
     "target_time":"2023-08-01T00:00:00.000",
     "actual_oni":1.25,
-    "predicted_oni":0.0010498664,
-    "residual_actual_minus_predicted":1.2489501336,
+    "predicted_oni":-0.0016113357,
+    "residual_actual_minus_predicted":1.2516113357,
     "final_holdout_evaluation":null
   },
   {
@@ -215,8 +215,8 @@
     "origin_time":"2023-08-01T00:00:00.000",
     "target_time":"2023-09-01T00:00:00.000",
     "actual_oni":1.5,
-    "predicted_oni":0.1750791222,
-    "residual_actual_minus_predicted":1.3249208778,
+    "predicted_oni":0.1650620252,
+    "residual_actual_minus_predicted":1.3349379748,
     "final_holdout_evaluation":null
   },
   {
@@ -226,8 +226,8 @@
     "origin_time":"2023-09-01T00:00:00.000",
     "target_time":"2023-10-01T00:00:00.000",
     "actual_oni":1.74,
-    "predicted_oni":0.4217549264,
-    "residual_actual_minus_predicted":1.3182450736,
+    "predicted_oni":0.4108512998,
+    "residual_actual_minus_predicted":1.3291487002,
     "final_holdout_evaluation":null
   },
   {
@@ -237,8 +237,8 @@
     "origin_time":"2023-10-01T00:00:00.000",
     "target_time":"2023-11-01T00:00:00.000",
     "actual_oni":1.9,
-    "predicted_oni":0.6686502099,
-    "residual_actual_minus_predicted":1.2313497901,
+    "predicted_oni":0.6570734382,
+    "residual_actual_minus_predicted":1.2429265618,
     "final_holdout_evaluation":null
   },
   {
@@ -248,8 +248,8 @@
     "origin_time":"2023-11-01T00:00:00.000",
     "target_time":"2023-12-01T00:00:00.000",
     "actual_oni":1.99,
-    "predicted_oni":0.768421948,
-    "residual_actual_minus_predicted":1.221578052,
+    "predicted_oni":0.757512033,
+    "residual_actual_minus_predicted":1.232487967,
     "final_holdout_evaluation":null
   },
   {
@@ -259,8 +259,8 @@
     "origin_time":"2022-01-01T00:00:00.000",
     "target_time":"2022-04-01T00:00:00.000",
     "actual_oni":-0.86,
-    "predicted_oni":-0.6794631481,
-    "residual_actual_minus_predicted":-0.1805368519,
+    "predicted_oni":-0.6728340983,
+    "residual_actual_minus_predicted":-0.1871659017,
     "final_holdout_evaluation":null
   },
   {
@@ -270,8 +270,8 @@
     "origin_time":"2022-02-01T00:00:00.000",
     "target_time":"2022-05-01T00:00:00.000",
     "actual_oni":-0.83,
-    "predicted_oni":-0.481203407,
-    "residual_actual_minus_predicted":-0.348796593,
+    "predicted_oni":-0.4816768467,
+    "residual_actual_minus_predicted":-0.3483231533,
     "final_holdout_evaluation":null
   },
   {
@@ -281,8 +281,8 @@
     "origin_time":"2022-03-01T00:00:00.000",
     "target_time":"2022-06-01T00:00:00.000",
     "actual_oni":-0.73,
-    "predicted_oni":-0.4802963138,
-    "residual_actual_minus_predicted":-0.2497036862,
+    "predicted_oni":-0.4817310274,
+    "residual_actual_minus_predicted":-0.2482689726,
     "final_holdout_evaluation":null
   },
   {
@@ -292,8 +292,8 @@
     "origin_time":"2022-04-01T00:00:00.000",
     "target_time":"2022-07-01T00:00:00.000",
     "actual_oni":-0.7,
-    "predicted_oni":-0.4344803989,
-    "residual_actual_minus_predicted":-0.2655196011,
+    "predicted_oni":-0.436757952,
+    "residual_actual_minus_predicted":-0.263242048,
     "final_holdout_evaluation":null
   },
   {
@@ -303,8 +303,8 @@
     "origin_time":"2022-05-01T00:00:00.000",
     "target_time":"2022-08-01T00:00:00.000",
     "actual_oni":-0.78,
-    "predicted_oni":-0.5268389583,
-    "residual_actual_minus_predicted":-0.2531610417,
+    "predicted_oni":-0.5289043188,
+    "residual_actual_minus_predicted":-0.2510956812,
     "final_holdout_evaluation":null
   },
   {
@@ -314,8 +314,8 @@
     "origin_time":"2022-06-01T00:00:00.000",
     "target_time":"2022-09-01T00:00:00.000",
     "actual_oni":-0.87,
-    "predicted_oni":-0.5974943638,
-    "residual_actual_minus_predicted":-0.2725056362,
+    "predicted_oni":-0.5969582796,
+    "residual_actual_minus_predicted":-0.2730417204,
     "final_holdout_evaluation":null
   },
   {
@@ -325,8 +325,8 @@
     "origin_time":"2022-07-01T00:00:00.000",
     "target_time":"2022-10-01T00:00:00.000",
     "actual_oni":-0.89,
-    "predicted_oni":-0.6324095726,
-    "residual_actual_minus_predicted":-0.2575904274,
+    "predicted_oni":-0.6299962997,
+    "residual_actual_minus_predicted":-0.2600037003,
     "final_holdout_evaluation":null
   },
   {
@@ -336,8 +336,8 @@
     "origin_time":"2022-08-01T00:00:00.000",
     "target_time":"2022-11-01T00:00:00.000",
     "actual_oni":-0.82,
-    "predicted_oni":-0.7286683917,
-    "residual_actual_minus_predicted":-0.0913316083,
+    "predicted_oni":-0.7281267643,
+    "residual_actual_minus_predicted":-0.0918732357,
     "final_holdout_evaluation":null
   },
   {
@@ -347,8 +347,8 @@
     "origin_time":"2022-09-01T00:00:00.000",
     "target_time":"2022-12-01T00:00:00.000",
     "actual_oni":-0.7,
-    "predicted_oni":-0.7819619179,
-    "residual_actual_minus_predicted":0.0819619179,
+    "predicted_oni":-0.7808442116,
+    "residual_actual_minus_predicted":0.0808442116,
     "final_holdout_evaluation":null
   },
   {
@@ -358,8 +358,8 @@
     "origin_time":"2022-10-01T00:00:00.000",
     "target_time":"2023-01-01T00:00:00.000",
     "actual_oni":-0.55,
-    "predicted_oni":-0.813580513,
-    "residual_actual_minus_predicted":0.263580513,
+    "predicted_oni":-0.8127303123,
+    "residual_actual_minus_predicted":0.2627303123,
     "final_holdout_evaluation":null
   },
   {
@@ -369,8 +369,8 @@
     "origin_time":"2022-11-01T00:00:00.000",
     "target_time":"2023-02-01T00:00:00.000",
     "actual_oni":-0.33,
-    "predicted_oni":-0.8305519223,
-    "residual_actual_minus_predicted":0.5005519223,
+    "predicted_oni":-0.8281240463,
+    "residual_actual_minus_predicted":0.4981240463,
     "final_holdout_evaluation":null
   },
   {
@@ -380,8 +380,8 @@
     "origin_time":"2022-12-01T00:00:00.000",
     "target_time":"2023-03-01T00:00:00.000",
     "actual_oni":-0.11,
-    "predicted_oni":-0.6775779128,
-    "residual_actual_minus_predicted":0.5675779128,
+    "predicted_oni":-0.6772071123,
+    "residual_actual_minus_predicted":0.5672071123,
     "final_holdout_evaluation":null
   },
   {
@@ -391,8 +391,8 @@
     "origin_time":"2023-01-01T00:00:00.000",
     "target_time":"2023-04-01T00:00:00.000",
     "actual_oni":0.19,
-    "predicted_oni":-0.6123054028,
-    "residual_actual_minus_predicted":0.8023054028,
+    "predicted_oni":-0.61148417,
+    "residual_actual_minus_predicted":0.80148417,
     "final_holdout_evaluation":null
   },
   {
@@ -402,8 +402,8 @@
     "origin_time":"2023-02-01T00:00:00.000",
     "target_time":"2023-05-01T00:00:00.000",
     "actual_oni":0.46,
-    "predicted_oni":-0.4944140315,
-    "residual_actual_minus_predicted":0.9544140315,
+    "predicted_oni":-0.4961645305,
+    "residual_actual_minus_predicted":0.9561645305,
     "final_holdout_evaluation":null
   },
   {
@@ -413,8 +413,8 @@
     "origin_time":"2023-03-01T00:00:00.000",
     "target_time":"2023-06-01T00:00:00.000",
     "actual_oni":0.73,
-    "predicted_oni":-0.3818310797,
-    "residual_actual_minus_predicted":1.1118310797,
+    "predicted_oni":-0.3872702122,
+    "residual_actual_minus_predicted":1.1172702122,
     "final_holdout_evaluation":null
   },
   {
@@ -424,8 +424,8 @@
     "origin_time":"2023-04-01T00:00:00.000",
     "target_time":"2023-07-01T00:00:00.000",
     "actual_oni":1.0,
-    "predicted_oni":-0.2427977771,
-    "residual_actual_minus_predicted":1.2427977771,
+    "predicted_oni":-0.2553120852,
+    "residual_actual_minus_predicted":1.2553120852,
     "final_holdout_evaluation":null
   },
   {
@@ -435,8 +435,8 @@
     "origin_time":"2023-05-01T00:00:00.000",
     "target_time":"2023-08-01T00:00:00.000",
     "actual_oni":1.25,
-    "predicted_oni":-0.2410577685,
-    "residual_actual_minus_predicted":1.4910577685,
+    "predicted_oni":-0.2513914108,
+    "residual_actual_minus_predicted":1.5013914108,
     "final_holdout_evaluation":null
   },
   {
@@ -446,8 +446,8 @@
     "origin_time":"2023-06-01T00:00:00.000",
     "target_time":"2023-09-01T00:00:00.000",
     "actual_oni":1.5,
-    "predicted_oni":-0.2526114881,
-    "residual_actual_minus_predicted":1.7526114881,
+    "predicted_oni":-0.2641522884,
+    "residual_actual_minus_predicted":1.7641522884,
     "final_holdout_evaluation":null
   },
   {
@@ -457,8 +457,8 @@
     "origin_time":"2023-07-01T00:00:00.000",
     "target_time":"2023-10-01T00:00:00.000",
     "actual_oni":1.74,
-    "predicted_oni":-0.1990688592,
-    "residual_actual_minus_predicted":1.9390688592,
+    "predicted_oni":-0.211149931,
+    "residual_actual_minus_predicted":1.951149931,
     "final_holdout_evaluation":null
   },
   {
@@ -468,8 +468,8 @@
     "origin_time":"2023-08-01T00:00:00.000",
     "target_time":"2023-11-01T00:00:00.000",
     "actual_oni":1.9,
-    "predicted_oni":-0.0014679754,
-    "residual_actual_minus_predicted":1.9014679754,
+    "predicted_oni":-0.0132698109,
+    "residual_actual_minus_predicted":1.9132698109,
     "final_holdout_evaluation":null
   },
   {
@@ -479,8 +479,8 @@
     "origin_time":"2023-09-01T00:00:00.000",
     "target_time":"2023-12-01T00:00:00.000",
     "actual_oni":1.99,
-    "predicted_oni":0.3529983759,
-    "residual_actual_minus_predicted":1.6370016241,
+    "predicted_oni":0.337671876,
+    "residual_actual_minus_predicted":1.652328124,
     "final_holdout_evaluation":null
   },
   {
@@ -490,8 +490,8 @@
     "origin_time":"2022-01-01T00:00:00.000",
     "target_time":"2022-07-01T00:00:00.000",
     "actual_oni":-0.7,
-    "predicted_oni":-0.0340893231,
-    "residual_actual_minus_predicted":-0.6659106769,
+    "predicted_oni":-0.0350522026,
+    "residual_actual_minus_predicted":-0.6649477974,
     "final_holdout_evaluation":null
   },
   {
@@ -501,8 +501,8 @@
     "origin_time":"2022-02-01T00:00:00.000",
     "target_time":"2022-08-01T00:00:00.000",
     "actual_oni":-0.78,
-    "predicted_oni":-0.0045740986,
-    "residual_actual_minus_predicted":-0.7754259014,
+    "predicted_oni":-0.0072269747,
+    "residual_actual_minus_predicted":-0.7727730253,
     "final_holdout_evaluation":null
   },
   {
@@ -512,8 +512,8 @@
     "origin_time":"2022-03-01T00:00:00.000",
     "target_time":"2022-09-01T00:00:00.000",
     "actual_oni":-0.87,
-    "predicted_oni":-0.0165466648,
-    "residual_actual_minus_predicted":-0.8534533352,
+    "predicted_oni":-0.0188795161,
+    "residual_actual_minus_predicted":-0.8511204839,
     "final_holdout_evaluation":null
   },
   {
@@ -523,8 +523,8 @@
     "origin_time":"2022-04-01T00:00:00.000",
     "target_time":"2022-10-01T00:00:00.000",
     "actual_oni":-0.89,
-    "predicted_oni":-0.0209486298,
-    "residual_actual_minus_predicted":-0.8690513702,
+    "predicted_oni":-0.0226177312,
+    "residual_actual_minus_predicted":-0.8673822688,
     "final_holdout_evaluation":null
   },
   {
@@ -534,8 +534,8 @@
     "origin_time":"2022-05-01T00:00:00.000",
     "target_time":"2022-11-01T00:00:00.000",
     "actual_oni":-0.82,
-    "predicted_oni":-0.020653015,
-    "residual_actual_minus_predicted":-0.799346985,
+    "predicted_oni":-0.0225651674,
+    "residual_actual_minus_predicted":-0.7974348326,
     "final_holdout_evaluation":null
   },
   {
@@ -545,8 +545,8 @@
     "origin_time":"2022-06-01T00:00:00.000",
     "target_time":"2022-12-01T00:00:00.000",
     "actual_oni":-0.7,
-    "predicted_oni":-0.021197319,
-    "residual_actual_minus_predicted":-0.678802681,
+    "predicted_oni":-0.0235672258,
+    "residual_actual_minus_predicted":-0.6764327742,
     "final_holdout_evaluation":null
   },
   {
@@ -556,8 +556,8 @@
     "origin_time":"2022-07-01T00:00:00.000",
     "target_time":"2023-01-01T00:00:00.000",
     "actual_oni":-0.55,
-    "predicted_oni":-0.0318531059,
-    "residual_actual_minus_predicted":-0.5181468941,
+    "predicted_oni":-0.0333048254,
+    "residual_actual_minus_predicted":-0.5166951746,
     "final_holdout_evaluation":null
   },
   {
@@ -567,8 +567,8 @@
     "origin_time":"2022-08-01T00:00:00.000",
     "target_time":"2023-02-01T00:00:00.000",
     "actual_oni":-0.33,
-    "predicted_oni":-0.0490632951,
-    "residual_actual_minus_predicted":-0.2809367049,
+    "predicted_oni":-0.0508133173,
+    "residual_actual_minus_predicted":-0.2791866827,
     "final_holdout_evaluation":null
   },
   {
@@ -578,8 +578,8 @@
     "origin_time":"2022-09-01T00:00:00.000",
     "target_time":"2023-03-01T00:00:00.000",
     "actual_oni":-0.11,
-    "predicted_oni":-0.0260418281,
-    "residual_actual_minus_predicted":-0.0839581719,
+    "predicted_oni":-0.0268137883,
+    "residual_actual_minus_predicted":-0.0831862117,
     "final_holdout_evaluation":null
   },
   {
@@ -589,8 +589,8 @@
     "origin_time":"2022-10-01T00:00:00.000",
     "target_time":"2023-04-01T00:00:00.000",
     "actual_oni":0.19,
-    "predicted_oni":-0.0147185801,
-    "residual_actual_minus_predicted":0.2047185801,
+    "predicted_oni":-0.015009529,
+    "residual_actual_minus_predicted":0.205009529,
     "final_holdout_evaluation":null
   },
   {
@@ -600,8 +600,8 @@
     "origin_time":"2022-11-01T00:00:00.000",
     "target_time":"2023-05-01T00:00:00.000",
     "actual_oni":0.46,
-    "predicted_oni":-0.0176399201,
-    "residual_actual_minus_predicted":0.4776399201,
+    "predicted_oni":-0.0177763104,
+    "residual_actual_minus_predicted":0.4777763104,
     "final_holdout_evaluation":null
   },
   {
@@ -611,8 +611,8 @@
     "origin_time":"2022-12-01T00:00:00.000",
     "target_time":"2023-06-01T00:00:00.000",
     "actual_oni":0.73,
-    "predicted_oni":-0.0188188013,
-    "residual_actual_minus_predicted":0.7488188013,
+    "predicted_oni":-0.020453956,
+    "residual_actual_minus_predicted":0.750453956,
     "final_holdout_evaluation":null
   },
   {
@@ -622,8 +622,8 @@
     "origin_time":"2023-01-01T00:00:00.000",
     "target_time":"2023-07-01T00:00:00.000",
     "actual_oni":1.0,
-    "predicted_oni":0.0007757463,
-    "residual_actual_minus_predicted":0.9992242537,
+    "predicted_oni":-0.0012647852,
+    "residual_actual_minus_predicted":1.0012647852,
     "final_holdout_evaluation":null
   },
   {
@@ -633,8 +633,8 @@
     "origin_time":"2023-02-01T00:00:00.000",
     "target_time":"2023-08-01T00:00:00.000",
     "actual_oni":1.25,
-    "predicted_oni":-0.0111674452,
-    "residual_actual_minus_predicted":1.2611674452,
+    "predicted_oni":-0.0125366086,
+    "residual_actual_minus_predicted":1.2625366086,
     "final_holdout_evaluation":null
   },
   {
@@ -644,8 +644,8 @@
     "origin_time":"2023-03-01T00:00:00.000",
     "target_time":"2023-09-01T00:00:00.000",
     "actual_oni":1.5,
-    "predicted_oni":0.0215797462,
-    "residual_actual_minus_predicted":1.4784202538,
+    "predicted_oni":0.0203139074,
+    "residual_actual_minus_predicted":1.4796860926,
     "final_holdout_evaluation":null
   },
   {
@@ -655,8 +655,8 @@
     "origin_time":"2023-04-01T00:00:00.000",
     "target_time":"2023-10-01T00:00:00.000",
     "actual_oni":1.74,
-    "predicted_oni":0.1100531593,
-    "residual_actual_minus_predicted":1.6299468407,
+    "predicted_oni":0.1097846106,
+    "residual_actual_minus_predicted":1.6302153894,
     "final_holdout_evaluation":null
   },
   {
@@ -666,8 +666,8 @@
     "origin_time":"2023-05-01T00:00:00.000",
     "target_time":"2023-11-01T00:00:00.000",
     "actual_oni":1.9,
-    "predicted_oni":0.1110163555,
-    "residual_actual_minus_predicted":1.7889836445,
+    "predicted_oni":0.1130507961,
+    "residual_actual_minus_predicted":1.7869492039,
     "final_holdout_evaluation":null
   },
   {
@@ -677,8 +677,8 @@
     "origin_time":"2023-06-01T00:00:00.000",
     "target_time":"2023-12-01T00:00:00.000",
     "actual_oni":1.99,
-    "predicted_oni":0.1001616344,
-    "residual_actual_minus_predicted":1.8898383656,
+    "predicted_oni":0.1016491428,
+    "residual_actual_minus_predicted":1.8883508572,
     "final_holdout_evaluation":null
   },
   {
@@ -688,8 +688,8 @@
     "origin_time":"2024-01-01T00:00:00.000",
     "target_time":"2024-02-01T00:00:00.000",
     "actual_oni":1.53,
-    "predicted_oni":0.7062663436,
-    "residual_actual_minus_predicted":0.8237336564,
+    "predicted_oni":0.6300414205,
+    "residual_actual_minus_predicted":0.8999585795,
     "final_holdout_evaluation":true
   },
   {
@@ -699,8 +699,8 @@
     "origin_time":"2024-02-01T00:00:00.000",
     "target_time":"2024-03-01T00:00:00.000",
     "actual_oni":1.18,
-    "predicted_oni":0.6280130744,
-    "residual_actual_minus_predicted":0.5519869256,
+    "predicted_oni":0.6230154634,
+    "residual_actual_minus_predicted":0.5569845366,
     "final_holdout_evaluation":true
   },
   {
@@ -710,8 +710,8 @@
     "origin_time":"2024-03-01T00:00:00.000",
     "target_time":"2024-04-01T00:00:00.000",
     "actual_oni":0.77,
-    "predicted_oni":0.5384026766,
-    "residual_actual_minus_predicted":0.2315973234,
+    "predicted_oni":0.5395906568,
+    "residual_actual_minus_predicted":0.2304093432,
     "final_holdout_evaluation":true
   },
   {
@@ -721,8 +721,8 @@
     "origin_time":"2024-04-01T00:00:00.000",
     "target_time":"2024-05-01T00:00:00.000",
     "actual_oni":0.43,
-    "predicted_oni":0.4693174064,
-    "residual_actual_minus_predicted":-0.0393174064,
+    "predicted_oni":0.4245578349,
+    "residual_actual_minus_predicted":0.0054421651,
     "final_holdout_evaluation":true
   },
   {
@@ -732,8 +732,8 @@
     "origin_time":"2024-05-01T00:00:00.000",
     "target_time":"2024-06-01T00:00:00.000",
     "actual_oni":0.18,
-    "predicted_oni":0.2387300134,
-    "residual_actual_minus_predicted":-0.0587300134,
+    "predicted_oni":0.2138510793,
+    "residual_actual_minus_predicted":-0.0338510793,
     "final_holdout_evaluation":true
   },
   {
@@ -743,8 +743,8 @@
     "origin_time":"2024-06-01T00:00:00.000",
     "target_time":"2024-07-01T00:00:00.000",
     "actual_oni":0.06,
-    "predicted_oni":0.0345071889,
-    "residual_actual_minus_predicted":0.0254928111,
+    "predicted_oni":0.0165734347,
+    "residual_actual_minus_predicted":0.0434265653,
     "final_holdout_evaluation":true
   },
   {
@@ -754,8 +754,8 @@
     "origin_time":"2024-07-01T00:00:00.000",
     "target_time":"2024-08-01T00:00:00.000",
     "actual_oni":-0.04,
-    "predicted_oni":-0.091067262,
-    "residual_actual_minus_predicted":0.051067262,
+    "predicted_oni":-0.1042551994,
+    "residual_actual_minus_predicted":0.0642551994,
     "final_holdout_evaluation":true
   },
   {
@@ -765,8 +765,8 @@
     "origin_time":"2024-08-01T00:00:00.000",
     "target_time":"2024-09-01T00:00:00.000",
     "actual_oni":-0.12,
-    "predicted_oni":-0.2126339972,
-    "residual_actual_minus_predicted":0.0926339972,
+    "predicted_oni":-0.2280275673,
+    "residual_actual_minus_predicted":0.1080275673,
     "final_holdout_evaluation":true
   },
   {
@@ -776,8 +776,8 @@
     "origin_time":"2024-09-01T00:00:00.000",
     "target_time":"2024-10-01T00:00:00.000",
     "actual_oni":-0.19,
-    "predicted_oni":-0.356382519,
-    "residual_actual_minus_predicted":0.166382519,
+    "predicted_oni":-0.3737331927,
+    "residual_actual_minus_predicted":0.1837331927,
     "final_holdout_evaluation":true
   },
   {
@@ -787,8 +787,8 @@
     "origin_time":"2024-10-01T00:00:00.000",
     "target_time":"2024-11-01T00:00:00.000",
     "actual_oni":-0.29,
-    "predicted_oni":-0.5029875636,
-    "residual_actual_minus_predicted":0.2129875636,
+    "predicted_oni":-0.5168617964,
+    "residual_actual_minus_predicted":0.2268617964,
     "final_holdout_evaluation":true
   },
   {
@@ -798,8 +798,8 @@
     "origin_time":"2024-11-01T00:00:00.000",
     "target_time":"2024-12-01T00:00:00.000",
     "actual_oni":-0.43,
-    "predicted_oni":-0.6118338704,
-    "residual_actual_minus_predicted":0.1818338704,
+    "predicted_oni":-0.6276037097,
+    "residual_actual_minus_predicted":0.1976037097,
     "final_holdout_evaluation":true
   },
   {
@@ -809,8 +809,8 @@
     "origin_time":"2024-12-01T00:00:00.000",
     "target_time":"2025-01-01T00:00:00.000",
     "actual_oni":-0.46,
-    "predicted_oni":-0.6031258106,
-    "residual_actual_minus_predicted":0.1431258106,
+    "predicted_oni":-0.6201866865,
+    "residual_actual_minus_predicted":0.1601866865,
     "final_holdout_evaluation":true
   },
   {
@@ -820,8 +820,8 @@
     "origin_time":"2025-01-01T00:00:00.000",
     "target_time":"2025-02-01T00:00:00.000",
     "actual_oni":-0.22,
-    "predicted_oni":-0.4376654923,
-    "residual_actual_minus_predicted":0.2176654923,
+    "predicted_oni":-0.4616726935,
+    "residual_actual_minus_predicted":0.2416726935,
     "final_holdout_evaluation":true
   },
   {
@@ -831,8 +831,8 @@
     "origin_time":"2025-02-01T00:00:00.000",
     "target_time":"2025-03-01T00:00:00.000",
     "actual_oni":-0.08,
-    "predicted_oni":-0.2569006681,
-    "residual_actual_minus_predicted":0.1769006681,
+    "predicted_oni":-0.2825489044,
+    "residual_actual_minus_predicted":0.2025489044,
     "final_holdout_evaluation":true
   },
   {
@@ -842,8 +842,8 @@
     "origin_time":"2025-03-01T00:00:00.000",
     "target_time":"2025-04-01T00:00:00.000",
     "actual_oni":0.02,
-    "predicted_oni":-0.1256065071,
-    "residual_actual_minus_predicted":0.1456065071,
+    "predicted_oni":-0.1503940076,
+    "residual_actual_minus_predicted":0.1703940076,
     "final_holdout_evaluation":true
   },
   {
@@ -853,8 +853,8 @@
     "origin_time":"2025-04-01T00:00:00.000",
     "target_time":"2025-05-01T00:00:00.000",
     "actual_oni":-0.04,
-    "predicted_oni":0.0105670746,
-    "residual_actual_minus_predicted":-0.0505670746,
+    "predicted_oni":-0.0045352564,
+    "residual_actual_minus_predicted":-0.0354647436,
     "final_holdout_evaluation":true
   },
   {
@@ -864,8 +864,8 @@
     "origin_time":"2025-05-01T00:00:00.000",
     "target_time":"2025-06-01T00:00:00.000",
     "actual_oni":-0.02,
-    "predicted_oni":-0.1194515452,
-    "residual_actual_minus_predicted":0.0994515452,
+    "predicted_oni":-0.1290270537,
+    "residual_actual_minus_predicted":0.1090270537,
     "final_holdout_evaluation":true
   },
   {
@@ -875,8 +875,8 @@
     "origin_time":"2025-06-01T00:00:00.000",
     "target_time":"2025-07-01T00:00:00.000",
     "actual_oni":-0.11,
-    "predicted_oni":-0.1831839383,
-    "residual_actual_minus_predicted":0.0731839383,
+    "predicted_oni":-0.1860702187,
+    "residual_actual_minus_predicted":0.0760702187,
     "final_holdout_evaluation":true
   },
   {
@@ -886,8 +886,8 @@
     "origin_time":"2024-01-01T00:00:00.000",
     "target_time":"2024-04-01T00:00:00.000",
     "actual_oni":0.77,
-    "predicted_oni":0.424064666,
-    "residual_actual_minus_predicted":0.345935334,
+    "predicted_oni":0.3839454949,
+    "residual_actual_minus_predicted":0.3860545051,
     "final_holdout_evaluation":true
   },
   {
@@ -897,8 +897,8 @@
     "origin_time":"2024-02-01T00:00:00.000",
     "target_time":"2024-05-01T00:00:00.000",
     "actual_oni":0.43,
-    "predicted_oni":0.3453459442,
-    "residual_actual_minus_predicted":0.0846540558,
+    "predicted_oni":0.3607541621,
+    "residual_actual_minus_predicted":0.0692458379,
     "final_holdout_evaluation":true
   },
   {
@@ -908,8 +908,8 @@
     "origin_time":"2024-03-01T00:00:00.000",
     "target_time":"2024-06-01T00:00:00.000",
     "actual_oni":0.18,
-    "predicted_oni":0.3065219223,
-    "residual_actual_minus_predicted":-0.1265219223,
+    "predicted_oni":0.3163427413,
+    "residual_actual_minus_predicted":-0.1363427413,
     "final_holdout_evaluation":true
   },
   {
@@ -919,8 +919,8 @@
     "origin_time":"2024-04-01T00:00:00.000",
     "target_time":"2024-07-01T00:00:00.000",
     "actual_oni":0.06,
-    "predicted_oni":0.1786143631,
-    "residual_actual_minus_predicted":-0.1186143631,
+    "predicted_oni":0.0852373615,
+    "residual_actual_minus_predicted":-0.0252373615,
     "final_holdout_evaluation":true
   },
   {
@@ -930,8 +930,8 @@
     "origin_time":"2024-05-01T00:00:00.000",
     "target_time":"2024-08-01T00:00:00.000",
     "actual_oni":-0.04,
-    "predicted_oni":0.02288213,
-    "residual_actual_minus_predicted":-0.06288213,
+    "predicted_oni":-0.0188784394,
+    "residual_actual_minus_predicted":-0.0211215606,
     "final_holdout_evaluation":true
   },
   {
@@ -941,8 +941,8 @@
     "origin_time":"2024-06-01T00:00:00.000",
     "target_time":"2024-09-01T00:00:00.000",
     "actual_oni":-0.12,
-    "predicted_oni":-0.166448921,
-    "residual_actual_minus_predicted":0.046448921,
+    "predicted_oni":-0.1961774379,
+    "residual_actual_minus_predicted":0.0761774379,
     "final_holdout_evaluation":true
   },
   {
@@ -952,8 +952,8 @@
     "origin_time":"2024-07-01T00:00:00.000",
     "target_time":"2024-10-01T00:00:00.000",
     "actual_oni":-0.19,
-    "predicted_oni":-0.2630959749,
-    "residual_actual_minus_predicted":0.0730959749,
+    "predicted_oni":-0.2894985676,
+    "residual_actual_minus_predicted":0.0994985676,
     "final_holdout_evaluation":true
   },
   {
@@ -963,8 +963,8 @@
     "origin_time":"2024-08-01T00:00:00.000",
     "target_time":"2024-11-01T00:00:00.000",
     "actual_oni":-0.29,
-    "predicted_oni":-0.2514593303,
-    "residual_actual_minus_predicted":-0.0385406697,
+    "predicted_oni":-0.2686441541,
+    "residual_actual_minus_predicted":-0.0213558459,
     "final_holdout_evaluation":true
   },
   {
@@ -974,8 +974,8 @@
     "origin_time":"2024-09-01T00:00:00.000",
     "target_time":"2024-12-01T00:00:00.000",
     "actual_oni":-0.43,
-    "predicted_oni":-0.2209688127,
-    "residual_actual_minus_predicted":-0.2090311873,
+    "predicted_oni":-0.2337207347,
+    "residual_actual_minus_predicted":-0.1962792653,
     "final_holdout_evaluation":true
   },
   {
@@ -985,8 +985,8 @@
     "origin_time":"2024-10-01T00:00:00.000",
     "target_time":"2025-01-01T00:00:00.000",
     "actual_oni":-0.46,
-    "predicted_oni":-0.2814728916,
-    "residual_actual_minus_predicted":-0.1785271084,
+    "predicted_oni":-0.2913123369,
+    "residual_actual_minus_predicted":-0.1686876631,
     "final_holdout_evaluation":true
   },
   {
@@ -996,8 +996,8 @@
     "origin_time":"2024-11-01T00:00:00.000",
     "target_time":"2025-02-01T00:00:00.000",
     "actual_oni":-0.22,
-    "predicted_oni":-0.4046174288,
-    "residual_actual_minus_predicted":0.1846174288,
+    "predicted_oni":-0.411913693,
+    "residual_actual_minus_predicted":0.191913693,
     "final_holdout_evaluation":true
   },
   {
@@ -1007,8 +1007,8 @@
     "origin_time":"2024-12-01T00:00:00.000",
     "target_time":"2025-03-01T00:00:00.000",
     "actual_oni":-0.08,
-    "predicted_oni":-0.4182620347,
-    "residual_actual_minus_predicted":0.3382620347,
+    "predicted_oni":-0.4279586673,
+    "residual_actual_minus_predicted":0.3479586673,
     "final_holdout_evaluation":true
   },
   {
@@ -1018,8 +1018,8 @@
     "origin_time":"2025-01-01T00:00:00.000",
     "target_time":"2025-04-01T00:00:00.000",
     "actual_oni":0.02,
-    "predicted_oni":-0.2698390782,
-    "residual_actual_minus_predicted":0.2898390782,
+    "predicted_oni":-0.2805888653,
+    "residual_actual_minus_predicted":0.3005888653,
     "final_holdout_evaluation":true
   },
   {
@@ -1029,8 +1029,8 @@
     "origin_time":"2025-02-01T00:00:00.000",
     "target_time":"2025-05-01T00:00:00.000",
     "actual_oni":-0.04,
-    "predicted_oni":-0.1765264869,
-    "residual_actual_minus_predicted":0.1365264869,
+    "predicted_oni":-0.1881652027,
+    "residual_actual_minus_predicted":0.1481652027,
     "final_holdout_evaluation":true
   },
   {
@@ -1040,8 +1040,8 @@
     "origin_time":"2025-03-01T00:00:00.000",
     "target_time":"2025-06-01T00:00:00.000",
     "actual_oni":-0.02,
-    "predicted_oni":-0.0805139169,
-    "residual_actual_minus_predicted":0.0605139169,
+    "predicted_oni":-0.0893786103,
+    "residual_actual_minus_predicted":0.0693786103,
     "final_holdout_evaluation":true
   },
   {
@@ -1051,8 +1051,8 @@
     "origin_time":"2025-04-01T00:00:00.000",
     "target_time":"2025-07-01T00:00:00.000",
     "actual_oni":-0.11,
-    "predicted_oni":-0.1347230822,
-    "residual_actual_minus_predicted":0.0247230822,
+    "predicted_oni":-0.1395176053,
+    "residual_actual_minus_predicted":0.0295176053,
     "final_holdout_evaluation":true
   },
   {
@@ -1062,8 +1062,8 @@
     "origin_time":"2025-05-01T00:00:00.000",
     "target_time":"2025-08-01T00:00:00.000",
     "actual_oni":-0.26,
-    "predicted_oni":-0.2769906819,
-    "residual_actual_minus_predicted":0.0169906819,
+    "predicted_oni":-0.2854736447,
+    "residual_actual_minus_predicted":0.0254736447,
     "final_holdout_evaluation":true
   },
   {
@@ -1073,8 +1073,8 @@
     "origin_time":"2025-06-01T00:00:00.000",
     "target_time":"2025-09-01T00:00:00.000",
     "actual_oni":-0.43,
-    "predicted_oni":-0.4808751345,
-    "residual_actual_minus_predicted":0.0508751345,
+    "predicted_oni":-0.4893976152,
+    "residual_actual_minus_predicted":0.0593976152,
     "final_holdout_evaluation":true
   },
   {
@@ -1084,8 +1084,8 @@
     "origin_time":"2024-01-01T00:00:00.000",
     "target_time":"2024-07-01T00:00:00.000",
     "actual_oni":0.06,
-    "predicted_oni":0.107075654,
-    "residual_actual_minus_predicted":-0.047075654,
+    "predicted_oni":0.0813160017,
+    "residual_actual_minus_predicted":-0.0213160017,
     "final_holdout_evaluation":true
   },
   {
@@ -1095,8 +1095,8 @@
     "origin_time":"2024-02-01T00:00:00.000",
     "target_time":"2024-08-01T00:00:00.000",
     "actual_oni":-0.04,
-    "predicted_oni":0.0793667808,
-    "residual_actual_minus_predicted":-0.1193667808,
+    "predicted_oni":0.0766954795,
+    "residual_actual_minus_predicted":-0.1166954795,
     "final_holdout_evaluation":true
   },
   {
@@ -1106,8 +1106,8 @@
     "origin_time":"2024-03-01T00:00:00.000",
     "target_time":"2024-09-01T00:00:00.000",
     "actual_oni":-0.12,
-    "predicted_oni":0.1155022606,
-    "residual_actual_minus_predicted":-0.2355022606,
+    "predicted_oni":0.1122273281,
+    "residual_actual_minus_predicted":-0.2322273281,
     "final_holdout_evaluation":true
   },
   {
@@ -1117,8 +1117,8 @@
     "origin_time":"2024-04-01T00:00:00.000",
     "target_time":"2024-10-01T00:00:00.000",
     "actual_oni":-0.19,
-    "predicted_oni":0.0443767272,
-    "residual_actual_minus_predicted":-0.2343767272,
+    "predicted_oni":0.0754928067,
+    "residual_actual_minus_predicted":-0.2654928067,
     "final_holdout_evaluation":true
   },
   {
@@ -1128,8 +1128,8 @@
     "origin_time":"2024-05-01T00:00:00.000",
     "target_time":"2024-11-01T00:00:00.000",
     "actual_oni":-0.29,
-    "predicted_oni":-0.0100385258,
-    "residual_actual_minus_predicted":-0.2799614742,
+    "predicted_oni":0.004382859,
+    "residual_actual_minus_predicted":-0.294382859,
     "final_holdout_evaluation":true
   },
   {
@@ -1139,8 +1139,8 @@
     "origin_time":"2024-06-01T00:00:00.000",
     "target_time":"2024-12-01T00:00:00.000",
     "actual_oni":-0.43,
-    "predicted_oni":-0.0722432733,
-    "residual_actual_minus_predicted":-0.3577567267,
+    "predicted_oni":-0.0836935565,
+    "residual_actual_minus_predicted":-0.3463064435,
     "final_holdout_evaluation":true
   },
   {
@@ -1150,8 +1150,8 @@
     "origin_time":"2024-07-01T00:00:00.000",
     "target_time":"2025-01-01T00:00:00.000",
     "actual_oni":-0.46,
-    "predicted_oni":-0.0975640118,
-    "residual_actual_minus_predicted":-0.3624359882,
+    "predicted_oni":-0.1070606187,
+    "residual_actual_minus_predicted":-0.3529393813,
     "final_holdout_evaluation":true
   },
   {
@@ -1161,8 +1161,8 @@
     "origin_time":"2024-08-01T00:00:00.000",
     "target_time":"2025-02-01T00:00:00.000",
     "actual_oni":-0.22,
-    "predicted_oni":-0.1090293229,
-    "residual_actual_minus_predicted":-0.1109706771,
+    "predicted_oni":-0.1152705774,
+    "residual_actual_minus_predicted":-0.1047294226,
     "final_holdout_evaluation":true
   },
   {
@@ -1172,8 +1172,8 @@
     "origin_time":"2024-09-01T00:00:00.000",
     "target_time":"2025-03-01T00:00:00.000",
     "actual_oni":-0.08,
-    "predicted_oni":-0.1161473542,
-    "residual_actual_minus_predicted":0.0361473542,
+    "predicted_oni":-0.1215320006,
+    "residual_actual_minus_predicted":0.0415320006,
     "final_holdout_evaluation":true
   },
   {
@@ -1183,8 +1183,8 @@
     "origin_time":"2024-10-01T00:00:00.000",
     "target_time":"2025-04-01T00:00:00.000",
     "actual_oni":0.02,
-    "predicted_oni":-0.0501304753,
-    "residual_actual_minus_predicted":0.0701304753,
+    "predicted_oni":-0.0516927838,
+    "residual_actual_minus_predicted":0.0716927838,
     "final_holdout_evaluation":true
   },
   {
@@ -1194,8 +1194,8 @@
     "origin_time":"2024-11-01T00:00:00.000",
     "target_time":"2025-05-01T00:00:00.000",
     "actual_oni":-0.04,
-    "predicted_oni":-0.1065935045,
-    "residual_actual_minus_predicted":0.0665935045,
+    "predicted_oni":-0.1069103479,
+    "residual_actual_minus_predicted":0.0669103479,
     "final_holdout_evaluation":true
   },
   {
@@ -1205,8 +1205,8 @@
     "origin_time":"2024-12-01T00:00:00.000",
     "target_time":"2025-06-01T00:00:00.000",
     "actual_oni":-0.02,
-    "predicted_oni":-0.1410108507,
-    "residual_actual_minus_predicted":0.1210108507,
+    "predicted_oni":-0.1424478889,
+    "residual_actual_minus_predicted":0.1224478889,
     "final_holdout_evaluation":true
   },
   {
@@ -1216,8 +1216,8 @@
     "origin_time":"2025-01-01T00:00:00.000",
     "target_time":"2025-07-01T00:00:00.000",
     "actual_oni":-0.11,
-    "predicted_oni":-0.0963836685,
-    "residual_actual_minus_predicted":-0.0136163315,
+    "predicted_oni":-0.0980577618,
+    "residual_actual_minus_predicted":-0.0119422382,
     "final_holdout_evaluation":true
   },
   {
@@ -1227,8 +1227,8 @@
     "origin_time":"2025-02-01T00:00:00.000",
     "target_time":"2025-08-01T00:00:00.000",
     "actual_oni":-0.26,
-    "predicted_oni":-0.1137053221,
-    "residual_actual_minus_predicted":-0.1462946779,
+    "predicted_oni":-0.1210339144,
+    "residual_actual_minus_predicted":-0.1389660856,
     "final_holdout_evaluation":true
   },
   {
@@ -1238,8 +1238,8 @@
     "origin_time":"2025-03-01T00:00:00.000",
     "target_time":"2025-09-01T00:00:00.000",
     "actual_oni":-0.43,
-    "predicted_oni":-0.0335846804,
-    "residual_actual_minus_predicted":-0.3964153196,
+    "predicted_oni":-0.0390879475,
+    "residual_actual_minus_predicted":-0.3909120525,
     "final_holdout_evaluation":true
   },
   {
@@ -1249,8 +1249,8 @@
     "origin_time":"2025-04-01T00:00:00.000",
     "target_time":"2025-10-01T00:00:00.000",
     "actual_oni":-0.57,
-    "predicted_oni":-0.0113244662,
-    "residual_actual_minus_predicted":-0.5586755338,
+    "predicted_oni":-0.013421488,
+    "residual_actual_minus_predicted":-0.556578512,
     "final_holdout_evaluation":true
   },
   {
@@ -1260,8 +1260,8 @@
     "origin_time":"2025-05-01T00:00:00.000",
     "target_time":"2025-11-01T00:00:00.000",
     "actual_oni":-0.61,
-    "predicted_oni":0.0242450126,
-    "residual_actual_minus_predicted":-0.6342450126,
+    "predicted_oni":0.0227044858,
+    "residual_actual_minus_predicted":-0.6327044858,
     "final_holdout_evaluation":true
   },
   {
@@ -1271,8 +1271,8 @@
     "origin_time":"2025-06-01T00:00:00.000",
     "target_time":"2025-12-01T00:00:00.000",
     "actual_oni":-0.6,
-    "predicted_oni":-0.0076518441,
-    "residual_actual_minus_predicted":-0.5923481559,
+    "predicted_oni":-0.009084099,
+    "residual_actual_minus_predicted":-0.590915901,
     "final_holdout_evaluation":true
   }
 ]

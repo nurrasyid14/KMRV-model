@@ -101,7 +101,12 @@
       "epochs": 300,
       "batch_size": 16,
       "learning_rate": 0.003,
-      "dropout": 0.1
+      "dropout": 0.1,
+      "refit_epochs": 1,
+      "epoch_selection_period": {
+        "start": "2021-01-01",
+        "end": "2021-06-01"
+      }
     },
     "classifier": {
       "objective": "multi:softmax",
@@ -173,41 +178,57 @@
     "missing_predicted_classes": [
       "El Nino"
     ],
-    "oni_mse": 1.1523309916195636,
-    "oni_rmse": 1.0734668097428832,
-    "oni_mae": 0.9030019021054936,
-    "oni_r2": -0.08998104795159922
-  },
-  "test_metrics": {
-    "accuracy": 0.5555555555555556,
-    "balanced_accuracy": 0.7333333333333334,
-    "macro_precision": 0.42424242424242425,
-    "macro_recall": 0.48888888888888893,
-    "macro_f1": 0.35497835497835495,
-    "weighted_f1": 0.6017316017316018,
-    "actual_class_counts": {
-      "0": 3,
-      "1": 15,
-      "2": 0
-    },
-    "predicted_class_counts": {
-      "0": 11,
-      "1": 7,
-      "2": 0
-    },
-    "missing_actual_classes": [
-      "El Nino"
-    ],
-    "missing_predicted_classes": [
-      "El Nino"
-    ],
-    "oni_mse": 0.046795056466366634,
-    "oni_rmse": 0.21632165047994303,
-    "oni_mae": 0.1753079980115096,
-    "oni_r2": 0.002506740586801781
+    "log_loss": 1.095582950508737,
+    "multiclass_brier_score": 0.6639788822410674,
+    "top_label_ece_10_bins": 0.0816182593504588,
+    "mean_top_label_confidence": 0.39987167053752476,
+    "oni_mse": 1.055418563179584,
+    "oni_rmse": 1.0273356623711571,
+    "oni_mae": 0.8884112213008728,
+    "oni_r2": 0.0016876749056069507
   },
   "selected_using": "validation metrics only; test metrics were not used for selection",
   "selection_validation_fold": 1,
   "selection_is_provisional": true,
-  "training_timestamp_utc": "2026-11-18T14:44:27.448368+00:00"
+  "training_timestamp_utc": "2026-11-24T13:52:46.437164+00:00",
+  "final_holdout_evaluation": {
+    "classification": {
+      "accuracy": 0.5555555555555556,
+      "balanced_accuracy": 0.7333333333333334,
+      "macro_precision": 0.42424242424242425,
+      "macro_recall": 0.48888888888888893,
+      "macro_f1": 0.35497835497835495,
+      "weighted_f1": 0.6017316017316018,
+      "actual_class_counts": {
+        "0": 3,
+        "1": 15,
+        "2": 0
+      },
+      "predicted_class_counts": {
+        "0": 11,
+        "1": 7,
+        "2": 0
+      },
+      "missing_actual_classes": [
+        "El Nino"
+      ],
+      "missing_predicted_classes": [
+        "El Nino"
+      ],
+      "log_loss": 1.0335125818013937,
+      "multiclass_brier_score": 0.6226242696350561,
+      "top_label_ece_10_bins": 0.16231935554080537,
+      "mean_top_label_confidence": 0.3932362000147502
+    },
+    "oni_regression": {
+      "oni_mse": 0.09658277346088834,
+      "oni_rmse": 0.31077769138226174,
+      "oni_mae": 0.2421495566041105,
+      "oni_r2": -1.0587786996669553
+    },
+    "test_period": {
+      "start": "2024-01-01",
+      "end": "2025-06-01"
+    }
+  }
 }

@@ -27,7 +27,7 @@ import xarray as xr
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATASET_DIR = PROJECT_ROOT / "dataset"
 START = pd.Timestamp("2015-01-01")
-END = pd.Timestamp("2025-12-31")
+END = pd.Timestamp("2026-12-31")
 MONTHS = pd.date_range(START, END, freq="MS")
 
 NETCDF_EXTENSIONS = {".nc", ".nc4", ".cdf", ".netcdf"}
@@ -318,6 +318,7 @@ def write_group(
 
 
 def main() -> int:
+    global START, END, MONTHS
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--input-dir",
@@ -343,7 +344,23 @@ def main() -> int:
         default=2 if ZARR_FORMAT_SUPPORTED else None,
         help="Format Zarr; default 2 bila didukung xarray terpasang",
     )
+    parser.add_argument(
+        "--start",
+        type=pd.Timestamp,
+        default=START,
+        help="Tanggal awal observasi bulanan (default: 2015-01-01)",
+    )
+    parser.add_argument(
+        "--end",
+        type=pd.Timestamp,
+        default=END,
+        help="Tanggal akhir observasi bulanan (default: 2026-12-31)",
+    )
     args = parser.parse_args()
+
+    START = pd.Timestamp(args.start)
+    END = pd.Timestamp(args.end)
+    MONTHS = pd.date_range(START, END, freq="MS")
 
     input_dir = args.input_dir.expanduser().resolve()
     output_path = args.output.expanduser().resolve()

@@ -39,7 +39,7 @@ def tri_monthly_season(date: pd.Timestamp) -> str:
 
 def validate_horizons(horizons: Iterable[int]) -> tuple[int, ...]:
     selected = tuple(dict.fromkeys(horizons))
-    unsupported = set(selected) - {1, 3, 6}
+    unsupported = set(selected) - {1, 3, 6, 9, 12}
     if unsupported:
         raise ValueError(f"Unsupported forecast horizons: {sorted(unsupported)}")
     if not selected:
@@ -48,7 +48,7 @@ def validate_horizons(horizons: Iterable[int]) -> tuple[int, ...]:
 
 
 def train_ensemble(
-    horizons: Iterable[int] = (1, 3, 6),
+    horizons: Iterable[int] = (1, 3, 6, 9, 12),
     epochs: int = 300,
     seed: int = 42,
 ) -> dict[int, Path]:
@@ -277,7 +277,7 @@ def plot_forecast_horizons(predictions: pd.DataFrame) -> None:
 
 
 def run(
-    horizons: Iterable[int] = (1, 3, 6),
+    horizons: Iterable[int] = (1, 3, 6, 9, 12),
     epochs: int = 300,
     seed: int = 42,
 ) -> dict[str, object]:

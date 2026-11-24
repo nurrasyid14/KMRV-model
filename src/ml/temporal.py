@@ -10,7 +10,7 @@ import pandas as pd
 
 PHASE_NAMES = {0: "La Nina", 1: "Neutral", 2: "El Nino"}
 PHASE_CLASSES = np.array([0, 1, 2], dtype=np.int64)
-SUPPORTED_HORIZONS = (1, 3, 6)
+SUPPORTED_HORIZONS = (1, 3, 6, 9, 12)
 BACKTEST_MIN_TRAIN_MONTHS = 72
 BACKTEST_VALIDATION_MONTHS = 24
 BACKTEST_TEST_MONTHS = 18

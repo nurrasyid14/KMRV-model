@@ -5,9 +5,9 @@ provided_train,train,1,2016-01-01,2021-12-01,72,61,2,El Nino,20,0.27777777777777
 provided_validation,validation,1,2022-01-01,2023-12-01,24,13,0,La Nina,12,0.5,False,0
 provided_validation,validation,1,2022-01-01,2023-12-01,24,13,1,Neutral,4,0.16666666666666666,False,0
 provided_validation,validation,1,2022-01-01,2023-12-01,24,13,2,El Nino,8,0.3333333333333333,False,0
-provided_test,test,1,2024-01-01,2025-06-01,18,7,0,La Nina,0,0.0,True,0
-provided_test,test,1,2024-01-01,2025-06-01,18,7,1,Neutral,15,0.8333333333333334,False,0
-provided_test,test,1,2024-01-01,2025-06-01,18,7,2,El Nino,3,0.16666666666666666,False,0
+provided_test,test,1,2024-01-01,2026-03-01,27,16,0,La Nina,3,0.1111111111111111,False,0
+provided_test,test,1,2024-01-01,2026-03-01,27,16,1,Neutral,21,0.7777777777777778,False,0
+provided_test,test,1,2024-01-01,2026-03-01,27,16,2,El Nino,3,0.1111111111111111,False,0
 1,train,1,2016-12-01,2021-11-01,60,60,0,La Nina,17,0.2833333333333333,False,1
 1,train,1,2016-12-01,2021-11-01,60,60,1,Neutral,27,0.45,False,1
 1,train,1,2016-12-01,2021-11-01,60,60,2,El Nino,16,0.26666666666666666,False,1
@@ -23,9 +23,9 @@ provided_train,train,3,2016-01-01,2021-12-01,72,61,2,El Nino,18,0.25,False,0
 provided_validation,validation,3,2022-01-01,2023-12-01,24,13,0,La Nina,10,0.4166666666666667,False,0
 provided_validation,validation,3,2022-01-01,2023-12-01,24,13,1,Neutral,4,0.16666666666666666,False,0
 provided_validation,validation,3,2022-01-01,2023-12-01,24,13,2,El Nino,10,0.4166666666666667,False,0
-provided_test,test,3,2024-01-01,2025-06-01,18,7,0,La Nina,0,0.0,True,0
-provided_test,test,3,2024-01-01,2025-06-01,18,7,1,Neutral,17,0.9444444444444444,False,0
-provided_test,test,3,2024-01-01,2025-06-01,18,7,2,El Nino,1,0.05555555555555555,False,0
+provided_test,test,3,2024-01-01,2026-03-01,27,16,0,La Nina,3,0.1111111111111111,False,0
+provided_test,test,3,2024-01-01,2026-03-01,27,16,1,Neutral,21,0.7777777777777778,False,0
+provided_test,test,3,2024-01-01,2026-03-01,27,16,2,El Nino,3,0.1111111111111111,False,0
 1,train,3,2016-12-01,2021-09-01,58,58,0,La Nina,17,0.29310344827586204,False,3
 1,train,3,2016-12-01,2021-09-01,58,58,1,Neutral,25,0.43103448275862066,False,3
 1,train,3,2016-12-01,2021-09-01,58,58,2,El Nino,16,0.27586206896551724,False,3
@@ -41,9 +41,9 @@ provided_train,train,6,2016-01-01,2021-12-01,72,61,2,El Nino,16,0.22222222222222
 provided_validation,validation,6,2022-01-01,2023-12-01,24,13,0,La Nina,7,0.2916666666666667,False,0
 provided_validation,validation,6,2022-01-01,2023-12-01,24,13,1,Neutral,6,0.25,False,0
 provided_validation,validation,6,2022-01-01,2023-12-01,24,13,2,El Nino,11,0.4583333333333333,False,0
-provided_test,test,6,2024-01-01,2025-06-01,18,7,0,La Nina,3,0.16666666666666666,False,0
-provided_test,test,6,2024-01-01,2025-06-01,18,7,1,Neutral,15,0.8333333333333334,False,0
-provided_test,test,6,2024-01-01,2025-06-01,18,7,2,El Nino,0,0.0,True,0
+provided_test,test,6,2024-01-01,2026-03-01,27,16,0,La Nina,3,0.1111111111111111,False,0
+provided_test,test,6,2024-01-01,2026-03-01,27,16,1,Neutral,19,0.7037037037037037,False,0
+provided_test,test,6,2024-01-01,2026-03-01,27,16,2,El Nino,5,0.18518518518518517,False,0
 1,train,6,2016-12-01,2021-06-01,55,55,0,La Nina,17,0.3090909090909091,False,6
 1,train,6,2016-12-01,2021-06-01,55,55,1,Neutral,22,0.4,False,6
 1,train,6,2016-12-01,2021-06-01,55,55,2,El Nino,16,0.2909090909090909,False,6

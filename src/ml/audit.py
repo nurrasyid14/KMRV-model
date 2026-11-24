@@ -287,7 +287,8 @@ def _temporal_integrity_report(
     notebook: dict[str, Any],
 ) -> str:
     target_checks = []
-    for horizon in (1, 3, 6):
+    audited_horizons = [h for h in (1, 3, 6, 9, 12) if f"target_oni_lead_{h}m" in frame.columns]
+    for horizon in audited_horizons:
         observed = frame[f"target_oni_lead_{horizon}m"].to_numpy(dtype=np.float64)
         expected = frame["oni_anom"].shift(-horizon).to_numpy(dtype=np.float64)
         usable = len(frame) - horizon
@@ -305,7 +306,7 @@ def _temporal_integrity_report(
 
     purge_checks = []
     for fold in folds:
-        for horizon in (1, 3, 6):
+        for horizon in audited_horizons:
             indices = fold_indices(fold, horizon, WINDOW_MONTHS)
             train_target_end = int(indices["train"].max() + horizon)
             validation_target_end = int(indices["validation"].max() + horizon)
@@ -324,7 +325,7 @@ def _temporal_integrity_report(
 
     validation_test_overlap = []
     for previous, following in zip(folds, folds[1:]):
-        for horizon in (1, 3, 6):
+        for horizon in audited_horizons:
             previous_test = set(
                 fold_indices(previous, horizon, WINDOW_MONTHS)["test"].tolist()
             )
@@ -507,8 +508,9 @@ def _data_sufficiency_report(
     selection_audit: pd.DataFrame,
 ) -> str:
     raw_counts = []
-    for horizon in (1, 3, 6):
-        labels = frame[f"target_phase_lead_{horizon}m"].astype(int)
+    audited_horizons = [h for h in (1, 3, 6, 9, 12) if f"target_phase_lead_{h}m" in frame.columns]
+    for horizon in audited_horizons:
+        labels = frame[f"target_phase_lead_{horizon}m"].dropna().astype(int)
         raw_counts.append(
             {
                 "horizon": horizon,
@@ -526,7 +528,7 @@ def _data_sufficiency_report(
         pd.to_numeric(fold_rows["fold"], errors="coerce").dropna().astype(int).unique()
     )
     summary_rows = []
-    for horizon in (1, 3, 6):
+    for horizon in audited_horizons:
         row: dict[str, Any] = {"horizon": horizon}
         for fold in fold_ids:
             current = fold_rows.loc[
