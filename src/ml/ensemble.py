@@ -32,7 +32,7 @@ from sklearn.metrics import (
 from sklearn.preprocessing import StandardScaler
 from torch import nn
 from torch.utils.data import DataLoader, TensorDataset
-from xgboost import XGBClassifier
+from xgboost import XGBClassifier, XGBRegressor
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
@@ -196,6 +196,67 @@ def tabular_ensemble_features(
     return features
 
 
+def calculate_hindcast_skill_weights(
+    actual: np.ndarray,
+    model_predictions: dict[str, np.ndarray],
+    eps: float = 1e-6,
+) -> dict[str, float]:
+    """Calculate ensemble weights inversely proportional to hindcast/validation RMSE.
+
+    Ensures weights are dynamically determined from empirical out-of-sample skill,
+    not fixed constant values.
+    """
+    actual = np.asarray(actual, dtype=np.float64)
+    rmse_scores: dict[str, float] = {}
+    for name, preds in model_predictions.items():
+        preds = np.asarray(preds, dtype=np.float64)
+        rmse = float(np.sqrt(mean_squared_error(actual, preds)))
+        rmse_scores[name] = max(rmse, eps)
+
+    inv_errors = {name: 1.0 / val for name, val in rmse_scores.items()}
+    total_inv = sum(inv_errors.values())
+    return {name: float(weight / total_inv) for name, weight in inv_errors.items()}
+
+
+def train_xgboost_regressor(
+    features: pd.DataFrame,
+    targets: np.ndarray,
+    validation_features: pd.DataFrame | None = None,
+    validation_targets: np.ndarray | None = None,
+    random_state: int = 42,
+    n_estimators: int = 300,
+    learning_rate: float = 0.05,
+    max_depth: int = 4,
+    early_stopping_rounds: int | None = 30,
+) -> XGBRegressor:
+    """Train XGBoost tabular regressor from scratch on physical/unscaled features.
+
+    Does not use warm-starting (xgb_model=None) to prevent drift on time-series.
+    """
+    model = XGBRegressor(
+        n_estimators=n_estimators,
+        learning_rate=learning_rate,
+        max_depth=max_depth,
+        subsample=0.8,
+        colsample_bytree=0.8,
+        random_state=random_state,
+        n_jobs=-1,
+        early_stopping_rounds=(
+            early_stopping_rounds if validation_features is not None else None
+        ),
+    )
+    if validation_features is not None and validation_targets is not None:
+        model.fit(
+            features,
+            targets,
+            eval_set=[(validation_features, validation_targets)],
+            verbose=False,
+        )
+    else:
+        model.fit(features, targets, verbose=False)
+    return model
+
+
 def train_xgboost(
     features: pd.DataFrame,
     labels: np.ndarray,
@@ -283,14 +344,51 @@ def main() -> None:
     validation_lstm_forecast = target_scaler.inverse_transform(validation_lstm_scaled.reshape(-1, 1)).reshape(-1)
     test_lstm_forecast = target_scaler.inverse_transform(test_lstm_scaled.reshape(-1, 1)).reshape(-1)
 
+    validation_actual_oni = validation[oni_target].to_numpy(dtype=np.float64)[args.window - 1:]
+    test_actual_oni = test[oni_target].to_numpy(dtype=np.float64)[args.window - 1:]
+    train_actual_oni = train[oni_target].to_numpy(dtype=np.float64)[args.window - 1:]
+
+    # Train XGBoost tabular regressor as tabular comparison model
+    train_tabular = train[feature_columns].iloc[args.window - 1:].reset_index(drop=True)
+    val_tabular = validation[feature_columns].iloc[args.window - 1:].reset_index(drop=True)
+    test_tabular = test[feature_columns].iloc[args.window - 1:].reset_index(drop=True)
+
+    xgb_regressor = train_xgboost_regressor(
+        train_tabular,
+        train_actual_oni,
+        val_tabular,
+        validation_actual_oni,
+        random_state=args.seed,
+    )
+    train_xgb_forecast = xgb_regressor.predict(train_tabular)
+    validation_xgb_forecast = xgb_regressor.predict(val_tabular)
+    test_xgb_forecast = xgb_regressor.predict(test_tabular)
+
+    # Calculate ensemble weights from hindcast / validation skill (inverse RMSE)
+    ensemble_weights = calculate_hindcast_skill_weights(
+        validation_actual_oni,
+        {
+            "lstm": validation_lstm_forecast,
+            "xgboost": validation_xgb_forecast,
+        },
+    )
+    w_lstm = ensemble_weights["lstm"]
+    w_xgb = ensemble_weights["xgboost"]
+
+    train_ensemble_forecast = w_lstm * train_lstm_forecast + w_xgb * train_xgb_forecast
+    validation_ensemble_forecast = (
+        w_lstm * validation_lstm_forecast + w_xgb * validation_xgb_forecast
+    )
+    test_ensemble_forecast = w_lstm * test_lstm_forecast + w_xgb * test_xgb_forecast
+
     train_classifier_features = tabular_ensemble_features(
-        train, feature_columns, train_lstm_forecast, args.window
+        train, feature_columns, train_ensemble_forecast, args.window
     )
     validation_classifier_features = tabular_ensemble_features(
-        validation, feature_columns, validation_lstm_forecast, args.window
+        validation, feature_columns, validation_ensemble_forecast, args.window
     )
     test_classifier_features = tabular_ensemble_features(
-        test, feature_columns, test_lstm_forecast, args.window
+        test, feature_columns, test_ensemble_forecast, args.window
     )
     train_labels = train[phase_target].to_numpy(dtype=np.int64)[args.window - 1:]
     validation_labels = validation[phase_target].to_numpy(dtype=np.int64)[args.window - 1:]
@@ -320,14 +418,14 @@ def main() -> None:
         test_classifier_features
     )
     test_phase = production_classifier.predict(test_classifier_features).astype(np.int64)
-    validation_actual_oni = validation[oni_target].to_numpy()[args.window - 1:]
-    test_actual_oni = test[oni_target].to_numpy()[args.window - 1:]
+
     metrics = {
         "horizon_months": args.horizon,
         "window_months": args.window,
-        "model": "causal_lstm_xgboost",
+        "model": "causal_lstm_xgboost_ensemble",
         "class_mapping": PHASE_NAMES,
         "probabilities_calibrated": False,
+        "ensemble_weights": ensemble_weights,
         "validation": {
             **classification_metrics(
                 validation_labels,
@@ -336,6 +434,12 @@ def main() -> None:
             ),
             "lstm_oni_rmse": float(
                 np.sqrt(mean_squared_error(validation_actual_oni, validation_lstm_forecast))
+            ),
+            "xgboost_oni_rmse": float(
+                np.sqrt(mean_squared_error(validation_actual_oni, validation_xgb_forecast))
+            ),
+            "ensemble_oni_rmse": float(
+                np.sqrt(mean_squared_error(validation_actual_oni, validation_ensemble_forecast))
             ),
         },
         "test": {
@@ -346,6 +450,12 @@ def main() -> None:
             ),
             "lstm_oni_rmse": float(
                 np.sqrt(mean_squared_error(test_actual_oni, test_lstm_forecast))
+            ),
+            "xgboost_oni_rmse": float(
+                np.sqrt(mean_squared_error(test_actual_oni, test_xgb_forecast))
+            ),
+            "ensemble_oni_rmse": float(
+                np.sqrt(mean_squared_error(test_actual_oni, test_ensemble_forecast))
             ),
         },
     }
@@ -370,6 +480,9 @@ def main() -> None:
     production_classifier.save_model(
         str(output_dir / f"xgboost_horizon_{args.horizon}m.json")
     )
+    xgb_regressor.save_model(
+        str(output_dir / f"xgboost_regressor_horizon_{args.horizon}m.json")
+    )
     joblib.dump(feature_scaler, output_dir / f"feature_scaler_horizon_{args.horizon}m.joblib")
     joblib.dump(target_scaler, output_dir / f"target_scaler_horizon_{args.horizon}m.joblib")
     (output_dir / f"metrics_horizon_{args.horizon}m.json").write_text(
@@ -381,6 +494,9 @@ def main() -> None:
             "time": test["time"].iloc[args.window - 1:].reset_index(drop=True),
             f"actual_oni_lead_{args.horizon}m": test_actual_oni,
             f"lstm_oni_lead_{args.horizon}m": test_lstm_forecast,
+            f"xgboost_oni_lead_{args.horizon}m": test_xgb_forecast,
+            f"ensemble_oni_lead_{args.horizon}m": test_ensemble_forecast,
+            f"predicted_oni_lead_{args.horizon}m": test_ensemble_forecast,
             f"actual_phase_lead_{args.horizon}m": test_labels,
             f"predicted_phase_lead_{args.horizon}m": test_phase,
             "phase_confidence": test_phase_probabilities.max(axis=1),

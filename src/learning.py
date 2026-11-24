@@ -96,9 +96,13 @@ def save_model_checkpoints(output_dirs: dict[int, Path]) -> dict[str, Path]:
                 f"{checkpoint} or {metrics_file} is missing"
             )
         metrics = json.loads(metrics_file.read_text(encoding="utf-8"))
-        ranking.append(
-            (float(metrics["validation"]["lstm_oni_rmse"]), horizon, checkpoint)
+        val_rmse = float(
+            metrics["validation"].get(
+                "ensemble_oni_rmse",
+                metrics["validation"].get("lstm_oni_rmse", float("inf")),
+            )
         )
+        ranking.append((val_rmse, horizon, checkpoint))
 
     recent_checkpoint = ranking[-1][2]
     best_checkpoint = min(ranking, key=lambda row: row[0])[2]
@@ -146,7 +150,12 @@ def collect_metrics(output_dirs: dict[int, Path]) -> tuple[pd.DataFrame, pd.Data
         actual_phase = predictions[f"actual_phase_lead_{horizon}m"].to_numpy()
         predicted_phase = predictions[f"predicted_phase_lead_{horizon}m"].to_numpy()
         actual_oni = predictions[f"actual_oni_lead_{horizon}m"].to_numpy()
-        forecast_oni = predictions[f"lstm_oni_lead_{horizon}m"].to_numpy()
+        oni_col = (
+            f"ensemble_oni_lead_{horizon}m"
+            if f"ensemble_oni_lead_{horizon}m" in predictions.columns
+            else f"lstm_oni_lead_{horizon}m"
+        )
+        forecast_oni = predictions[oni_col].to_numpy()
         metric_rows.append({
             "split": "test",
             "forecast_horizon_months": horizon,

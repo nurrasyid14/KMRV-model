@@ -19,7 +19,7 @@ import xgboost as xgb
 from sklearn.preprocessing import StandardScaler
 from sklearn.utils.class_weight import compute_class_weight, compute_sample_weight
 
-from src.ml.ensemble import predict_lstm, train_lstm
+from src.ml.ensemble import calculate_hindcast_skill_weights, predict_lstm, train_lstm
 from src.ml.evaluation import (
     classification_evaluation,
     probability_evaluation,
@@ -414,6 +414,39 @@ def _expanded_metric_row(
     return row
 
 
+def _fit_xgboost_regressor(
+    frame: pd.DataFrame,
+    feature_columns: list[str],
+    target_column: str,
+    train_origins: np.ndarray,
+    validation_origins: np.ndarray,
+    seed: int,
+) -> tuple[xgb.XGBRegressor, np.ndarray]:
+    train_x = frame.iloc[train_origins][feature_columns]
+    train_y = frame.iloc[train_origins][target_column].to_numpy(dtype=np.float64)
+    val_x = frame.iloc[validation_origins][feature_columns]
+    val_y = frame.iloc[validation_origins][target_column].to_numpy(dtype=np.float64)
+
+    model = xgb.XGBRegressor(
+        n_estimators=300,
+        learning_rate=0.05,
+        max_depth=4,
+        subsample=0.8,
+        colsample_bytree=0.8,
+        random_state=seed,
+        n_jobs=-1,
+        early_stopping_rounds=30,
+    )
+    model.fit(
+        train_x,
+        train_y,
+        eval_set=[(val_x, val_y)],
+        verbose=False,
+    )
+    val_preds = model.predict(val_x)
+    return model, val_preds
+
+
 def _fit_period(
     frame: pd.DataFrame,
     feature_columns: list[str],
@@ -450,10 +483,40 @@ def _fit_period(
     test_forecasts = _predict_oni(
         model, frame, feature_columns, test_origins, config.window
     )
+
+    # Train XGBoost tabular regressor as benchmark comparison model
+    xgb_reg, val_xgb_forecasts = _fit_xgboost_regressor(
+        frame,
+        feature_columns,
+        target_column,
+        train_origins,
+        validation_origins,
+        seed + horizon * 10000 + fold.fold_id * 1000,
+    )
+    val_actual = frame.iloc[validation_origins][target_column].to_numpy(dtype=np.float64)
+    weights = calculate_hindcast_skill_weights(
+        val_actual,
+        {"lstm": validation_forecasts, "xgboost": val_xgb_forecasts},
+    )
+    w_l = weights["lstm"]
+    w_x = weights["xgboost"]
+
+    train_xgb_forecasts = xgb_reg.predict(frame.iloc[oof_origins][feature_columns])
+    test_xgb_forecasts = xgb_reg.predict(frame.iloc[test_origins][feature_columns])
+
+    oof_ensemble = w_l * oof_forecasts + w_x * train_xgb_forecasts
+    val_ensemble = w_l * validation_forecasts + w_x * val_xgb_forecasts
+    test_ensemble = w_l * test_forecasts + w_x * test_xgb_forecasts
+
     forecast_map = {
-        "train": oof_forecasts,
-        "validation": validation_forecasts,
-        "test": test_forecasts,
+        "train": oof_ensemble,
+        "validation": val_ensemble,
+        "test": test_ensemble,
+        "lstm_validation": validation_forecasts,
+        "xgb_validation": val_xgb_forecasts,
+        "lstm_test": test_forecasts,
+        "xgb_test": test_xgb_forecasts,
+        "ensemble_weights": weights,
     }
     origin_map = {
         "train": oof_origins,

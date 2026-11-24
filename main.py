@@ -20,6 +20,23 @@ def parse_args() -> argparse.ArgumentParser:
     parser.add_argument("--epochs", type=int, default=300)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument(
+        "--autoscrap",
+        action="store_true",
+        default=False,
+        help="Download latest remote climate sources before QC and training. Default: False (use local data).",
+    )
+    parser.add_argument(
+        "--append-data",
+        type=str,
+        default=None,
+        help="Path to new observations CSV to incrementally append to master archive without rewriting historical data.",
+    )
+    parser.add_argument(
+        "--retrain-full",
+        action="store_true",
+        help="Retrain all models from scratch on the full expanding window without xgb_model warm start.",
+    )
+    parser.add_argument(
         "--prepare-data",
         action="store_true",
         help="Run src/preprocessing.py before training.",
@@ -51,6 +68,28 @@ def parse_args() -> argparse.ArgumentParser:
 def main() -> None:
     parser = parse_args()
     args = parser.parse_args()
+    if args.append_data:
+        from src.incremental import update_pipeline_and_retrain
+
+        report = update_pipeline_and_retrain(
+            new_data=args.append_data,
+            horizons=tuple(args.horizons),
+            epochs=args.epochs,
+            seed=args.seed,
+            force_retrain=args.retrain_full,
+        )
+        print(json.dumps(report, indent=2))
+        return
+    if args.retrain_full:
+        from src.incremental import retrain_from_full_data
+
+        report = retrain_from_full_data(
+            horizons=tuple(args.horizons),
+            epochs=args.epochs,
+            seed=args.seed,
+        )
+        print(json.dumps(report, indent=2))
+        return
     if args.final_retrain or args.forecast_months is not None:
         from src.ml.final_retraining import run_final_retraining
 
@@ -70,6 +109,7 @@ def main() -> None:
         prepare_data=args.prepare_data,
         run_eda=args.run_eda,
         legacy_training=args.legacy_training,
+        autoscrap=args.autoscrap,
     )
     print(json.dumps(report, indent=2))
 

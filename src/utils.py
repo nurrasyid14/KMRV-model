@@ -28,6 +28,41 @@ class NCEncoder:
         ds.to_zarr(zarr_path, mode="w", zarr_format=2)
         return zarr_path
 
+    def append_to_zarr(
+        self,
+        output_path: Union[str, Path],
+        append_dim: str = "time",
+    ) -> Path:
+        """Appends new time steps to an existing Zarr store without rewriting the archive."""
+        ds = self.ds if self.ds is not None else self.open_dataset()
+        return append_zarr_dataset(ds, output_path, append_dim=append_dim)
+
+
+def append_zarr_dataset(
+    ds: xr.Dataset,
+    output_path: Union[str, Path],
+    append_dim: str = "time",
+) -> Path:
+    """Incrementally append a dataset into an existing Zarr store along append_dim."""
+    zarr_path = Path(output_path)
+    if not zarr_path.exists():
+        zarr_path.parent.mkdir(parents=True, exist_ok=True)
+        ds.to_zarr(zarr_path, mode="w", zarr_format=2)
+        return zarr_path
+
+    with xr.open_zarr(zarr_path) as existing:
+        if append_dim in existing.coords and append_dim in ds.coords:
+            existing_times = existing[append_dim].values
+            last_timestamp = existing_times[-1]
+            new_slice = ds.sel({append_dim: ds[append_dim] > last_timestamp})
+            if new_slice.sizes.get(append_dim, 0) == 0:
+                return zarr_path
+        else:
+            new_slice = ds
+
+    new_slice.to_zarr(zarr_path, mode="a", append_dim=append_dim)
+    return zarr_path
+
     def print_metadata(self) -> None:
         """Prints dataset dimensions, variables, and attributes."""
         ds = self.ds if self.ds is not None else self.open_dataset()

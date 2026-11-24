@@ -210,10 +210,29 @@ class InferenceEngine:
                     f"Horizon {horizon} feature scaler has an unexpected shape"
                 )
 
+            xgb_reg_path = model_dir / f"xgboost_regressor_horizon_{horizon}m.json"
+            xgb_regressor = None
+            if xgb_reg_path.is_file():
+                from xgboost import XGBRegressor
+                xgb_regressor = XGBRegressor()
+                xgb_regressor.load_model(str(xgb_reg_path))
+
+            metrics_path = model_dir / f"metrics_horizon_{horizon}m.json"
+            ensemble_weights = {"lstm": 0.5, "xgboost": 0.5}
+            if metrics_path.is_file():
+                try:
+                    m_data = json.loads(metrics_path.read_text(encoding="utf-8"))
+                    if "ensemble_weights" in m_data:
+                        ensemble_weights = m_data["ensemble_weights"]
+                except Exception:
+                    pass
+
             self.models[horizon] = {
                 "lstm": lstm,
                 "classifier": classifier,
                 "classifier_family": "XGBoost",
+                "xgb_regressor": xgb_regressor,
+                "ensemble_weights": ensemble_weights,
                 "feature_columns": feature_columns,
                 "classifier_features": classifier_features,
                 "classes": np.asarray(classifier.classes_, dtype=np.int64),
@@ -256,9 +275,18 @@ class InferenceEngine:
         with torch.no_grad():
             scaled_forecast = model["lstm"](inputs).numpy().reshape(-1, 1)
 
-        forecast = float(
+        lstm_forecast = float(
             model["target_scaler"].inverse_transform(scaled_forecast)[0, 0]
         )
+        if model.get("xgb_regressor") is not None:
+            latest_tabular = frame.loc[[frame.index[-1]], feature_columns]
+            xgb_forecast = float(model["xgb_regressor"].predict(latest_tabular)[0])
+            weights = model.get("ensemble_weights", {"lstm": 0.5, "xgboost": 0.5})
+            w_l = float(weights.get("lstm", 0.5))
+            w_x = float(weights.get("xgboost", 0.5))
+            forecast = float(w_l * lstm_forecast + w_x * xgb_forecast)
+        else:
+            forecast = lstm_forecast
         classifier_row = frame.loc[frame.index[-1], feature_columns].to_dict()
         classifier_row["lstm_oni_forecast"] = forecast
         classifier_input = pd.DataFrame(

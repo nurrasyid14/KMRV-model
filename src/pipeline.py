@@ -8,6 +8,12 @@ from typing import NamedTuple
 from src.learning import run as run_learning
 from src.etl import ExploratoryDataAnalysis
 from src.ml.backtesting import run_backtesting
+from src.scraper import download_all_sources
+from src.incremental import (
+    append_new_feature_observations,
+    retrain_from_full_data,
+    update_pipeline_and_retrain,
+)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
@@ -145,6 +151,22 @@ def run_source_eda() -> Path:
     return report_path
 
 
+def run_autoscrap(timeout: int = 30) -> dict[str, object]:
+    """Execute all remote climate downloaders before QC and training."""
+    return download_all_sources(timeout=timeout)
+
+
+def append_pipeline_data(
+    new_data: Path | str | object,
+    master_path: Path | str | None = None,
+) -> tuple[object, int]:
+    """Append new observations into feature archives without rewriting past data."""
+    return append_new_feature_observations(
+        master_path or (PROJECT_ROOT / "dataset" / "features_master_unscaled.csv"),
+        new_data,
+    )
+
+
 def run_full_pipeline(
     horizons: tuple[int, ...] = (1, 3, 6),
     epochs: int = 300,
@@ -152,17 +174,31 @@ def run_full_pipeline(
     prepare_data: bool = False,
     run_eda: bool = False,
     legacy_training: bool = False,
+    autoscrap: bool = False,
 ) -> dict[str, object]:
+    """Orchestrate data ingestion, QC, and modeling pipeline.
+
+    Parameters
+    ----------
+    autoscrap : bool
+        If False (default), pipeline uses local data archives.
+        If True, pipeline executes all download scrapers before QC and training.
+    """
     import json
 
+    scrap_summary = None
+    if autoscrap:
+        scrap_summary = run_autoscrap()
     if run_eda:
         run_source_eda()
-    if prepare_data:
+    if prepare_data or autoscrap:
         run_data_preprocessing()
     if legacy_training:
         report = run_enso_training(horizons=horizons, epochs=epochs, seed=seed)
     else:
         report = run_enso_backtesting(horizons=horizons, epochs=epochs, seed=seed)
+    if scrap_summary is not None:
+        report["autoscrap_summary"] = scrap_summary
     report["call_graph"] = PIPELINE_CALL_GRAPH
     reports_dir = PROJECT_ROOT / "reports"
     reports_dir.mkdir(parents=True, exist_ok=True)
